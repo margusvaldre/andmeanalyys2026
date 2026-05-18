@@ -20,9 +20,9 @@
 |---------|------|--------------|------|
 | [Nimi] | [API / CSV / DB] | Jah, [iga X tundi / päeva] | [Milleks kasutatakse?] |
 | Kataloogi sisu | API | Jah, iga päev | Kataloogi koosesisu pärimiseks |
-| Esiletõstetud sisu | API/CSV | Jah, iga päev | Esiletõstetuse arvutamiseks |
-| Vaadatavuse andmed | CSV | Jah, iga päev | Sisu vaadatavuse pärimiseks |
-| Sisu kirjeldavad metaandmed | CSV | Jah, iga nädal | Sisu žanrite, päritolumaade ja tootmisaastate pärimiseks |
+| Esiletõstetud sisu | API/CSV | Jah, iga päev | Sisunimetuste esiletõstetuse arvutamiseks |
+| Vaadatavuse andmed | CSV | Jah, iga päev | Sisunimetuste vaadatavuse pärimiseks |
+| Sisu kirjeldavad metaandmed | CSV | Jah, iga nädal | Sisunimetuste žanrite, päritolumaade ja tootmisaastate pärimiseks |
 
 ## Andmevoog
 
