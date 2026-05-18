@@ -5,6 +5,8 @@
 ## Äriküsimus
 
 [Kirjuta ühe-kahe lausega oma äriküsimus täpselt. Näiteks: "Millistes kauplustes ja mis kellaaegadel on müügitõhusus (käive külastaja kohta) kõrgeim?"]
+1. Kuidas erinevad Jupiteri kataloogis olemasoleva sisu, kasutajaliideses esiletõstetud sisu ja vaadatud sisu struktuurid žanrite ja päritolumaade lõikes?
+2. Kui tugev on esiletõstetuse ja vaadatavuse vaheline seos?
 
 ## Mõõdikud
 
