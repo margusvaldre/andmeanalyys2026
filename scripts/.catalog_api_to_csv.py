@@ -31,10 +31,10 @@ fieldnames = [
     "date",
     "id",
     "scheduleStart",
-    "heading",
+    "title",
     "primaryCategory.name",
     "primaryCategory.relativePath",
-    "verticalPhotos.type5.url",
+    "posterUrl",
 ]
 
 
@@ -82,14 +82,14 @@ try:
             "date": date_stamp,
             "id": item.get("id", ""),
             "scheduleStart": item.get("scheduleStart", ""),
-            "heading": item.get("heading", ""),
+            "title": item.get("heading", ""),
             "primaryCategory.name": (
                 item.get("primaryCategory", {}).get("name", "")
             ),
             "primaryCategory.relativePath": (
                 item.get("primaryCategory", {}).get("relativePath", "")
             ),
-            "verticalPhotos.type5.url": vertical_photo_type_5_url,
+            "posterUrl": vertical_photo_type_5_url,
         }
 
         # Lisab rea rows listi
