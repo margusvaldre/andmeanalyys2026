@@ -15,7 +15,7 @@ Küsimuse 1 vastus on kaks **100% virnlintdiagrammi** (horisontaalne virn, telg 
 | **Esitatud sisu struktuur** (presented content structure) | `staging.featured_daily` + meta | Mis jaotusega sisu kasutajaliideses esiletõstetakse |
 | **Vaadatud sisu struktuur** (viewed content structure) | `staging.viewers_raw` + meta | Mis jaotusega sisu tegelikult vaadatakse |
 
-Metaandmete CSV (pealkiri → sisutüüp, päritolumaa) on küsimuse 1 jaoks **kohustuslik**. Ilma selleta saab kuvada ainult vaheversiooni (nt kataloogi API kategooria või vaadatavuse `content_type`), mis ei vasta täielikult allikdiagrammidele.
+Küsimuse 1 täisdiagrammid eeldavad metaandmete CSV-d (`data/metadata/jupiter_metadata.csv` → `staging.content_metadata`). **Ilma meta laadimiseta** jääb alles vaheversioon (nt kataloogi API kategooria või vaadatavuse toor-`content_type`), mis ei vasta allikdiagrammidele.
 
 ### Äriküsimus 1 — mõõdikud (näidikulaud)
 
@@ -190,7 +190,7 @@ Enne cron'i peab uus vaadatavuse päevafail (`jupiter_d_YYYYMMDD-YYYYMMDD.csv`) 
 |------|------|---------|
 | ERR API ei vasta | Kataloog või esiletõstmine ei värskene | `pipeline_runs` status `failed`; log `logs/pipeline.log`; käivita uuesti |
 | Vaadatavuse CSV hilinemine | Sama päeva korrelatsioon puudub | Pane fail enne cron'i kausta; kontrolli `mart.title_match_daily` |
-| Pealkiri erineb allikate vahel | Madal match rate, vale ühendus | `mart.normalize_title`; meta CSV hiljem; vaata `catalog_title_changes` |
+| Pealkiri erineb allikate vahel | Madal match rate, vale ühendus | `mart.normalize_title`; kontrolli meta ↔ kataloogi kattuvust (`quality` reeglid); vaata `catalog_title_changes` |
 | Nädala- ja päevafail segamini | Vale interpretatsioon | `grain` on eraldi; nädala fail ei ole päevade summa |
 | API-st kadunud kataloogi rida | Vananenud rida jääb alles | Teadlik otsus; vajadusel tulevikus `is_active` lipp |
 | Scheduler ei tööta | Andmed vananevad | `docker compose logs scheduler`; kontrolli konteinerit |
@@ -205,8 +205,15 @@ Projekt kasutab **ainult sisutaseme statistikat** (pealkirjad, vaatamiste arvud,
 
 ## Järgmised arendusetapid
 
-1. ~~**Meta CSV ingest**~~ — olemas (`ingest_metadata_csv.py`, `staging.content_metadata`, `mart.content_structure_pct`).
-2. **Superset** — lisa päritolumaa diagramm datasetist `mart.v_superset_origin_pct` (sisutüüp: `mart.v_superset_content_type_pct`).
-3. **Andmekvaliteet** — laienda reegleid (nt meta ↔ kataloog match rate läve seadistamine).
+**Tehtud (toru ja mart):**
+
+- Meta CSV ingest — `ingest_metadata_csv.py`, `staging.content_metadata`, `mart.content_structure_pct`
+- Põhiandmekvaliteet — `quality.run_checks()` (sh meta ja staging reeglid), käivitus `run-all` lõpus
+- Superseti vaated ja dashboard — `mart.v_superset_origin_pct`, `mart.v_superset_content_type_pct`, graafikud **Päritolumaad** ja **Sisutüübid**
+
+**Järgmine töö (näidikulaud):**
+
+1. ~~**Superset — päritolumaa ja sisutüüp**~~ — imporditud graafikud `Päritolumaad` ja `Sisutüübid` (`superset/dashboard_export/`). Uuesti laadimiseks: `docs/superset.md`.
+2. **Andmekvaliteet** — laienda reegleid ja lävesid (nt meta ↔ kataloog match rate, automaatne hoiatus madala kattuvuse korral).
 
 Tehniline käivitusjuhend: juurkausta `README.md`.

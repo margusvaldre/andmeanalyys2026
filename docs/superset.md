@@ -38,30 +38,37 @@ Menüüst: **Dashboards** → **Jupiteri analüüs**
 | Graafik | Andmestik | Äriküsimus |
 |---------|-----------|------------|
 | Ühenduste kvaliteet | `mart.title_match_daily` | Andmekvaliteet / ühendused |
-| Struktuuri protsendid | `mart.v_superset_structure_pct` | 1 (vaheversioon) |
-| Esiletõstmine ja vaadatavus (sama päev) | `mart.v_featured_viewership` | 2 (tabelina; scatter eemaldatud impordi piirangute tõttu) |
+| **Päritolumaad** | `mart.v_superset_origin_pct` | 1A (100% virn, horisontaalne) |
+| **Sisutüübid** | `mart.v_superset_content_type_pct` | 1B (100% virn, horisontaalne) |
+| Esiletõstmine ja vaadatavus (sama päev) | `mart.v_featured_viewership` | 2 (tabelina) |
 | Top esiletõstetud | `mart.v_superset_featured_top` | Esiletõstmise ülevaade |
 
 Kui scatter on tühi, puuduvad sama päeva vaadatavuse andmed (vt `docs/arhitektuur.md`).
 
-## Äriküsimus 1 — täisversioon (meta CSV)
+## Äriküsimus 1 — struktuuridiagrammid (meta CSV)
 
-Kui `data/metadata/jupiter_metadata.csv` on laetud ja transform käinud, ehita kaks **horisontaalset 100% virnlintdiagrammi**:
+Pärast `run-all` imporditakse dashboardile kaks **horisontaalset 100% virnlintdiagrammi**, vastavalt näidistele:
 
-1. **Päritolumaad** — dataset `mart.v_superset_origin_pct` (read: kataloog / esitatud / vaadatud).
-2. **Sisutüübid** — dataset `mart.v_superset_content_type_pct` (sama loogika).
+| Näidis | Graafik | Andmestik |
+|--------|---------|-----------|
+| [`docs/images/päritolumaad.png`](images/päritolumaad.png) | **Päritolumaad** | `mart.v_superset_origin_pct` |
+| [`docs/images/sisutüübid.png`](images/sisutüübid.png) | **Sisutüübid** | `mart.v_superset_content_type_pct` |
 
-Olemasolev imporditud graafik **Struktuuri protsendid** kasutab vaadet `mart.v_superset_structure_pct`, mis pärast meta laadimist näitab sisutüüpe meta CSV-st (mitte vaadatavuse toor-koode ega kataloogi kategooriat).
+**Paigutus (nagu PNG-del, sildid eesti keeles):**
 
-Superseti seaded (Bar chart):
+- Kolm rida: *Kataloogi struktuur*, *Esitatud sisu struktuur*, *Vaadatud sisu struktuur*
+- Telg **0–100%**, virn = `segment` (päritolumaa või sisutüüp), mõõdik `SUM(pct)`, väärtused ribadel
+- Legend **paremal**; kategooriad tulevad `mart.ref_origin_labels` / `mart.ref_content_type_labels` tõlgetest
 
-- **X-axis:** `structure_label` (või sarnane väli)
-- **Metrics:** `SUM(pct)` või eelarvutatud `pct`
-- **Dimensions / Series:** kategooria (päritolumaa või sisutüüp)
-- **Stacked:** Stack
-- **Normalize / Contribution mode:** 100% (kui Superset pakub “Percentages” või “Contribution”)
+**Tume taust** (nagu PNG): Supersetis **Dashboard properties** → **Theme** / chart **Customize** → taust `#000000` (imporditud YAML ei sea alati teemat üle).
 
-Vaadatud rea puhul arvuta protsent **vaatamiste summast**, mitte ainult pealkirjade arvust.
+Olemasolevas DB-s uuenda vaated:
+
+```powershell
+docker compose exec db psql -U praktikum -d praktikum -f /docker-entrypoint-initdb.d/09_superset_display.sql
+```
+
+Kui graafik on tühi, kontrolli: `SELECT COUNT(*) FROM mart.content_structure_pct;` peab olema > 0 (meta ingest + transform).
 
 ## Scatter / bubble (korrelatsioon) käsitsi
 

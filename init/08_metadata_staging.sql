@@ -17,7 +17,7 @@ CREATE INDEX IF NOT EXISTS idx_content_metadata_origin
 CREATE INDEX IF NOT EXISTS idx_content_metadata_type
     ON staging.content_metadata (content_type_code);
 
--- Viitekoodid → eestikeelsed sildid (Superseti diagrammid).
+-- Viitekoodid → eestikeelsed sildid (mart.dim_content ja Superseti vaated v_superset_*_pct).
 CREATE TABLE IF NOT EXISTS mart.ref_origin_labels (
     origin_code TEXT PRIMARY KEY,
     origin_label TEXT NOT NULL

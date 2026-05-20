@@ -75,6 +75,7 @@ docker compose exec db psql -U praktikum -d praktikum -f /docker-entrypoint-init
 docker compose exec db psql -U praktikum -d praktikum -f /docker-entrypoint-initdb.d/06_superset_views.sql
 docker compose exec db psql -U praktikum -d praktikum -f /docker-entrypoint-initdb.d/07_quality_objects.sql
 docker compose exec db psql -U praktikum -d praktikum -f /docker-entrypoint-initdb.d/08_metadata_staging.sql
+docker compose exec db psql -U praktikum -d praktikum -f /docker-entrypoint-initdb.d/09_superset_display.sql
 ```
 
 `03_catalog_incremental.sql` loob `staging.catalog` (üks rida `catalog_id` kohta) ja täidab selle vajadusel vanast `catalog_raw`-st.
