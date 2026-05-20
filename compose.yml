@@ -118,7 +118,7 @@ services:
     command:
       - /bin/sh
       - -c
-      - "python /app/jupiter_superset/zip_dashboard.py /app/jupiter_superset/dashboard_export /tmp/jupiter_dashboard.zip && superset import-dashboards --path /tmp/jupiter_dashboard.zip --username $${SUPERSET_ADMIN_USER}"
+      - "python /app/jupiter_superset/zip_dashboard.py /app/jupiter_superset/dashboard_export /tmp/jupiter_dashboard.zip && superset import-dashboards --path /tmp/jupiter_dashboard.zip --username $${SUPERSET_ADMIN_USER} && python /app/jupiter_superset/sync_datasets.py"
     restart: "no"
 
   superset:

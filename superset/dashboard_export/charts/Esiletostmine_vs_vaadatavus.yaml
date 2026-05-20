@@ -1,5 +1,5 @@
 slice_name: Esiletõstmine ja vaadatavus (sama päev)
-description: Tabel — scatter jäi vanasse Superseti kirjesse vigaste parameetritega. Kui ridu pole, lae sama päeva vaadatavuse CSV ja käivita transform.
+description: Viimase esiletõstmise päev. views_total on täidetud ainult siis, kui sama päeva vaadatavuse CSV on olemas.
 viz_type: table
 params:
   datasource: c2222222-2222-4222-8222-000000000003__table

@@ -27,7 +27,7 @@ Kui port 8088 on hõivatud, muuda `.env` failis `SUPERSET_PORT_HOST=8089`.
 Veendu, et mart andmed on olemas:
 
 ```powershell
-docker compose exec db psql -U praktikum -d praktikum -f /docker-entrypoint-initdb.d/06_superset_views.sql
+docker compose exec db psql -U praktikum -d praktikum -f /docker-entrypoint-initdb.d/10_superset_views.sql
 docker compose exec pipeline python scripts/run_pipeline.py run-all
 ```
 
@@ -43,7 +43,7 @@ Menüüst: **Dashboards** → **Jupiteri analüüs**
 | Esiletõstmine ja vaadatavus (sama päev) | `mart.v_featured_viewership` | 2 (tabelina) |
 | Top esiletõstetud | `mart.v_superset_featured_top` | Esiletõstmise ülevaade |
 
-Kui scatter on tühi, puuduvad sama päeva vaadatavuse andmed (vt `docs/arhitektuur.md`).
+Kui `views_total` on tühi, ei kattu esiletõstmise ja vaadatavuse CSV päevad (nt featured 20.05, viewers 19.05). Graafik näitab siiski esiletõstmist; lae `data/viewers/` fail sama `feature_date` jaoks ja käivita `run-all`.
 
 ## Äriküsimus 1 — struktuuridiagrammid (meta CSV)
 
@@ -65,7 +65,7 @@ Pärast `run-all` imporditakse dashboardile kaks **horisontaalset 100% virnlintd
 Olemasolevas DB-s uuenda vaated:
 
 ```powershell
-docker compose exec db psql -U praktikum -d praktikum -f /docker-entrypoint-initdb.d/09_superset_display.sql
+docker compose exec db psql -U praktikum -d praktikum -f /docker-entrypoint-initdb.d/10_superset_views.sql
 ```
 
 Kui graafik on tühi, kontrolli: `SELECT COUNT(*) FROM mart.content_structure_pct;` peab olema > 0 (meta ingest + transform).
@@ -96,8 +96,8 @@ postgresql+psycopg2://praktikum:praktikum@db:5432/praktikum
 |----------|----------|
 | Dashboard puudub | `docker compose logs superset-import`; seejärel `docker compose up -d --build superset` |
 | Tühi graafik | Käivita `run-all`; kontrolli `SELECT COUNT(*) FROM mart.fact_content_daily` |
-| `superset-import` exit 1 | Vaata logi; kontrolli, et `06_superset_views.sql` on käinud |
-| `Columns missing in dataset` | Imporditud datasetil polnud veergude metaandmeid. **Lahendus A:** käivita uuesti import (vt allpool). **Lahendus B:** Supersetis **Data** → **Datasets** → vali dataset → **Columns** → **Sync columns from source**. |
+| `superset-import` exit 1 | Vaata logi; kontrolli, et `10_superset_views.sql` on käinud (pärast `08`) |
+| `Columns missing in dataset` | Vale graafik dashboardil (parandatud `chartId` impordis) või dataset ilma veergudeta. **Lahendus:** `docker compose run --rm --no-deps superset-import` (sisaldab `sync_datasets.py`) või **Data** → **Datasets** → **Sync columns from source**. |
 | **Issue 1011** / scatter `KeyError: None` | Superset salvestab graafiku **query_context**; import **ei kirjuta** olemasolevat chart UUID-d alati üle. Legacy scatter jättis `aggregate: null`. **Lahendus:** uus graafik **UUID** + **tabel** (repo uuendatud). Käivita import uuesti; **kustuta vana dashboard** Supersetis, kui näed kahte sama nimega plokki. Scatteri saad hiljem **Explore** → chart tüüp **Bubble** või **Bar**. |
 
 Dashboardi uuesti importimiseks (pärast `dashboard_export` muudatusi, nt veergude parandus):

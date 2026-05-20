@@ -525,24 +525,6 @@ CREATE OR REPLACE VIEW mart.v_content_daily AS
 SELECT *
 FROM mart.fact_content_daily;
 
--- Ainult read, kus on nii esiletõstmine kui vaadatavus (korrelatsioon).
-CREATE OR REPLACE VIEW mart.v_featured_viewership AS
-SELECT
-    activity_date,
-    title_normalized,
-    title,
-    primary_category_name,
-    content_type,
-    prominence_score_total,
-    views_total,
-    views_web,
-    views_app
-FROM mart.fact_content_daily
-WHERE in_featured
-  AND in_viewers
-  AND prominence_score_total IS NOT NULL
-  AND views_total IS NOT NULL;
-
 -- Viimane esiletõstmise päev.
 CREATE OR REPLACE VIEW mart.v_latest_featured_day AS
 SELECT MAX(feature_date) AS latest_feature_date
@@ -554,7 +536,23 @@ FROM mart.fact_content_daily AS f
 INNER JOIN mart.v_latest_featured_day AS d
     ON f.activity_date = d.latest_feature_date;
 
--- Superseti vaated (vt init/06_superset_views.sql).
+-- Viimase esiletõstmise päeva read (vaadatavus võib puududa, kui CSV päevad ei kattu).
+CREATE OR REPLACE VIEW mart.v_featured_viewership AS
+SELECT
+    activity_date,
+    title_normalized,
+    title,
+    primary_category_name,
+    content_type,
+    prominence_score_total,
+    views_total,
+    views_web,
+    views_app
+FROM mart.v_content_latest_day
+WHERE in_featured
+  AND prominence_score_total IS NOT NULL;
+
+-- Superseti vaated (vt init/10_superset_views.sql).
 -- Kui meta CSV on laetud, kasuta content_structure_pct; muidu vana vaheversioon.
 CREATE OR REPLACE VIEW mart.v_superset_structure_pct AS
 SELECT

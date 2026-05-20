@@ -60,7 +60,7 @@ position:
     children: []
     id: CHART-MATCH
     meta:
-      chartId: 1
+      chartId: 2
       height: 32
       sliceName: Ühenduste kvaliteet
       uuid: caaaaaaa-aaaa-4aaa-8aaa-000000000002
@@ -74,7 +74,7 @@ position:
     children: []
     id: CHART-ORIGIN
     meta:
-      chartId: 5
+      chartId: 3
       height: 56
       sliceName: Päritolumaad
       uuid: caaaaaaa-aaaa-4aaa-8aaa-000000000005
@@ -88,7 +88,7 @@ position:
     children: []
     id: CHART-TYPE
     meta:
-      chartId: 6
+      chartId: 4
       height: 56
       sliceName: Sisutüübid
       uuid: caaaaaaa-aaaa-4aaa-8aaa-000000000006
@@ -116,7 +116,7 @@ position:
     children: []
     id: CHART-TOP
     meta:
-      chartId: 4
+      chartId: 6
       height: 50
       sliceName: Top esiletõstetud
       uuid: caaaaaaa-aaaa-4aaa-8aaa-000000000004

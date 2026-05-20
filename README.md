@@ -28,12 +28,30 @@ Arenduses saad toru stardil käivitada (lisa `.env` faili `RUN_ON_STARTUP=true` 
 
 Superset: **http://localhost:8089** (vaikimisi port `.env.example` failis; kasutaja `admin`). Juhend: [`docs/superset.md`](docs/superset.md).
 
-Kui vana andmebaas segab, lähtesta:
+Kui vana andmebaas segab, lähtesta (kustutab kõik andmed):
 
 ```powershell
 docker compose down -v
 docker compose up -d --build
 ```
+
+Oota, kuni `docker compose ps` näitab `db`, `scheduler` ja `superset` olekus **healthy** (esimene Superseti build võib võtta mitu minutit). `superset-import` peab lõppema edukalt (vaata `docker compose logs superset-import`).
+
+**Täiesti uus andmebaas** saab skeemi automaatselt failidest `init/01` … `init/10` (esimene `docker compose up`; Superseti vaated on `10`, et käivitada pärast `08`).
+
+**Puhas paigaldus — kontrollnimekiri**
+
+```powershell
+copy .env.example .env
+docker compose down -v
+docker compose up -d --build
+docker compose ps
+docker compose exec pipeline python scripts/run_pipeline.py run-all
+```
+
+Oodatav `run-all` lõpp: `mart.dim_content` tuhandeid ridu, `v_featured_viewership` sadu ridu, kvaliteedikontrollid läbisid. Seejärel Superset: http://localhost:8089 → dashboard **Jupiteri analüüs**.
+
+**Olemasolev andmebaas** (nt kloonitud repo enne meta CSV-d) — käivita käsitsi kõik täiendavad skriptid (vt allpool jaotist „Vana andmebaas”).
 
 3. Lae andmed (kataloog + vaadatavus + esiletõstmine + meta CSV):
 
@@ -65,20 +83,44 @@ Täielik toru (sissevõtt + transform + kvaliteet):
 docker compose exec pipeline python scripts/run_pipeline.py run-all
 ```
 
-Kui andmebaas loodi enne uuemaid tabeleid, käivita üks kord:
+### Vana andmebaas — käsitsi skeemi täiendamine
+
+Kui andmebaas loodi **enne** uuemaid `init/*.sql` faile, PostgreSQL **ei käivita** neid uuesti automaatselt. Käivita üks kord (järjekord oluline):
 
 ```powershell
 docker compose exec db psql -U praktikum -d praktikum -f /docker-entrypoint-initdb.d/02_viewers_staging.sql
 docker compose exec db psql -U praktikum -d praktikum -f /docker-entrypoint-initdb.d/03_catalog_incremental.sql
 docker compose exec db psql -U praktikum -d praktikum -f /docker-entrypoint-initdb.d/04_featured_staging.sql
 docker compose exec db psql -U praktikum -d praktikum -f /docker-entrypoint-initdb.d/05_mart_objects.sql
-docker compose exec db psql -U praktikum -d praktikum -f /docker-entrypoint-initdb.d/06_superset_views.sql
 docker compose exec db psql -U praktikum -d praktikum -f /docker-entrypoint-initdb.d/07_quality_objects.sql
 docker compose exec db psql -U praktikum -d praktikum -f /docker-entrypoint-initdb.d/08_metadata_staging.sql
-docker compose exec db psql -U praktikum -d praktikum -f /docker-entrypoint-initdb.d/09_superset_display.sql
+docker compose exec db psql -U praktikum -d praktikum -f /docker-entrypoint-initdb.d/10_superset_views.sql
+```
+
+Kontrolli, et meta tabel on olemas:
+
+```powershell
+docker compose exec db psql -U praktikum -d praktikum -c "\dt staging.content_metadata"
+```
+
+Peaks näitama tabelit `staging.content_metadata`. Seejärel:
+
+```powershell
+docker compose exec pipeline python scripts/run_pipeline.py run-all
 ```
 
 `03_catalog_incremental.sql` loob `staging.catalog` (üks rida `catalog_id` kohta) ja täidab selle vajadusel vanast `catalog_raw`-st.
+
+### Levinud vead
+
+| Viga | Põhjus | Lahendus |
+|------|--------|----------|
+| `relation "staging.content_metadata" does not exist` | Puudub `init/08_metadata_staging.sql` (vana DB maht) | Käivita `08` ja `10` (vt ülal); seejärel `run-all` |
+| `function quality.run_checks does not exist` | Puudub `init/07_quality_objects.sql` | Käivita `07` |
+| `relation "staging.catalog" does not exist` | Puudub `init/03_catalog_incremental.sql` | Käivita `02`–`08` ja `10` või `docker compose down -v` ja uus `up` |
+| `db` konteiner exit 3 esimesel `up` | Vana init järjekord (`06` enne `08`) | `docker compose down -v` ja uus `up` (vajab `10_superset_views.sql`) |
+| Superset „Columns missing in dataset” | Vale dashboardi `chartId` või vana Superseti maht | `docker compose run --rm --no-deps superset-import` |
+| Tühi „Esiletõstmine ja vaadatavus” | Erinev featured vs viewers päev | Lae viewers CSV sama päevaks; `transform`; või vaata tabelit (views võib olla NULL) |
 
 4. Kontrolli tulemust:
 
