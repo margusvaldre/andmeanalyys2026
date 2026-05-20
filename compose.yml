@@ -1,0 +1,146 @@
+x-superset-build: &superset-build
+  context: .
+  dockerfile: Dockerfile.superset
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: andmeanalyys2026-db
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "${DB_PORT_HOST:-55433}:5432"
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d
+      - andmeanalyys2026_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-praktikum} -d ${POSTGRES_DB:-praktikum}"]
+      interval: 10s
+      retries: 5
+      start_period: 5s
+
+  pipeline:
+    build:
+      context: .
+      dockerfile: Dockerfile.pipeline
+    container_name: andmeanalyys2026-pipeline
+    env_file:
+      - .env
+    environment:
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_NAME: ${POSTGRES_DB}
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: ["sleep", "infinity"]
+
+  scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile.scheduler
+    container_name: andmeanalyys2026-scheduler
+    env_file:
+      - .env
+    environment:
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_NAME: ${POSTGRES_DB}
+      TZ: ${TZ:-Europe/Tallinn}
+      RUN_ON_STARTUP: ${RUN_ON_STARTUP:-false}
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - ./logs:/var/log/praktikum
+    working_dir: /app
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep cron >/dev/null"]
+      interval: 30s
+      retries: 3
+      start_period: 10s
+
+  superset-init:
+    build: *superset-build
+    container_name: andmeanalyys2026-superset-init
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./superset/superset_config.py:/app/superset_config.py
+      - andmeanalyys2026_superset_home:/app/superset_home
+    environment:
+      SUPERSET_CONFIG_PATH: /app/superset_config.py
+      DATABASE_URI: "postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"
+      SECRET_KEY: ${SUPERSET_SECRET_KEY:-jupiter_superset_secret_muuda_env_failis_2026}
+      TZ: ${TZ:-Europe/Tallinn}
+      ADMIN_USERNAME: ${SUPERSET_ADMIN_USER:-admin}
+      ADMIN_PASSWORD: ${SUPERSET_ADMIN_PASSWORD:-jupiter26}
+      ADMIN_EMAIL: ${SUPERSET_ADMIN_EMAIL:-admin@example.com}
+    command:
+      - /bin/sh
+      - -c
+      - "superset db upgrade && (superset fab create-admin --username $${ADMIN_USERNAME} --firstname Admin --lastname User --email $${ADMIN_EMAIL} --password $${ADMIN_PASSWORD} || true) && superset init"
+    restart: "no"
+
+  superset-import:
+    build: *superset-build
+    container_name: andmeanalyys2026-superset-import
+    depends_on:
+      superset-init:
+        condition: service_completed_successfully
+    volumes:
+      - ./superset/superset_config.py:/app/superset_config.py
+      - ./superset:/app/jupiter_superset
+      - andmeanalyys2026_superset_home:/app/superset_home
+    environment:
+      SUPERSET_CONFIG_PATH: /app/superset_config.py
+      DATABASE_URI: "postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"
+      SECRET_KEY: ${SUPERSET_SECRET_KEY:-jupiter_superset_secret_muuda_env_failis_2026}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_HOST: db
+      POSTGRES_PORT: "5432"
+      SUPERSET_ADMIN_USER: ${SUPERSET_ADMIN_USER:-admin}
+    command:
+      - /bin/sh
+      - -c
+      - "python /app/jupiter_superset/zip_dashboard.py /app/jupiter_superset/dashboard_export /tmp/jupiter_dashboard.zip && superset import-dashboards --path /tmp/jupiter_dashboard.zip --username $${SUPERSET_ADMIN_USER}"
+    restart: "no"
+
+  superset:
+    build: *superset-build
+    container_name: andmeanalyys2026-superset
+    depends_on:
+      superset-import:
+        condition: service_completed_successfully
+    ports:
+      - "${SUPERSET_PORT_HOST:-8089}:8088"
+    volumes:
+      - ./superset/superset_config.py:/app/superset_config.py
+      - andmeanalyys2026_superset_home:/app/superset_home
+    environment:
+      SUPERSET_CONFIG_PATH: /app/superset_config.py
+      DATABASE_URI: "postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"
+      SECRET_KEY: ${SUPERSET_SECRET_KEY:-jupiter_superset_secret_muuda_env_failis_2026}
+      TZ: ${TZ:-Europe/Tallinn}
+    command: ["/app/docker/entrypoints/run-server.sh"]
+
+volumes:
+  andmeanalyys2026_pgdata:
+    name: andmeanalyys2026_pgdata
+  andmeanalyys2026_superset_home:
+    name: andmeanalyys2026_superset_home
