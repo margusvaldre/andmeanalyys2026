@@ -1,7 +1,7 @@
 updated;title;origin;type
 20.05.2026;Adam Richman sööb nagu jalkafänn;UK;INFO
-20.05.2026;Al Pacino - staar vastu tahtmist;EU;CULTRURE
-20.05.2026;Alo elu;EST;CULTRURE
+20.05.2026;Al Pacino - staar vastu tahtmist;EU;CULTURE
+20.05.2026;Alo elu;EST;CULTURE
 20.05.2026;Alo laulud;EST;MUSIC
 20.05.2026;Apelsin ei asenda armastust;COPRO;LIFE
 20.05.2026;Argentina, äärmuste maa;EU;INFO
@@ -10,7 +10,7 @@ updated;title;origin;type
 20.05.2026;Attenborough ja sipelgate kuningriik;COPRO;LIFE
 20.05.2026;aug.91;EST;FILM
 20.05.2026;Austusavaldus Tema Majesteedile kuningannale;UK;INFO
-20.05.2026;Con amore;EST;CULTRURE
+20.05.2026;Con amore;EST;CULTURE
 20.05.2026;Das Boot. Ühe allveelaeva lugu;EU;FILM
 20.05.2026;David Attenborough' värvide maailm;COPRO;INFO
 20.05.2026;David Garrett: Alive;EU;MUSIC
@@ -4577,3 +4577,263 @@ updated;title;origin;type
 20.05.2026;XXXV Pärnu Filmifestivali kommentaarid;EST;CULTURE
 20.05.2026;XXXVIII Pärnu Filmifestivali võidufilm Mängi surnut!;EU;LIFE
 20.05.2026;Yves Montand'i laulud;EST;MUSIC
+21.05.2026;Teatrietendus. Teatridirektor;EST;MUSIC
+21.05.2026;Teatrietendus. Hamlet;EST;FILM
+21.05.2026;Teatrietendus. Lahtihüpe;EST;FILM
+21.05.2026;Teatrietendus. Mäng lossis;EST;FILM
+21.05.2026;Teatrietendus. Saateviga;EST;FILM
+21.05.2026;Teatrietendus. Säärane mulk ehk Sada vakka tangusoola;EST;FILM
+21.05.2026;Teatrietendus. Pisuhänd;EST;FILM
+21.05.2026;Teatrietendus. ...mina pean teed juua saama!;EST;FILM
+21.05.2026;Teatrietendus. Antigone;EST;FILM
+21.05.2026;Teatrietendus. Arkaadia;EST;FILM
+21.05.2026;Teatrietendus. Aruanne;EST;FILM
+21.05.2026;Teatrietendus. Bernarda Alba maja;EST;FILM
+21.05.2026;Teatrietendus. Cinzano;EST;FILM
+21.05.2026;Teatrietendus. Džinnimäng;EST;FILM
+21.05.2026;Teatrietendus. Emadepäev;EST;FILM
+21.05.2026;Teatrietendus. Epp Pillarpardi Punjaba potitehas;EST;FILM
+21.05.2026;Teatrietendus. Farss pastoraadis;EST;FILM
+21.05.2026;Teatrietendus. Füüsikud;EST;FILM
+21.05.2026;Teatrietendus. Grupipilt;EST;FILM
+21.05.2026;Teatrietendus. Gulliver ja Gulliver;EST;FILM
+21.05.2026;Teatrietendus. Hapu vein ja sinihape;EST;FILM
+21.05.2026;Teatrietendus. Hiirelõks;EST;FILM
+21.05.2026;Teatrietendus. Hommikusöök tundmatutega;EST;FILM
+21.05.2026;Teatrietendus. Häda mõistuse pärast;EST;FILM
+21.05.2026;Teatrietendus. Iha jalakate all;EST;FILM
+21.05.2026;Teatrietendus. Impro 1 - Põhjakonn;EST;FILM
+21.05.2026;Teatrietendus. Ingel, ingel, vii mind taeva;EST;FILM
+21.05.2026;Teatrietendus. Inimene ja inimene;EST;FILM
+21.05.2026;Teatrietendus. Isamaa pääsukesed;EST;FILM
+21.05.2026;Teatrietendus. Jalutuskäik vikerkaarel;EST;FILM
+21.05.2026;Teatrietendus. Juudit;EST;FILM
+21.05.2026;Teatrietendus. Järglased;EST;FILM
+21.05.2026;Teatrietendus. Kahekesi Teisel avenüül;EST;FILM
+21.05.2026;Teatrietendus. Karin. Indrek. Tõde ja õigus 4;EST;FILM
+21.05.2026;Teatrietendus. Kauka jumal;EST;FILM
+21.05.2026;Teatrietendus. Kena naine lillega...;EST;FILM
+21.05.2026;Teatrietendus. Kes aevastas?;EST;FILM
+21.05.2026;Teatrietendus. Kes kardab Virginia Woolfi?;EST;FILM
+21.05.2026;Teatrietendus. Kevade;EST;FILM
+21.05.2026;Teatrietendus. Kohvioad;EST;FILM
+21.05.2026;Teatrietendus. Kolm korda üle õla;EST;FILM
+21.05.2026;Teatrietendus. Kolm õde;EST;FILM
+21.05.2026;Teatrietendus. Krahv Luxemburg;EST;MUSIC
+21.05.2026;Teatrietendus. Krahvinna Mariza;EST;MUSIC
+21.05.2026;Teatrietendus. Kremli ööbikud;EST;FILM
+21.05.2026;Teatrietendus. Kullervo;EST;FILM
+21.05.2026;Teatrietendus. Kõik aias;EST;FILM
+21.05.2026;Teatrietendus. Kõrboja peremees;EST;FILM
+21.05.2026;Teatrietendus. Leekrüübe;EST;FILM
+21.05.2026;Teatrietendus. Lollid;EST;FILM
+21.05.2026;Teatrietendus. Marlene;EST;FILM
+21.05.2026;Teatrietendus. Mees, naine ja kontsert;EST;FILM
+21.05.2026;Teatrietendus. Meistriklass;EST;FILM
+21.05.2026;Teatrietendus. Mikumärdi;EST;FILM
+21.05.2026;Teatrietendus. Montmartre'i kannike;EST;MUSIC
+21.05.2026;Teatrietendus. Mägede iluduskuninganna;EST;FILM
+21.05.2026;Teatrietendus. Nukumaja;EST;FILM
+21.05.2026;Teatrietendus. Oklahoma;EST;FILM
+21.05.2026;Teatrietendus. Palju õnne argipäevaks;EST;FILM
+21.05.2026;Teatrietendus. Peenike pere;EST;FILM
+21.05.2026;Teatrietendus. Pianoola ehk mehhaaniline klaver;EST;FILM
+21.05.2026;Teatrietendus. Poiste sõidud;EST;FILM
+21.05.2026;Teatrietendus. Polkovniku lesk;EST;FILM
+21.05.2026;Teatrietendus. Pruutide kool;EST;FILM
+21.05.2026;Teatrietendus. Rakvere romanss;EST;FILM
+21.05.2026;Teatrietendus. Romeo ja Julia;EST;FILM
+21.05.2026;Teatrietendus. Roosiaed;EST;FILM
+21.05.2026;Teatrietendus. Rästiku pihtimus;EST;FILM
+21.05.2026;Teatrietendus. Silme ees läheb mustaks;EST;FILM
+21.05.2026;Teatrietendus. Skangpoomijad;EST;FILM
+21.05.2026;Teatrietendus. Superdiskor;EST;FILM
+21.05.2026;Teatrietendus. Südames sündinud;EST;FILM
+21.05.2026;Teatrietendus. Sügisõhtul;EST;FILM
+21.05.2026;Teatrietendus. Taevas, muld ja tulevik;EST;FILM
+21.05.2026;Teatrietendus. Tagahoovis;EST;FILM
+21.05.2026;Teatrietendus. Topeltkokteil;EST;FILM
+21.05.2026;Teatrietendus. Tuuleiil;EST;FILM
+21.05.2026;Teatrietendus. Tuvi;EST;FILM
+21.05.2026;Teatrietendus. Tühivaim;EST;FILM
+21.05.2026;Teatrietendus. Vaimude tund Kadrioru lossis;EST;FILM
+21.05.2026;Teatrietendus. Valge tee kutse;EST;FILM
+21.05.2026;Teatrietendus. Ühe katuse all;EST;FILM
+21.05.2026;Teatrietendus. Ühe koosoleku protokoll;EST;FILM
+21.05.2026;Telelavastus. Lunastus;EST;FILM
+21.05.2026;Telelavastus. Armujook;EST;FILM
+21.05.2026;Telelavastus. Kuulsuse narrid;EST;FILM
+21.05.2026;Telelavastus. Ma armastasin sakslast;EST;FILM
+21.05.2026;Telelavastus. McGregori juhtum;EST;FILM
+21.05.2026;Telelavastus. Meie maja tsirkus;EST;FILM
+21.05.2026;Telelavastus. Minu veetlev Kunder;EST;FILM
+21.05.2026;Telelavastus. Naine, kes saabus kell kuus;EST;FILM
+21.05.2026;Telelavastus. Odav spetsialist;EST;FILM
+21.05.2026;Telelavastus. Pildikesi Paunverest;EST;FILM
+21.05.2026;Telelavastus. Pulmatragöödia;EST;FILM
+21.05.2026;Telelavastus. Püha Katariina pöörane õhtusöömaaeg;EST;FILM
+21.05.2026;Telelavastus. Püha Susanna ehk Meistrite kool;EST;FILM
+21.05.2026;Telelavastus. Sa oled koor minu kohvis;EST;FILM
+21.05.2026;Telelavastus. Teatrifantoom;EST;FILM
+21.05.2026;Telelavastus. Tema majesteet komödiant;EST;FILM
+21.05.2026;Telelavastus. Uus jõuluvana;EST;FILM
+21.05.2026;Telelavastus. Vigased pruudid;EST;FILM
+21.05.2026;Telelavastus. Üle linna Vinski;EST;FILM
+21.05.2026;Telelavastus. Tuleb tuttav ette;EST;CULTURE
+21.05.2026;Telelavastus. 5 grammi sisemist rahu;EST;FILM
+21.05.2026;Telelavastus. Ametialased suhted;EST;FILM
+21.05.2026;Telelavastus. Amoraalne lugu;EST;FILM
+21.05.2026;Telelavastus. Armastuse ja juhuse mäng;EST;FILM
+21.05.2026;Telelavastus. Avameelsete kõneluste õhtu;EST;FILM
+21.05.2026;Telelavastus. Ebajumal;EST;FILM
+21.05.2026;Telelavastus. Elavad surnud;EST;FILM
+21.05.2026;Telelavastus. Fenomenid;EST;FILM
+21.05.2026;Telelavastus. Juhtum seoses A. Trapeeži teisikuga;EST;FILM
+21.05.2026;Telelavastus. Kahe kodu ballaad;EST;FILM
+21.05.2026;Telelavastus. Kaheksa armastavat naist;EST;FILM
+21.05.2026;Telelavastus. Kala neljale;EST;FILM
+21.05.2026;Telelavastus. Kallid külalised;EST;FILM
+21.05.2026;Telelavastus. Kallima naeratus;EST;FILM
+21.05.2026;Telelavastus. Kassimäng;EST;FILM
+21.05.2026;Telelavastus. Koduhani;EST;FILM
+21.05.2026;Telelavastus. Koera süda;EST;FILM
+21.05.2026;Telelavastus. Kohtume alleel;EST;FILM
+21.05.2026;Telelavastus. Kriminaaltango ja väga korralikud inimesed;EST;FILM
+21.05.2026;Telelavastus. Leedi Windermere'i lehvik;EST;FILM
+21.05.2026;Telelavastus. Legend hundimõrsjast;EST;FILM
+21.05.2026;Telelavastus. Linnapea ehk Hirmu põhivormid;EST;FILM
+21.05.2026;Telelavastus. Minu visiitkaart;EST;FILM
+21.05.2026;Telelavastus. Mrs. McWilliams ja äike;EST;FILM
+21.05.2026;Telelavastus. Musta katuse all;EST;FILM
+21.05.2026;Telelavastus. Mäng tulega;EST;FILM
+21.05.2026;Telelavastus. Mängumõrv;EST;FILM
+21.05.2026;Telelavastus. Puhkepäev;EST;FILM
+21.05.2026;Telelavastus. Püha öö, üksildusöö;EST;FILM
+21.05.2026;Telelavastus. Rudolf ja Irma;EST;FILM
+21.05.2026;Telelavastus. Saaremaa onupoeg;EST;FILM
+21.05.2026;Telelavastus. Soo;EST;FILM
+21.05.2026;Telelavastus. Tulge minu juurde;EST;FILM
+21.05.2026;Telelavastus. Viimane suvi;EST;FILM
+21.05.2026;Telelavastus. Viimne lahing;EST;FILM
+21.05.2026;Telelavastus. Äkki juhtub midagi;EST;FILM
+21.05.2026;20. Augusti Klubi ja XIV Riigikogu pidulik istung;EST;INFO
+21.05.2026;Abramovitš: oligarh Putini hõlma all;EU;INFO
+21.05.2026;Anu Kaal operetis;EST;MUSIC
+21.05.2026;Cabaret Siberia;EST;FILM
+21.05.2026;Cheri lugu;UK;CULTURE
+21.05.2026;Dünastiad;UK;INFO
+21.05.2026;EV100. Elamuste aasta;EST;CULTURE
+21.05.2026;EV100. Sajaga edasi, Eesti!;EST;ENTER
+21.05.2026;Edmond;EU;FILM
+21.05.2026;Eesti Filharmoonia Kammerkoor ja Daniel Reuss;EST;MUSIC
+21.05.2026;Eesti eurolaulud viipekeeles;EST;MUSIC
+21.05.2026;Eesti parimad ehitised 2021;EST;LIFE
+21.05.2026;Eesti tänab 2022. Riiklike teenetemärkide üleandmine;EST;INFO
+21.05.2026;Elisabet Reinsalu. Sõnateatri näitleja elulaval;EST;CULTURE
+21.05.2026;Emalõvi;EST;FILM
+21.05.2026;Erakordne tenor. Placido Domingo;EST;ENTER
+21.05.2026;Ettevaatust, habras! Brenne'i järved;EU;INFO
+21.05.2026;Eurovisioon 2001 Kopenhaagenis: Lava taga;EST;ENTER
+21.05.2026;Eurovisiooni laulud 2026 (eesti viipekeeles);EU;MUSIC
+21.05.2026;Eurovisiooni lauluvõistlus 2026;EU;MUSIC
+21.05.2026;Eurovisiooni lauluvõistlus 2026. Finaal (eesti viipekeeles);EU;MUSIC
+21.05.2026;Eurovisioonid;EU;CULTURE
+21.05.2026;Everybody! Nädal pärast võitu;EST;CULTURE
+21.05.2026;Film filmist: Kinnunen;EST;CULTURE
+21.05.2026;"Filmisaade ""Jupiter"" – Ahto Vesmes";EST;CULTURE
+21.05.2026;Folklooriansambel Leegajus;EST;MUSIC
+21.05.2026;Hernehirmutised;EU;LIFE
+21.05.2026;Hiina - iidne looduse kuningriik;COPRO;INFO
+21.05.2026;Hitleri toidumaitsjad;COPRO;FILM
+21.05.2026;Härra Eikeegi Putini vastu;COPRO;LIFE
+21.05.2026;Idée fixe. Ain Kaalep;EST;CULTURE
+21.05.2026;Ingeborg Bachmann – teekond kõrbe;COPRO;FILM
+21.05.2026;Ja kuningas ütles, kui imeline masin;NORDICS;LIFE
+21.05.2026;Jaak Lutsoja Kvintett teatris NO99;EST;MUSIC
+21.05.2026;Jack Garfein: vastuvoolu;EU;CULTURE
+21.05.2026;Jana - igaveseks märgitud;NORDICS;SERIES
+21.05.2026;Juubelijuttu Margarita Voitesega;EST;CULTURE
+21.05.2026;Jõulutähed. Saara Pius, Stig Rästa ja Victor Crone;EST;MUSIC
+21.05.2026;KAMP Arhitektid. Mõtteruum;EST;CULTURE
+21.05.2026;Kabinettide kiuste: telerahva lood;EST;CULTURE
+21.05.2026;Kadunud;UK;SERIES
+21.05.2026;Kalifaat;NORDICS;SERIES
+21.05.2026;Kapsapea;EST;ANIMA
+21.05.2026;Karu südame jälgedes;EST;CULTURE
+21.05.2026;Kevadine kärbes;EST;ANIMA
+21.05.2026;Kodu on koht, kus ma kunagi olnud ei ole;EST;LIFE
+21.05.2026;Kodused kontserdid. Liina Saar;EST;MUSIC
+21.05.2026;Kontserdisaalis;EST;MUSIC
+21.05.2026;Kroonu onu;EST;FILM
+21.05.2026;Kuidas tehti Eurovisiooni;EST;CULTURE
+21.05.2026;Kuidas valmistutakse Eurovisiooniks Viinis;EST;ENTER
+21.05.2026;Kultuurkapitali aastapreemiad 2021;EST;CULTURE
+21.05.2026;Kuninglik skandaal;UK;SERIES
+21.05.2026;Lahedad lapsed;EST;SERIES
+21.05.2026;Lenda minuga - lennunduse kuldajastu;EU;LIFE
+21.05.2026;Lendutõus. Ants Laikmaa;EST;CULTURE
+21.05.2026;Liblikad: looduse superkangelased;EU;INFO
+21.05.2026;Linnahall;EST;INFO
+21.05.2026;Litvinenko;COPRO;SERIES
+21.05.2026;Londoni linnaloodus;UK;INFO
+21.05.2026;Lugu tuleb või?;EST;LIFE
+21.05.2026;Luuleteater;EST;SERIES
+21.05.2026;Läätse valemi tõestamine;EST;CULTURE
+21.05.2026;Lõhestatud NATO;REST;INFO
+21.05.2026;Mariah Carey. Südikus ja sära;UK;CULTURE
+21.05.2026;Martin Clunesiga Atlandi ookeani saartel;UK;INFO
+21.05.2026;Message in a Bottle;UK;MUSIC
+21.05.2026;Metsikud jõugud;EU;INFO
+21.05.2026;Mitme näoga mees - Hendrik Toompere;EST;CULTURE
+21.05.2026;Murieli pulm;REST;FILM
+21.05.2026;Muutuv planeet;UK;INFO
+21.05.2026;Mõnuste paemurru lugu;EST;LIFE
+21.05.2026;Mõttemaal;EST;ENTER
+21.05.2026;Noortebänd 2020;EST;ENTER
+21.05.2026;Noortemuusika;EST;MUSIC
+21.05.2026;Noémie ütleb jah;USACAN;FILM
+21.05.2026;Paavo Järvi ja Eesti Festivaliorkester Pärnus 2019;EST;MUSIC
+21.05.2026;Pailapsiin;EST;SERIES
+21.05.2026;Peegelmaastikus. Ain Kaalep;EST;CULTURE
+21.05.2026;Pianist;COPRO;FILM
+21.05.2026;Pulmapilt;EST;FILM
+21.05.2026;Puritaanlased;EST;MUSIC
+21.05.2026;Putini salarelvad;EU;INFO
+21.05.2026;Päikese kodanik;EST;CULTURE
+21.05.2026;Pärlipeegeldused. Laulab Margarita Voites;EST;MUSIC
+21.05.2026;Põhjaekspress;EU;INFO
+21.05.2026;Rahvalood;COPRO;LIFE
+21.05.2026;Raudne eesriie. Elu Nõukogude okupatsiooni tingimustes;EU;INFO
+21.05.2026;Rein Veidemann. Mõjutused;EST;CULTURE
+21.05.2026;Reykjavíki fusioon;COPRO;SERIES
+21.05.2026;Riigi preemiad parimatele;EST;CULTURE
+21.05.2026;Rootsi kuningas Karl XVI Gustav ja kuninganna Silvia visiit Eestisse;EST;LIFE
+21.05.2026;Rännud kaugemale;EST;CULTURE
+21.05.2026;Siin. Praegu. Pärast;USACAN;FILM
+21.05.2026;Sinu värv;REST;ANIMA
+21.05.2026;Sisemine lõõm: Reekviem Katia ja Maurice Krafftile;COPRO;LIFE
+21.05.2026;Suur aastalõpuviktoriin 2021;EST;ENTER
+21.05.2026;Suure reede jumalateenistus Viimsi Püha Jaakobi kirikus;EST;CULTURE
+21.05.2026;Sündis inimene;EST;LIFE
+21.05.2026;Tammetõru seiklused;EST;SERIES
+21.05.2026;Teatrietendus. Obinitsa;EST;FILM
+21.05.2026;Telelavastus. 1991;EST;FILM
+21.05.2026;Telelavastus. Pisuhänd;EST;FILM
+21.05.2026;Tilda Swinton. Soopiiride nihutaja;EU;CULTURE
+21.05.2026;Toetame Ukrainat! Ülekanne Vabaduse väljakult;EST;LIFE
+21.05.2026;Torn;EST;LIFE
+21.05.2026;Truu naine;EST;FILM
+21.05.2026;"Tänukontsert ""Aitäh!""";EST;MUSIC
+21.05.2026;Tšornobõl 22;REST;INFO
+21.05.2026;Vahelduvad maskid. Teo Maiste;EST;CULTURE
+21.05.2026;Vana nali;EST;ENTER
+21.05.2026;Vanameeste paradiis;EST;FILM
+21.05.2026;Vanilla Ninja. Suhkrust ja terasest;EST;ENTER
+21.05.2026;Varastatud kohtumine;EST;FILM
+21.05.2026;Vastutav. Laastatud planeedil äri ajada ei saa;EU;INFO
+21.05.2026;Vestlused sõpradega;UK;SERIES
+21.05.2026;Veteranirock 2026;EST;MUSIC
+21.05.2026;Vetikate lummuses;REST;LIFE
+21.05.2026;Väljasuremine: faktid;UK;INFO
+21.05.2026;Ämblikmees: Kojutulek;USACAN;FILM
+21.05.2026;Õhukesel jääl. Putin ja Greenpeace;UK;INFO
