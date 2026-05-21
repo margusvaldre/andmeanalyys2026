@@ -129,7 +129,7 @@ docker compose exec db psql -U praktikum -d praktikum -c "SELECT COUNT(*) FROM s
 docker compose exec db psql -U praktikum -d praktikum -c "SELECT * FROM staging.catalog_title_changes ORDER BY detected_at DESC LIMIT 5;"
 docker compose exec db psql -U praktikum -d praktikum -c "SELECT grain, COUNT(*) FROM staging.viewers_raw GROUP BY grain;"
 docker compose exec db psql -U praktikum -d praktikum -c "SELECT feature_date, COUNT(*) FROM staging.featured_daily GROUP BY feature_date;"
-docker compose exec db psql -U praktikum -d praktikum -c "SELECT title, prominence_score_total FROM staging.featured_daily ORDER BY prominence_score_total DESC LIMIT 10;"
+docker compose exec db psql -U praktikum -d praktikum -c "SELECT title, prominence_score_total, feature_date FROM staging.featured_daily ORDER BY prominence_score_total DESC LIMIT 10;"
 docker compose exec db psql -U praktikum -d praktikum -c "SELECT run_id, source_name, status, row_count FROM staging.pipeline_runs ORDER BY started_at DESC LIMIT 5;"
 docker compose exec db psql -U praktikum -d praktikum -c "SELECT activity_date, featured_count, catalog_match_pct, viewers_match_pct FROM mart.title_match_daily;"
 docker compose exec db psql -U praktikum -d praktikum -c "SELECT source, SUM(title_count) FROM mart.content_by_source GROUP BY source;"
