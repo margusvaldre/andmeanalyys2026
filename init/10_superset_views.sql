@@ -140,12 +140,14 @@ WHERE dimension = 'content_type';
 
 CREATE OR REPLACE VIEW mart.v_superset_featured_top AS
 SELECT
-    title,
-    prominence_score_total,
-    views_total,
-    in_catalog,
-    primary_category_name
-FROM mart.v_content_latest_day
-WHERE in_featured
-ORDER BY prominence_score_total DESC
+    v.title,
+    v.prominence_score_total,
+    v.views_total,
+    f.in_catalog,
+    v.primary_category_name
+FROM mart.v_featured_viewership AS v
+INNER JOIN mart.v_content_latest_day AS f
+    ON v.title_normalized = f.title_normalized
+WHERE FALSE
+ORDER BY v.prominence_score_total DESC
 LIMIT 50;

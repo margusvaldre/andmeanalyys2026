@@ -43,7 +43,7 @@ Menüüst: **Dashboards** → **Jupiteri analüüs**
 | Esiletõstmine ja vaadatavus (sama päev) | `mart.v_featured_viewership` | 2 (tabelina) |
 | Top esiletõstetud | `mart.v_superset_featured_top` | Esiletõstmise ülevaade |
 
-Kui `views_total` on tühi, ei kattu esiletõstmise ja vaadatavuse CSV päevad (nt featured 20.05, viewers 19.05). Graafik näitab siiski esiletõstmist; lae `data/viewers/` fail sama `feature_date` jaoks ja käivita `run-all`.
+Kui esiletõstmise päev on uuem kui viimane viewers CSV (nt featured 21.05, daily viewers 19.05), täidab `mart.v_featured_viewership` `views_total` **viimase olemasoleva** vaadatavuse päevaga sama pealkirja kohta (mitte sama kalendripäev). Täpne sama päev: lisa `data/viewers/jupiter_d_YYYYMMDD-YYYYMMDD.csv` ja käivita `run-all`.
 
 ## Äriküsimus 1 — struktuuridiagrammid (meta CSV)
 

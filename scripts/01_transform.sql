@@ -536,21 +536,34 @@ FROM mart.fact_content_daily AS f
 INNER JOIN mart.v_latest_featured_day AS d
     ON f.activity_date = d.latest_feature_date;
 
--- Viimase esiletõstmise päeva read (vaadatavus võib puududa, kui CSV päevad ei kattu).
+-- Viimase esiletõstmise päev; kui sama päeva viewers puudub, täida viimase olemasoleva päeva vaatega.
 CREATE OR REPLACE VIEW mart.v_featured_viewership AS
+WITH latest_viewers_by_title AS (
+    SELECT DISTINCT ON (title_normalized)
+        title_normalized,
+        views_total,
+        views_web,
+        views_app
+    FROM mart.fact_content_daily
+    WHERE in_viewers
+      AND views_total IS NOT NULL
+    ORDER BY title_normalized, activity_date DESC
+)
 SELECT
-    activity_date,
-    title_normalized,
-    title,
-    primary_category_name,
-    content_type,
-    prominence_score_total,
-    views_total,
-    views_web,
-    views_app
-FROM mart.v_content_latest_day
-WHERE in_featured
-  AND prominence_score_total IS NOT NULL;
+    f.activity_date,
+    f.title_normalized,
+    f.title,
+    f.primary_category_name,
+    f.content_type,
+    f.prominence_score_total,
+    COALESCE(f.views_total, lv.views_total) AS views_total,
+    COALESCE(f.views_web, lv.views_web) AS views_web,
+    COALESCE(f.views_app, lv.views_app) AS views_app
+FROM mart.v_content_latest_day AS f
+LEFT JOIN latest_viewers_by_title AS lv
+    ON f.title_normalized = lv.title_normalized
+WHERE f.in_featured
+  AND f.prominence_score_total IS NOT NULL;
 
 -- Superseti vaated (vt init/10_superset_views.sql).
 -- Kui meta CSV on laetud, kasuta content_structure_pct; muidu vana vaheversioon.
@@ -693,12 +706,13 @@ WHERE dimension = 'content_type';
 
 CREATE OR REPLACE VIEW mart.v_superset_featured_top AS
 SELECT
-    title,
-    prominence_score_total,
-    views_total,
-    in_catalog,
-    primary_category_name
-FROM mart.v_content_latest_day
-WHERE in_featured
-ORDER BY prominence_score_total DESC
+    v.title,
+    v.prominence_score_total,
+    v.views_total,
+    f.in_catalog,
+    v.primary_category_name
+FROM mart.v_featured_viewership AS v
+INNER JOIN mart.v_content_latest_day AS f
+    ON v.title_normalized = f.title_normalized
+ORDER BY v.prominence_score_total DESC
 LIMIT 50;
