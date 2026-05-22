@@ -10,7 +10,7 @@
 
 ## Mõõdikud
 
-1. Žanrite ja päritolumaade osatähtsused (%) erinevates kihtides (kataloog, esiletõstetus, vaadatavus)
+1. Žanrite ja päritolumaade osatähtsused (%) erinevates kihtides (kataloog, esiletõstetus, vaadatavus). Osatähtsus % = vastava žanri/päritolumaa nimetuste arv (kihis) jagatud koguarvuga * 100% . Valemit rakendatakse kõikidele kihtidele eraldi. Kihtide tulemusi võrreldakse omavahel.
 2. Sisunimetuste esiletõstetuse skoorid
 3. Korrelatsioonid esiletõstetuse ja vaadatavuse vahel
 
