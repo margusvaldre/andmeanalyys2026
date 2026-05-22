@@ -10,9 +10,9 @@
 
 ## Mõõdikud
 
-1. [Esimene mõõdik — kirjelda, mida arvutate ja kuidas]
-2. [Teine mõõdik]
-3. [Kolmas mõõdik — vabatahtlik]
+1. Žanrite ja päritollumaade osatähtsused (%) erinevates kihtides (kataloog, esiletõstetus, vaadatavus)
+2. Sisunimetuste esiletõstetuse skoorid
+3. Korrelatsioonid esiletõstetuse ja vaadatavuse vahel
 
 ## Andmeallikad
 
