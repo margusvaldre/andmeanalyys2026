@@ -29,7 +29,7 @@ INSERT INTO mart.ref_origin_labels (origin_code, origin_label) VALUES
     ('UK', 'Ühendkuningriik'),
     ('USACAN', 'USA ja Kanada'),
     ('NORDICS', 'Põhjamaad'),
-    ('COPRO', 'Kaastoimeline'),
+    ('COPRO', 'Kaastootmine'),
     ('REST', 'Ülejäänud maailm')
 ON CONFLICT (origin_code) DO NOTHING;
 
@@ -49,7 +49,7 @@ INSERT INTO mart.ref_content_type_labels (content_type_code, content_type_label)
     ('SPORT', 'Sport'),
     ('INFOTAINMENT', 'Infotainment'),
     ('NEWS', 'Uudised'),
-    ('ANIMA', 'Animafilmid'),
+    ('ANIMA', 'Anima'),
     ('EDU', 'Haridus')
 ON CONFLICT (content_type_code) DO NOTHING;
 
