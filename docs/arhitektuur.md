@@ -65,5 +65,4 @@ flowchart LR
 
 ## Privaatsus ja turve
 
-[Kirjelda, millised isiku- või tundlikud andmed teie projektis esinevad (kui üldse) ja kuidas neid kaitsete. Isikuandmed peavad olema anonümiseeritud. Andmebaasi paroolid peavad tulema `.env` failist.]
-Projekt kasutab ainult avalikke andmeid. Isikuandmeid ei koguta. ???Andmebaasi kasutajanimi ja parool tulevad .env failist. .env faili ei tohi reposse lisada.
+Projekt kasutab ainult avalikke andmeid. Isikuandmeid ei koguta. [Andmebaasi paroolid peavad tulema `.env` failist.]Andmebaasi kasutajanimi ja parool tulevad .env failist. .env faili ei tohi reposse lisada.
