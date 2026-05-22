@@ -60,7 +60,7 @@ flowchart LR
 | Risk | Mõju | Maandus |
 |------|------|---------|
 | [Risk 1 — näiteks: API ei vasta] | [Mis juhtub?] | [Kuidas maandad?] |
-| [Risk 2] | [Mis juhtub?] | [Kuidas maandad?] |
+| [Risk 2 - sisnimetused erinevates kihtides ei ole vastavuses] | Sisunimetus on olemas kataloogis, kuid ei saa esletõstetuse ja/või vaadatavuse näitajaid. Sisu on vaadataud, aga sama nimetus ei esine kataloogis. Jne | [Kuidas maandad?] |
 | [Risk 3] | [Mis juhtub?] | [Kuidas maandad?] |
 
 ## Privaatsus ja turve
