@@ -51,7 +51,7 @@ flowchart LR
 | Andmeallika omanik | Kirjutab sissevõtu loogika, hoiab API-t töös | Raul Lobanov |
 | Transformatsioonide omanik | Kirjutab mart kihi mudelid ja mõõdikute arvutuse | [Nimi] |
 | Kvaliteedi omanik | Kirjutab testid ja vaatab läbi ebaõnnestunud kontrollid | [Nimi] |
-| Näidikulaua omanik | Ehitab näidikulaua ja seob selle äriküsimusega | [Nimi] |
+| Näidikulaua omanik | Ehitab näidikulaua ja seob selle äriküsimusega | Anu Aus |
 
 ## Riskid
 
