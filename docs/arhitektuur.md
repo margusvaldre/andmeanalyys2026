@@ -1,6 +1,4 @@
 # Arhitektuur
->[!WARNING]
-**Juhend:** See fail on projektitöö esimese nädala väljund. Asenda kõik nurksulgudes plankid oma projekti tegeliku sisuga. Kustuta see juhendrida.
 
 ## Äriküsimus
 
@@ -11,8 +9,8 @@
 ## Mõõdikud
 
 1. Žanrite ja päritolumaade osatähtsused (%) erinevates kihtides (kataloog, esiletõstetus, vaadatavus). Osatähtsus % = vastava žanri/päritolumaa nimetuste arv (kihis) jagatud koguarvuga * 100% . Valemit rakendatakse kõikidele kihtidele eraldi. Kihtide tulemusi võrreldakse omavahel.
-2. Sisunimetuste esiletõstetuse skoorid
-3. Korrelatsioonid esiletõstetuse ja vaadatavuse vahel
+2. Sisunimetuste päevased esiletõstetuse  skoorid. Iga sisunimetuse paigutus Jupiteri platvormil annab sisule teatud arvu punkte sõltuvalt sisu asukohast lehel (rida+positsioon reas) ning konkreetse lehe (esileht, sarjad, filmid, saated) nähtavuse kaalust. Lõplik skoor saadakse kõigi nende kaalutud punktide summana. Mida nähtavamatel lehtedel ja asukohtadel sisu paikneb, seda kõrgem on selle päevane esiletõstetuse skoor.
+3. Korrelatsioonid esiletõstetuse ja vaadatavuse vahel. Korrelatsioonikordaja (Pearsoni korrelatsioon) valem.
 
 ## Andmeallikad
 
