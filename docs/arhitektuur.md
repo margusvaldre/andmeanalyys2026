@@ -2,7 +2,6 @@
 
 ## Äriküsimus
 
-[Kirjuta ühe-kahe lausega oma äriküsimus täpselt. Näiteks: "Millistes kauplustes ja mis kellaaegadel on müügitõhusus (käive külastaja kohta) kõrgeim?"]
 1. Kuidas erinevad Jupiteri kataloogis olemasoleva sisu, kasutajaliideses esiletõstetud sisu ja vaadatud sisu struktuurid žanrite ja päritolumaade lõikes?
 2. Kui tugev on esiletõstetuse ja vaadatavuse vaheline seos?
 
@@ -35,7 +34,7 @@ flowchart LR
     scheduler[Scheduler] --> ingest
 ```
 
-> Täpsusta diagrammi vastavalt oma projektile — lisa rohkem andmeallikaid, mudeleid või teenuseid.
+
 
 ## Andmebaasi kihid
 
@@ -50,7 +49,7 @@ flowchart LR
 |------|----------|--------|
 | Andmeallika omanik | Kirjutab sissevõtu loogika, hoiab API-t töös | Raul Lobanov |
 | Transformatsioonide omanik | Kirjutab mart kihi mudelid ja mõõdikute arvutuse | [Nimi] |
-| Kvaliteedi omanik | Kirjutab testid ja vaatab läbi ebaõnnestunud kontrollid | [Nimi] |
+| Kvaliteedi omanik | Kirjutab testid ja vaatab läbi ebaõnnestunud kontrollid | Margus Valdre |
 | Näidikulaua omanik | Ehitab näidikulaua ja seob selle äriküsimusega | Anu Aus |
 
 ## Riskid
@@ -65,4 +64,4 @@ flowchart LR
 
 ## Privaatsus ja turve
 
-Projekt kasutab ainult avalikke andmeid. Isikuandmeid ei koguta. [Andmebaasi paroolid peavad tulema `.env` failist.]Andmebaasi kasutajanimi ja parool tulevad .env failist. .env faili ei tohi reposse lisada.
+Projekt kasutab ainult avalikke andmeid. Isikuandmeid ei koguta.Andmebaasi kasutajanimi ja parool tulevad .env failist. .env faili ei tohi reposse lisada.
