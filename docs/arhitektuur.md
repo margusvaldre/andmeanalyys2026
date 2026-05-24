@@ -73,7 +73,8 @@ Supersetis: horisontaalne **100% stacked bar chart**, mõõt `metric` = protsent
 
 ### Äriküsimus 2 — mõõdikud
 
-Korrelatsioonid esiletõstetuse skooride ja vaadatavuse vahel. Arvutatakse korrelatsioonikordaja (Pearsoni korrelatsioon) valemi abil.
+#### Mõõdik 2: Sisu esiletõstetuse ja vaadatavuse vaheline seos
+Korrelatsioonid esiletõstetuse skooride ja vaatajanumbrite vahel. Arvutatakse korrelatsioonikordaja (Pearsoni korrelatsioon) valemi abil.
 
 ## Andmeallikad
 
