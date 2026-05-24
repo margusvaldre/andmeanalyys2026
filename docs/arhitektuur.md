@@ -36,10 +36,10 @@ Küsimuse 1 täisdiagrammid eeldavad metaandmete CSV-d (`data/metadata/jupiter_m
 | Rida | Arvutusloogika |
 |------|----------------|
 | Kataloog | `count(pealkirjad)` grupis `origin_country` → protsent koguarvust (100%) |
-| Esitatud | `count(pealkirjad esiletõstmises)` grupis `origin_country` → protsent (100%) |
+| Esitatud | `sum(pealkirjad esiletõstmises)` grupis `origin_country` → protsent (100%) |
 | Vaadatud | `sum(views_total)` grupis `origin_country` → protsent koguvaatustest (100%) |
 
-Vaadatud real on mõistlik **kaaluda vaatamistega**, mitte ainult pealkirjade arvuga — nii nähtub, et väikese katalogiosaga sisu võib saada suure vaatamiste osa (nt sarjad kataloogis 7%, vaatamistes 27%).
+Esitatud ja vaadatud real on mõistlik kaaluda vastavalt **nähtavuse skoori** ja **vaatajate** summaga, mitte ainult pealkirjade arvuga — nii nähtub, et väikese katalogiosaga sisu võib saada suure nähtavuse või vaatamiste osa (nt sarjad kataloogis 7%, vaatamistes 27%).
 
 #### Mõõdik 1B: Sisutüübid (`Sisutüübid`)
 
