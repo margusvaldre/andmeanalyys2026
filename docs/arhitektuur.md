@@ -67,16 +67,16 @@ Diagrammid peaksid võimaldama näha **nihe** kataloogi ja vaatamise vahel, nt:
 
 Supersetis: horisontaalne **100% stacked bar chart**, mõõt `metric` = protsent, dimensioonid `structure_type` + `category`.
 
+## Äriküsimus
+
+1. Kuidas erinevad Jupiteri kataloogis olemasoleva sisu, kasutajaliideses esiletõstetud sisu ja vaadatud sisu struktuurid žanrite ja päritolumaade lõikes?
+2. Kui tugev on esiletõstetuse ja vaadatavuse vaheline seos?
+
 ### Äriküsimus 2 — mõõdikud
 
-1. **Esiletõstmise ja vaadatavuse seos** — sama päeva `prominence_score_total` vs `views_total` (`mart.v_featured_viewership`; scatter Supersetis).
-2. **Ühenduste kvaliteet** — mis osa pealkirjadest ühendub allikate vahel (`mart.title_match_daily`: `catalog_match_pct`, `viewers_match_pct`). Toetab andmete usaldusväärsust, mitte otseselt äriküsimust 2.
-3. **Esiletõstmise skoor** — positsioon ja lehe nähtavuse põhjal (`staging.featured_daily.prominence_score_total`).
-
-### Abimõõdikud (toru kvaliteet)
-
-- **Pealkirjade arv allika kohta** — `mart.content_by_source`, `mart.dim_content`.
-- **Match rate** — kas meta ja pealkirja ühendus on piisavalt hea enne struktuuridiagramme.
+1. Žanrite ja päritolumaade osatähtsused (%) erinevates kihtides (kataloog, esiletõstetus, vaadatavus). Osatähtsus % = vastava žanri/päritolumaa nimetuste arv (kihis) jagatud koguarvuga * 100% . Valemit rakendatakse kõikidele kihtidele eraldi. Kihtide tulemusi võrreldakse omavahel.
+2. Sisunimetuste päevased esiletõstetuse  skoorid. Iga sisunimetuse paigutus Jupiteri platvormil annab sisule teatud arvu punkte sõltuvalt sisu asukohast lehel (rida+positsioon reas) ning konkreetse lehe (esileht, sarjad, filmid, saated) nähtavuse kaalust. Lõplik skoor saadakse kõigi nende kaalutud punktide summana. Mida nähtavamatel lehtedel ja asukohtadel sisu paikneb, seda kõrgem on selle päevane esiletõstetuse skoor.
+3. Korrelatsioonid esiletõstetuse ja vaadatavuse vahel. Korrelatsioonikordaja (Pearsoni korrelatsioon) valem.
 
 ## Andmeallikad
 
@@ -88,6 +88,11 @@ Supersetis: horisontaalne **100% stacked bar chart**, mõõt `metric` = protsent
 | Sisu metaandmed | CSV (`data/metadata/jupiter_metadata.csv`) | ~nädalas | **Sisutüüp** ja **päritolumaa** pealkirja kohta (küsimus 1 diagrammid) |
 
 **Ühendusvõti** kõigi allikate vahel on **pealkiri** (`heading` kataloogis, `title` vaadatavuses ja esiletõstmises). Transform kasutab funktsiooni `mart.normalize_title()` (trim, üleliigsed tühikud).
+| [Nimi] | [API / CSV / DB] | Jah, [iga X tundi / päeva] | [Milleks kasutatakse?] |
+| Kataloogi sisu | API | Jah, iga päev | Kataloogi koosesisu pärimiseks |
+| Esiletõstetud sisu | API | Jah, iga päev | Sisunimetuste esiletõstetuse arvutamiseks |
+| Vaadatavuse andmed | CSV | Jah, iga päev | Sisunimetuste vaadatavuse pärimiseks |
+| Sisu kirjeldavad metaandmed | CSV | Jah, iga nädal | Sisunimetuste žanrite, päritolumaade ja tootmisaastate pärimiseks |
 
 ## Andmevoog
 
@@ -128,6 +133,7 @@ flowchart LR
 ```
 
 Iga ingest kirjutab käivituse logi tabelisse `staging.pipeline_runs` (`run_id`, `source_name`, `status`).
+
 
 ## Andmebaasi kihid
 
@@ -179,41 +185,21 @@ Enne cron'i peab uus vaadatavuse päevafail (`jupiter_d_YYYYMMDD-YYYYMMDD.csv`) 
 
 | Roll | Vastutus | Täitja |
 |------|----------|--------|
-| Andmeallika omanik | Kirjutab sissevõtu loogika, hoiab API-t töös | [Nimi] |
+| Andmeallika omanik | Kirjutab sissevõtu loogika, hoiab API-t töös | Raul Lobanov |
 | Transformatsioonide omanik | Kirjutab mart kihi mudelid ja mõõdikute arvutuse | [Nimi] |
-| Kvaliteedi omanik | Kirjutab testid ja vaatab läbi ebaõnnestunud kontrollid | [Nimi] |
-| Näidikulaua omanik | Ehitab näidikulaua ja seob selle äriküsimusega | [Nimi] |
+| Kvaliteedi omanik | Kirjutab testid ja vaatab läbi ebaõnnestunud kontrollid | Margus Valdre |
+| Näidikulaua omanik | Ehitab näidikulaua ja seob selle äriküsimusega | Anu Aus |
 
 ## Riskid
 
 | Risk | Mõju | Maandus |
 |------|------|---------|
-| ERR API ei vasta | Kataloog või esiletõstmine ei värskene | `pipeline_runs` status `failed`; log `logs/pipeline.log`; käivita uuesti |
-| Vaadatavuse CSV hilinemine | Sama päeva korrelatsioon puudub | Pane fail enne cron'i kausta; kontrolli `mart.title_match_daily` |
-| Pealkiri erineb allikate vahel | Madal match rate, vale ühendus | `mart.normalize_title`; kontrolli meta ↔ kataloogi kattuvust (`quality` reeglid); vaata `catalog_title_changes` |
-| Nädala- ja päevafail segamini | Vale interpretatsioon | `grain` on eraldi; nädala fail ei ole päevade summa |
-| API-st kadunud kataloogi rida | Vananenud rida jääb alles | Teadlik otsus; vajadusel tulevikus `is_active` lipp |
-| Scheduler ei tööta | Andmed vananevad | `docker compose logs scheduler`; kontrolli konteinerit |
+| [Risk 1 — näiteks: API ei vasta] | [Mis juhtub?] | [Kuidas maandad?] |
+| [Risk 2 - sisnimetused erinevates kihtides ei ole vastavuses] | Sisunimetus on olemas kataloogis, kuid ei saa esletõstetuse ja/või vaadatavuse näitajaid. Sisu on vaadataud, aga sama nimetus ei esine kataloogis. Jne | [Kuidas maandad?] |
+| Puuduv sisunimetus metaandmetes  | Sisunimetus ei saa endale külge žanri ja/või päritolumaad. | Hinnata osakaalu, kas jätta välja või täita käsitsi |
+| Liiga lühike analüüsiperiood  | Lühike periood võib moonutada tulemust - ühekordne suur "sündmus" | Vältida põhjuslike järelduste tegemist, analüüsi kordamine pikema perioodi jooksul tulevikus |
+| Unikaalse identifikaatori puudumine  | Andmete sidumine toimub pealkirjade järgi, mis võivad allikati erineda  | Lisada andmevoogu andmekvaliteedi kontrollid |
 
 ## Privaatsus ja turve
 
-Projekt kasutab **ainult sisutaseme statistikat** (pealkirjad, vaatamiste arvud, kategooriad). Vaadatavuse andmetes **ei ole** kasutaja-ID-sid ega muid otseseid isikuandmeid.
-
-- Andmebaasi parool ja kasutaja tulevad `.env` failist.
-- Faili `.env` ei committita reposse (vt `.gitignore`).
-- PostgreSQL on arenduses avatud hosti pordil (`DB_PORT_HOST`); tootmises piirata võrgu ligipääs.
-
-## Järgmised arendusetapid
-
-**Tehtud (toru ja mart):**
-
-- Meta CSV ingest — `ingest_metadata_csv.py`, `staging.content_metadata`, `mart.content_structure_pct`
-- Põhiandmekvaliteet — `quality.run_checks()` (sh meta ja staging reeglid), käivitus `run-all` lõpus
-- Superseti vaated ja dashboard — `mart.v_superset_origin_pct`, `mart.v_superset_content_type_pct`, graafikud **Päritolumaad** ja **Sisutüübid**
-
-**Järgmine töö (näidikulaud):**
-
-1. ~~**Superset — päritolumaa ja sisutüüp**~~ — imporditud graafikud `Päritolumaad` ja `Sisutüübid` (`superset/dashboard_export/`). Uuesti laadimiseks: `docs/superset.md`.
-2. **Andmekvaliteet** — laienda reegleid ja lävesid (nt meta ↔ kataloog match rate, automaatne hoiatus madala kattuvuse korral).
-
-Tehniline käivitusjuhend: juurkausta `README.md`.
+Projekt kasutab ainult avalikke andmeid. Isikuandmeid ei koguta.Andmebaasi kasutajanimi ja parool tulevad .env failist. .env faili ei tohi reposse lisada.
