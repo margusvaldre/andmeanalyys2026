@@ -56,7 +56,7 @@ Teine diagramm, sama kolme rea loogika. Kategooriad (metaandmetest), näiteks:
 - Infotainment
 - Uudised (News)
 
-Arvutus on sama mis päritolumaa puhul: kataloog ja esitatud **pealkirjade arvu** järgi, vaadatud **vaatamiste summa** järgi.
+Arvutus on sama mis päritolumaa puhul: kataloog **pealkirjade arvu** järgi, esitatud ja vaadatud **nähtavuse skoori ja vaatamiste summa** järgi.
 
 #### Visuaalne võrdlus (ärianalüüs)
 
