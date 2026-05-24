@@ -82,15 +82,10 @@ Korrelatsioonid esiletõstetuse skooride ja vaatajanumbrite vahel. Arvutatakse k
 |---------|------|--------------|------|
 | ERR videokataloog | HTTP API | Jah, iga päev | Kataloogi koosseis (`catalog_id`, pealkiri, kategooria) |
 | Jupiteri kategoorialehed (esiletõstmine) | HTTP API + konfig CSV | Jah, iga päev | Esiletõstmise skoor (`data/prominence/*.csv`) |
-| Vaadatavus | CSV (`data/viewers/`) | Jah, iga päev | Vaatamiste arvud pealkirja ja päeva lõikes |
+| Vaadatavus | CSV (`data/viewers/`) | Jah, iga päev | Vaatajate arv pealkirja ja päeva lõikes |
 | Sisu metaandmed | CSV (`data/metadata/jupiter_metadata.csv`) | ~nädalas | **Sisutüüp** ja **päritolumaa** pealkirja kohta (küsimus 1 diagrammid) |
 
 **Ühendusvõti** kõigi allikate vahel on **pealkiri** (`heading` kataloogis, `title` vaadatavuses ja esiletõstmises). Transform kasutab funktsiooni `mart.normalize_title()` (trim, üleliigsed tühikud).
-| [Nimi] | [API / CSV / DB] | Jah, [iga X tundi / päeva] | [Milleks kasutatakse?] |
-| Kataloogi sisu | API | Jah, iga päev | Kataloogi koosesisu pärimiseks |
-| Esiletõstetud sisu | API | Jah, iga päev | Sisunimetuste esiletõstetuse arvutamiseks |
-| Vaadatavuse andmed | CSV | Jah, iga päev | Sisunimetuste vaadatavuse pärimiseks |
-| Sisu kirjeldavad metaandmed | CSV | Jah, iga nädal | Sisunimetuste žanrite, päritolumaade ja tootmisaastate pärimiseks |
 
 ## Andmevoog
 
