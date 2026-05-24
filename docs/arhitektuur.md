@@ -27,7 +27,7 @@ Küsimuse 1 täisdiagrammid eeldavad metaandmete CSV-d (`data/metadata/jupiter_m
 - Euroopa Liit (European Union)
 - Ühendkuningriik (United Kingdom)
 - Ülejäänud maailm (Rest of the world)
-- Kaastoimeline (Coproduction)
+- Kaastootmine (Coproduction)
 - Põhjamaad (Nordic countries)
 - USA ja Kanada (USA and Canada)
 
