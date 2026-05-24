@@ -11,13 +11,13 @@ Küsimuse 1 vastus on kaks **100% virnlintdiagrammi** (horisontaalne virn, telg 
 
 | Rida diagrammil | Andmeallikas | Tähendus |
 |-----------------|--------------|----------|
-| **Kataloogi struktuur** (catalog structure) | `staging.catalog` + meta | Mis jaotusega sisu kataloogis üldse on |
-| **Esitatud sisu struktuur** (presented content structure) | `staging.featured_daily` + meta | Mis jaotusega sisu kasutajaliideses esile tõstetakse |
-| **Vaadatud sisu struktuur** (viewed content structure) | `staging.viewers_raw` + meta | Mis jaotusega sisu tegelikult vaadatakse |
+| **Kataloogi struktuur** (catalog structure) | `staging.catalog` + meta | Millise jaotusega on kataloogis olemasolev sisu |
+| **Esitatud sisu struktuur** (presented content structure) | `staging.featured_daily` + meta |  Millise jaotusega on sisu, mis on kasutajaliideses esile tõstetuf |
+| **Vaadatud sisu struktuur** (viewed content structure) | `staging.viewers_raw` + meta | Millise jaotusega on sisu, mida tegelikult vaadatakse |
 
 Küsimuse 1 täisdiagrammid eeldavad metaandmete CSV-d (`data/metadata/jupiter_metadata.csv` → `staging.content_metadata`). **Ilma meta laadimiseta** jääb alles vaheversioon (nt kataloogi API kategooria või vaadatavuse toor-`content_type`), mis ei vasta allikdiagrammidele.
 
-Esitatud sisu struktuuri hindamiseks on vaja arvutada sisunimetuste päevased esiletõstetuse  skoorid, mida saab kasutada ka eraldiseisva mõõdikuna. 
+Esitatud sisu struktuuri hindamiseks on eelnevalt vaja arvutada sisunimetuste päevased esiletõstetuse skoorid, mida saab kasutada ka eraldiseisva mõõdikuna. 
 Iga sisunimetuse paigutus Jupiteri platvormil annab sisule teatud arvu punkte sõltuvalt sisu asukohast lehel (rida+positsioon reas) ning konkreetse lehe (esileht, sarjad, filmid, saated) nähtavuse kaalust. Lõplik skoor saadakse kõigi nende kaalutud punktide summana. Mida nähtavamatel lehtedel ja asukohtadel sisu paikneb, seda kõrgem on selle päevane esiletõstetuse skoor.
 
 ### Äriküsimus 1 — mõõdikud (näidikulaud)
