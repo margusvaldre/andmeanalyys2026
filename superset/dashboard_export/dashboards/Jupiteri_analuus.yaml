@@ -1,0 +1,134 @@
+dashboard_title: Jupiteri analüüs
+description: ERR Jupiteri sisu kataloog, esiletõstmine ja vaadatavus.
+slug: jupiteri-analuus
+published: true
+uuid: c9999999-9999-4999-8999-000000000001
+position:
+  DASHBOARD_VERSION_KEY: v2
+  ROOT_ID:
+    children:
+    - GRID_ID
+    id: ROOT_ID
+    type: ROOT
+  GRID_ID:
+    children:
+    - ROW-1
+    - ROW-STRUCT
+    - ROW-2
+    id: GRID_ID
+    parents:
+    - ROOT_ID
+    type: GRID
+  HEADER_ID:
+    id: HEADER_ID
+    meta:
+      text: Jupiteri analüüs
+    type: HEADER
+  ROW-1:
+    children:
+    - CHART-MATCH
+    id: ROW-1
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    type: ROW
+  ROW-STRUCT:
+    children:
+    - CHART-ORIGIN
+    - CHART-TYPE
+    id: ROW-STRUCT
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    type: ROW
+  ROW-2:
+    children:
+    - CHART-SCATTER
+    - CHART-TOP
+    id: ROW-2
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    type: ROW
+  CHART-MATCH:
+    children: []
+    id: CHART-MATCH
+    meta:
+      chartId: 2
+      height: 32
+      sliceName: Ühenduste kvaliteet
+      uuid: caaaaaaa-aaaa-4aaa-8aaa-000000000002
+      width: 12
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-1
+    type: CHART
+  CHART-ORIGIN:
+    children: []
+    id: CHART-ORIGIN
+    meta:
+      chartId: 3
+      height: 56
+      sliceName: Päritolumaad
+      uuid: caaaaaaa-aaaa-4aaa-8aaa-000000000005
+      width: 6
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-STRUCT
+    type: CHART
+  CHART-TYPE:
+    children: []
+    id: CHART-TYPE
+    meta:
+      chartId: 4
+      height: 56
+      sliceName: Sisutüübid
+      uuid: caaaaaaa-aaaa-4aaa-8aaa-000000000006
+      width: 6
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-STRUCT
+    type: CHART
+  CHART-SCATTER:
+    children: []
+    id: CHART-SCATTER
+    meta:
+      chartId: 3
+      height: 50
+      sliceName: Esiletõstmine ja vaadatavus (sama päev)
+      uuid: f0e0d0c0-b0a9-4a8e-9f7c-3b2a190d0c03
+      width: 6
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-2
+    type: CHART
+  CHART-TOP:
+    children: []
+    id: CHART-TOP
+    meta:
+      chartId: 6
+      height: 50
+      sliceName: Top esiletõstetud
+      uuid: caaaaaaa-aaaa-4aaa-8aaa-000000000004
+      width: 6
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-2
+    type: CHART
+metadata:
+  refresh_frequency: 60
+  color_scheme: supersetColors
+  cross_filters_enabled: true
+  default_filters: '{}'
+version: 1.0.0

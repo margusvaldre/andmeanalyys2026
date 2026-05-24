@@ -1,0 +1,19 @@
+slice_name: Top esiletõstetud
+description: Viimase esiletõstmise päeva TOP pealkirjad.
+viz_type: table
+params:
+  datasource: c2222222-2222-4222-8222-000000000004__table
+  viz_type: table
+  query_mode: raw
+  all_columns:
+  - title
+  - prominence_score_total
+  - views_total
+  - in_catalog
+  - primary_category_name
+  order_desc: true
+  row_limit: 20
+cache_timeout: 30
+uuid: caaaaaaa-aaaa-4aaa-8aaa-000000000004
+version: 1.0.0
+dataset_uuid: c2222222-2222-4222-8222-000000000004

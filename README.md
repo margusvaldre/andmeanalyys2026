@@ -1,1 +1,170 @@
-Testfail mida alla laadida
+# Jupiteri andmeanalüüsi projekt
+
+## Kiirkäivitus (kataloog API → PostgreSQL)
+
+1. Loo keskkonnamuutujad:
+
+```powershell
+cd C:\Users\Kasutaja\andmeanalyys2026
+copy .env.example .env
+```
+
+2. Käivita teenused (andmebaas + pipeline + scheduler + Superset):
+
+```powershell
+docker compose up -d --build
+```
+
+Scheduler käivitab iga päev kell **06:00** (Europe/Tallinn) käsu `run-all` (kataloog, vaadatavus, esiletõstmine, **meta CSV**, transform, andmekvaliteedi kontrollid). Vaadatavuse CSV peab enne olema kaustas `data/viewers/`.
+
+Logid:
+
+```powershell
+docker compose logs -f scheduler
+Get-Content logs\pipeline.log -Tail 50
+```
+
+Arenduses saad toru stardil käivitada (lisa `.env` faili `RUN_ON_STARTUP=true` ja taaskäivita scheduler).
+
+Superset: **http://localhost:8089** (vaikimisi port `.env.example` failis; kasutaja `admin`). Juhend: [`docs/superset.md`](docs/superset.md).
+
+Kui vana andmebaas segab, lähtesta (kustutab kõik andmed):
+
+```powershell
+docker compose down -v
+docker compose up -d --build
+```
+
+Oota, kuni `docker compose ps` näitab `db`, `scheduler` ja `superset` olekus **healthy** (esimene Superseti build võib võtta mitu minutit). `superset-import` peab lõppema edukalt (vaata `docker compose logs superset-import`).
+
+**Täiesti uus andmebaas** saab skeemi automaatselt failidest `init/01` … `init/10` (esimene `docker compose up`; Superseti vaated on `10`, et käivitada pärast `08`).
+
+**Puhas paigaldus — kontrollnimekiri**
+
+```powershell
+copy .env.example .env
+docker compose down -v
+docker compose up -d --build
+docker compose ps
+docker compose exec pipeline python scripts/run_pipeline.py run-all
+```
+
+Oodatav `run-all` lõpp: `mart.dim_content` tuhandeid ridu, `v_featured_viewership` sadu ridu, kvaliteedikontrollid läbisid. Seejärel Superset: http://localhost:8089 → dashboard **Jupiteri analüüs**.
+
+**Olemasolev andmebaas** (nt kloonitud repo enne meta CSV-d) — käivita käsitsi kõik täiendavad skriptid (vt allpool jaotist „Vana andmebaas”).
+
+3. Lae andmed (kataloog + vaadatavus + esiletõstmine + meta CSV):
+
+```powershell
+docker compose exec pipeline python scripts/run_pipeline.py ingest-all
+```
+
+Või eraldi:
+
+```powershell
+docker compose exec pipeline python scripts/run_pipeline.py ingest-catalog
+docker compose exec pipeline python scripts/run_pipeline.py ingest-viewers
+docker compose exec pipeline python scripts/run_pipeline.py ingest-featured
+docker compose exec pipeline python scripts/run_pipeline.py ingest-metadata
+docker compose exec pipeline python scripts/run_pipeline.py transform
+```
+
+Meta CSV asub failis `data/metadata/jupiter_metadata.csv` (veerud: `updated`, `title`, `origin`, `type`).
+
+Andmekvaliteedi kontrollid (kirjutavad `quality.check_runs` ja `quality.rule_results`; eeldavad `init/07_quality_objects.sql`):
+
+```powershell
+docker compose exec pipeline python scripts/run_pipeline.py quality
+```
+
+Täielik toru (sissevõtt + transform + kvaliteet):
+
+```powershell
+docker compose exec pipeline python scripts/run_pipeline.py run-all
+```
+
+### Vana andmebaas — käsitsi skeemi täiendamine
+
+Kui andmebaas loodi **enne** uuemaid `init/*.sql` faile, PostgreSQL **ei käivita** neid uuesti automaatselt. Käivita üks kord (järjekord oluline):
+
+```powershell
+docker compose exec db psql -U praktikum -d praktikum -f /docker-entrypoint-initdb.d/02_viewers_staging.sql
+docker compose exec db psql -U praktikum -d praktikum -f /docker-entrypoint-initdb.d/03_catalog_incremental.sql
+docker compose exec db psql -U praktikum -d praktikum -f /docker-entrypoint-initdb.d/04_featured_staging.sql
+docker compose exec db psql -U praktikum -d praktikum -f /docker-entrypoint-initdb.d/05_mart_objects.sql
+docker compose exec db psql -U praktikum -d praktikum -f /docker-entrypoint-initdb.d/07_quality_objects.sql
+docker compose exec db psql -U praktikum -d praktikum -f /docker-entrypoint-initdb.d/08_metadata_staging.sql
+docker compose exec db psql -U praktikum -d praktikum -f /docker-entrypoint-initdb.d/10_superset_views.sql
+```
+
+Kontrolli, et meta tabel on olemas:
+
+```powershell
+docker compose exec db psql -U praktikum -d praktikum -c "\dt staging.content_metadata"
+```
+
+Peaks näitama tabelit `staging.content_metadata`. Seejärel:
+
+```powershell
+docker compose exec pipeline python scripts/run_pipeline.py run-all
+```
+
+`03_catalog_incremental.sql` loob `staging.catalog` (üks rida `catalog_id` kohta) ja täidab selle vajadusel vanast `catalog_raw`-st.
+
+### Levinud vead
+
+| Viga | Põhjus | Lahendus |
+|------|--------|----------|
+| `relation "staging.content_metadata" does not exist` | Puudub `init/08_metadata_staging.sql` (vana DB maht) | Käivita `08` ja `10` (vt ülal); seejärel `run-all` |
+| `function quality.run_checks does not exist` | Puudub `init/07_quality_objects.sql` | Käivita `07` |
+| `relation "staging.catalog" does not exist` | Puudub `init/03_catalog_incremental.sql` | Käivita `02`–`08` ja `10` või `docker compose down -v` ja uus `up` |
+| `db` konteiner exit 3 esimesel `up` | Vana init järjekord (`06` enne `08`) | `docker compose down -v` ja uus `up` (vajab `10_superset_views.sql`) |
+| Superset „Columns missing in dataset” | Vale dashboardi `chartId` või vana Superseti maht | `docker compose run --rm --no-deps superset-import` |
+| Tühi „Esiletõstmine ja vaadatavus” | Erinev featured vs viewers päev | Lae viewers CSV sama päevaks; `transform`; või vaata tabelit (views võib olla NULL) |
+
+4. Kontrolli tulemust:
+
+```powershell
+docker compose exec db psql -U praktikum -d praktikum -c "SELECT COUNT(*) FROM staging.catalog;"
+docker compose exec db psql -U praktikum -d praktikum -c "SELECT * FROM staging.catalog_title_changes ORDER BY detected_at DESC LIMIT 5;"
+docker compose exec db psql -U praktikum -d praktikum -c "SELECT grain, COUNT(*) FROM staging.viewers_raw GROUP BY grain;"
+docker compose exec db psql -U praktikum -d praktikum -c "SELECT feature_date, COUNT(*) FROM staging.featured_daily GROUP BY feature_date;"
+docker compose exec db psql -U praktikum -d praktikum -c "SELECT title, prominence_score_total, feature_date FROM staging.featured_daily ORDER BY prominence_score_total DESC LIMIT 10;"
+docker compose exec db psql -U praktikum -d praktikum -c "SELECT run_id, source_name, status, row_count FROM staging.pipeline_runs ORDER BY started_at DESC LIMIT 5;"
+docker compose exec db psql -U praktikum -d praktikum -c "SELECT activity_date, featured_count, catalog_match_pct, viewers_match_pct FROM mart.title_match_daily;"
+docker compose exec db psql -U praktikum -d praktikum -c "SELECT source, SUM(title_count) FROM mart.content_by_source GROUP BY source;"
+docker compose exec db psql -U praktikum -d praktikum -c "SELECT title, prominence_score_total, views_total FROM mart.v_featured_viewership ORDER BY views_total DESC LIMIT 10;"
+docker compose exec db psql -U praktikum -d praktikum -c "SELECT title, origin_country, meta_content_type FROM mart.dim_content WHERE in_metadata LIMIT 10;"
+docker compose exec db psql -U praktikum -d praktikum -c "SELECT structure_type, dimension, category_label, pct FROM mart.content_structure_pct WHERE dimension='origin_country' ORDER BY structure_type, pct DESC LIMIT 15;"
+docker compose exec db psql -U praktikum -d praktikum -c "SELECT * FROM quality.v_latest_rule_results;"
+```
+
+## Projektifailid
+
+| Fail | Roll |
+|------|------|
+| `compose.yml` | PostgreSQL + pipeline + scheduler + Superset |
+| `docs/superset.md` | Näidikulaua käivitus ja graafikud |
+| `Dockerfile.superset` | Superset konteiner |
+| `superset/dashboard_export/` | Imporditav starter-dashboard |
+| `scheduler/crontab` | Päevane cron (06:00) |
+| `Dockerfile.scheduler` | Cron konteiner |
+| `logs/pipeline.log` | Scheduleri väljund (gitignore) |
+| `init/01_create_objects.sql` | skeemid ja põhitabelid |
+| `init/03_catalog_incremental.sql` | `staging.catalog` + pealkirja muutuste logi |
+| `scripts/catalog_api.py` | API lugemine (kasutab ingest_catalog_api) |
+| `scripts/ingest_catalog_api.py` | API → `staging.catalog` (ainult uued + muutuste tuvastus) |
+| `scripts/ingest_viewers_csv.py` | CSV → `staging.viewers_raw` |
+| `scripts/prominence_api.py` | Esiletõstmise skooride arvutus API-st |
+| `scripts/ingest_featured_api.py` | API → `staging.featured_daily` |
+| `scripts/ingest_metadata_csv.py` | Meta CSV → `staging.content_metadata` |
+| `data/metadata/jupiter_metadata.csv` | Pealkiri → päritolumaa ja sisutüüp |
+| `data/prominence/*.csv` | Positsioonimaatriks ja lehe koefitsiendid |
+| `init/05_mart_objects.sql` | Mart tabelid ja `normalize_title` funktsioon |
+| `scripts/01_transform.sql` | Staging → mart transformatsioon |
+| `init/07_quality_objects.sql` | `quality` skeemi tabelid + `quality.run_checks()` |
+| `init/08_metadata_staging.sql` | `staging.content_metadata`, viitetabelid, `mart.content_structure_pct` |
+| `scripts/02_quality_checks.sql` | Käsitsi: `SELECT quality.run_checks(...)` (vt faili sisu) |
+| `scripts/run_pipeline.py` | `ingest-*`, `transform`, `quality`, `run-all` |
+| `docs/arhitektuur.md` | Äriküsimus ja andmevoog |
+

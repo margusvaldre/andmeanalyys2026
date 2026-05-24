@@ -1,0 +1,27 @@
+import os
+
+SQLALCHEMY_DATABASE_URI = os.environ["DATABASE_URI"]
+SECRET_KEY = os.environ["SECRET_KEY"]
+
+CACHE_CONFIG = {
+    "CACHE_TYPE": "SimpleCache",
+    "CACHE_DEFAULT_TIMEOUT": 30,
+}
+DATA_CACHE_CONFIG = {
+    "CACHE_TYPE": "SimpleCache",
+    "CACHE_DEFAULT_TIMEOUT": 30,
+}
+FILTER_STATE_CACHE_CONFIG = {"CACHE_TYPE": "SimpleCache"}
+EXPLORE_FORM_DATA_CACHE_CONFIG = {"CACHE_TYPE": "SimpleCache"}
+
+DASHBOARD_AUTO_REFRESH_INTERVALS = [
+    [0, "Ära värskenda"],
+    [60, "1 minut"],
+    [300, "5 minutit"],
+]
+
+FEATURE_FLAGS = {
+    "ENABLE_TEMPLATE_PROCESSING": True,
+}
+
+WTF_CSRF_ENABLED = True
