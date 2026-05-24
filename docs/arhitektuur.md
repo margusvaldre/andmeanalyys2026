@@ -17,6 +17,9 @@ Küsimuse 1 vastus on kaks **100% virnlintdiagrammi** (horisontaalne virn, telg 
 
 Küsimuse 1 täisdiagrammid eeldavad metaandmete CSV-d (`data/metadata/jupiter_metadata.csv` → `staging.content_metadata`). **Ilma meta laadimiseta** jääb alles vaheversioon (nt kataloogi API kategooria või vaadatavuse toor-`content_type`), mis ei vasta allikdiagrammidele.
 
+Esitatud sisu struktuuri hindamiseks on vaja arvutada sisunimetuste päevased esiletõstetuse  skoorid, mida saab kasutada ka eraldiseisva mõõdikuna. 
+Iga sisunimetuse paigutus Jupiteri platvormil annab sisule teatud arvu punkte sõltuvalt sisu asukohast lehel (rida+positsioon reas) ning konkreetse lehe (esileht, sarjad, filmid, saated) nähtavuse kaalust. Lõplik skoor saadakse kõigi nende kaalutud punktide summana. Mida nähtavamatel lehtedel ja asukohtadel sisu paikneb, seda kõrgem on selle päevane esiletõstetuse skoor.
+
 ### Äriküsimus 1 — mõõdikud (näidikulaud)
 
 #### Mõõdik 1A: Päritolumaad (`Päritolumaad`)
@@ -67,16 +70,10 @@ Diagrammid peaksid võimaldama näha **nihet** kataloogi, esiletõstetuse ja vaa
 
 Supersetis: horisontaalne **100% stacked bar chart**, mõõt `metric` = protsent, dimensioonid `structure_type` + `category`.
 
-## Äriküsimus
-
-1. Kuidas erinevad Jupiteri kataloogis olemasoleva sisu, kasutajaliideses esiletõstetud sisu ja vaadatud sisu struktuurid žanrite ja päritolumaade lõikes?
-2. Kui tugev on esiletõstetuse ja vaadatavuse vaheline seos?
 
 ### Äriküsimus 2 — mõõdikud
 
-1. Žanrite ja päritolumaade osatähtsused (%) erinevates kihtides (kataloog, esiletõstetus, vaadatavus). Osatähtsus % = vastava žanri/päritolumaa nimetuste arv (kihis) jagatud koguarvuga * 100% . Valemit rakendatakse kõikidele kihtidele eraldi. Kihtide tulemusi võrreldakse omavahel.
-2. Sisunimetuste päevased esiletõstetuse  skoorid. Iga sisunimetuse paigutus Jupiteri platvormil annab sisule teatud arvu punkte sõltuvalt sisu asukohast lehel (rida+positsioon reas) ning konkreetse lehe (esileht, sarjad, filmid, saated) nähtavuse kaalust. Lõplik skoor saadakse kõigi nende kaalutud punktide summana. Mida nähtavamatel lehtedel ja asukohtadel sisu paikneb, seda kõrgem on selle päevane esiletõstetuse skoor.
-3. Korrelatsioonid esiletõstetuse ja vaadatavuse vahel. Korrelatsioonikordaja (Pearsoni korrelatsioon) valem.
+Korrelatsioonid esiletõstetuse skooride ja vaadatavuse vahel. Arvutatakse korrelatsioonikordaja (Pearsoni korrelatsioon) valemi abil.
 
 ## Andmeallikad
 
