@@ -60,10 +60,10 @@ Arvutus on sama mis päritolumaa puhul: kataloog **pealkirjade arvu** järgi, es
 
 #### Visuaalne võrdlus (ärianalüüs)
 
-Diagrammid peaksid võimaldama näha **nihe** kataloogi ja vaatamise vahel, nt:
+Diagrammid peaksid võimaldama näha **nihet** kataloogi, esiletõstetuse ja vaatamise vahel, nt:
 
-- Eesti sisu suur osa kataloogist, väiksem osa vaatamistest.
-- UK või sarjad: väiksem kataloogiosakaal, suurem vaatamiste osakaal.
+- Eesti sisu suur osa kataloogist, kesmine nähtavuses, väiksem osa vaatamistest.
+- UK või sarjad: väiksem kataloogiosakaal, suurem nähtavuses, suurem vaatamiste osakaal.
 
 Supersetis: horisontaalne **100% stacked bar chart**, mõõt `metric` = protsent, dimensioonid `structure_type` + `category`.
 
