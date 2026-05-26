@@ -1,5 +1,5 @@
 slice_name: Esiletõstmine ja vaadatavus (sama päev)
-description: Viimase esiletõstmise päev. views_total on täidetud ainult siis, kui sama päeva vaadatavuse CSV on olemas.
+description: Viimase esiletõstmise päev. views_total eelistatult sama päeva CSV-st; muidu viimane olemasolev viewers päev sama pealkirja kohta.
 viz_type: table
 params:
   datasource: c2222222-2222-4222-8222-000000000003__table

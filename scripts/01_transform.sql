@@ -411,14 +411,14 @@ structure_counts AS (
 
     UNION ALL
 
-    -- Esitatud: esiletõstmise pealkirjad viimase päeva kohta
+    -- Esitatud: esiletõstmise skooride summa viimase päeva kohta (meta-ühendatud pealkirjad).
     SELECT
         ld.activity_date,
         'presented',
         'origin_country',
         m.origin_code,
         COALESCE(ol.origin_label, m.origin_code),
-        COUNT(*)::NUMERIC
+        SUM(f.prominence_score_total)::NUMERIC
     FROM staging.featured_daily AS f
     INNER JOIN meta AS m
         ON mart.normalize_title(f.title) = m.title_normalized
@@ -426,6 +426,7 @@ structure_counts AS (
     LEFT JOIN mart.ref_origin_labels AS ol
         ON m.origin_code = ol.origin_code
     WHERE f.feature_date = ld.activity_date
+      AND f.prominence_score_total IS NOT NULL
     GROUP BY ld.activity_date, m.origin_code, ol.origin_label
 
     UNION ALL
@@ -436,7 +437,7 @@ structure_counts AS (
         'content_type',
         m.content_type_code,
         COALESCE(tl.content_type_label, m.content_type_code),
-        COUNT(*)::NUMERIC
+        SUM(f.prominence_score_total)::NUMERIC
     FROM staging.featured_daily AS f
     INNER JOIN meta AS m
         ON mart.normalize_title(f.title) = m.title_normalized
@@ -444,6 +445,7 @@ structure_counts AS (
     LEFT JOIN mart.ref_content_type_labels AS tl
         ON m.content_type_code = tl.content_type_code
     WHERE f.feature_date = ld.activity_date
+      AND f.prominence_score_total IS NOT NULL
     GROUP BY ld.activity_date, m.content_type_code, tl.content_type_label
 
     UNION ALL
