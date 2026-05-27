@@ -4,12 +4,14 @@
 
 ## Mis on valmis
 
-- [ ] Docker Compose käivitab kõik teenused
-- [ ] Andmeid saadakse allikast kätte
-- [ ] Andmed laetakse `staging` kihti
-- [ ] Vähemalt üks transformatsioon toimib
-- [ ] Vähemalt üks näidikulaud on nähtaval
-- [ ] Vähemalt üks andmekvaliteedi test läbib
+- [ ] Docker Compose käivitab PostgreSQL-i, töövoo konteineri, scheduleri ja Superseti näidikulaua.
+- [ ] ERR API-dest saab kätte videokataloogi andmed ning kategoorialehtede esiletõstmise info.
+- [ ] Sisu päritolumaad ja tüübid on eraldi staatilises `staging.content_metadata` tabelis, mis laetakse metaandmete CSV-failist.
+- [ ] Andmed liiguvad `staging` kihist `mart` kihti
+- [ ] Näidikulaud võimaldab võrrelda kataloogi struktuuri ja esiletõstetud sisu struktuure päritolumaade järgi 100% virnlintdiagrammide abil.
+- [ ] Näidikulaud võimaldab võrrelda kataloogi struktuuri ja esiletõstetud sisu struktuure sisutüübi järgi 100% virnlintdiagrammide abil.
+- [ ] Näidikulaual on Eesiletõstmine ja vaadatavus (sama päev).
+- [ ] Scheduler käivitab töövoo vaikimisi igal hommikul kell 06:00, et uued päevaandmed sisse tõmmata ja transformeerida
 
 [Täpsusta lühidalt, mis täpselt valmis on]
 
