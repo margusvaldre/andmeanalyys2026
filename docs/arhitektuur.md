@@ -134,6 +134,17 @@ flowchart LR
     runAll --> ingestMeta
     runAll --> transform
     runAll --> quality[quality.run_checks]
+
+    manualCheck[Käsitsi: run_pipeline.py check] -.-> stagingCatalog
+    manualCheck -.-> stagingFeatured
+    manualCheck -.-> stagingViewers
+    manualCheck -.-> stagingMeta
+    manualCheck -.-> dimContent
+    manualCheck -.-> factDaily
+    manualCheck -.-> structurePct
+    manualCheck -.-> vOrigin
+    manualCheck -.-> vType
+    manualCheck -.-> vFeatured
 ```
 
 Esmasel käivitusel loob PostgreSQL skeemi `init/01` … `init/10` (Superseti vaated failis `10`, pärast `08`). Dashboard imporditakse konteineriga `superset-import` (vt `compose.yml`, `docs/superset.md`).
@@ -186,9 +197,12 @@ Transform kustutab mart tabelid ja täidab need uuesti (`scripts/01_transform.sq
 |-----------|-----------|
 | `scheduler` konteiner | Cron, ajavöönd `Europe/Tallinn` |
 | `scheduler/crontab` | Iga päev kell **06:00** → `python scripts/run_pipeline.py run-all` (sh transform ja `quality.run_checks`) |
+| `run_pipeline.py check` | Read-only kontroll (failid + staging/mart + Superseti vaated). Exit 0, kui on ainult WARN-id; `--strict` loeb WARN-id veaks. |
 | `logs/pipeline.log` | Scheduleri standardväljund |
 
 Enne cron'i peab uus vaadatavuse päevafail (`jupiter_d_YYYYMMDD-YYYYMMDD.csv`) olema kaustas `data/viewers/`, et esiletõstmise ja vaadatavuse päevad kattuksid.
+
+Kui päevad ei kattu, annab `check` sellest hoiatuse (nt featured päev on uuem kui viewers CSV) ja osa mõõdikuid (nt `views_total` viimase featured päeva jaoks) võib jääda tühjaks.
 
 ## Tööjaotus
 
