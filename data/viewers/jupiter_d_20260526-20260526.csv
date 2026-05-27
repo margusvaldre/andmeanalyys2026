@@ -1,0 +1,1338 @@
+date;type;title;total;live;od;web;app
+26.05.2026;S;Aktuaalne kaamera;5233;2956;2526;4716;517
+26.05.2026;S;La Promesa;5396;631;4820;4183;1213
+26.05.2026;S;Ringvaade;3123;1721;1545;2827;296
+26.05.2026;S;Terevisioon;3040;1979;1171;2666;374
+26.05.2026;S;Impulss;2096;1681;446;1918;178
+26.05.2026;S;Esimene stuudio;1329;1101;239;1229;100
+26.05.2026;S;Sport;1176;1002;181;1076;100
+26.05.2026;S;Hercule Poirot;1273;19;1253;777;496
+26.05.2026;S;Õnne 13;913;205;715;770;143
+26.05.2026;S;Kadunud;929;4;926;503;426
+26.05.2026;S;Maxima;526;0;526;500;26
+26.05.2026;S;Suured loomad, väiksed loomad;704;0;704;474;230
+26.05.2026;S;Betty diagnoosid;512;190;333;434;78
+26.05.2026;S;Välisilm;508;63;446;430;78
+26.05.2026;S;ENSV;527;0;527;423;104
+26.05.2026;S;Pealtnägija;433;0;433;372;61
+26.05.2026;S;Grace;698;4;694;372;326
+26.05.2026;S;Kirjandusministri juures. Muusika eri;358;328;29;336;22
+26.05.2026;S;Maahommik;371;238;148;332;39
+26.05.2026;S;31. jaoskond;334;233;104;321;13
+26.05.2026;S;Grantchester;323;248;73;314;9
+26.05.2026;S;Ohtlik lend;362;0;362;288;74
+26.05.2026;S;Eesti lood;261;161;107;248;13
+26.05.2026;S;Mõrvad põhjas;339;0;339;226;113
+26.05.2026;S;Rahva oma kaitse;223;0;223;219;4
+26.05.2026;S;Müstiline Venemaa;217;0;217;204;13
+26.05.2026;S;Jana - igaveseks märgitud;347;0;347;204;143
+26.05.2026;S;Õde Boniface'i mõistatused;219;141;82;197;22
+26.05.2026;S;Tervist!;197;143;58;193;4
+26.05.2026;S;Raudne eesriie. Elu Nõukogude okupatsiooni tingimustes;241;106;136;193;48
+26.05.2026;S;"Järjejutt. Sam Wachman ""Päevalillepoisid""";190;0;190;190;0
+26.05.2026;S;Hommik Anuga;214;17;197;175;39
+26.05.2026;S;Südameasi;245;7;238;175;70
+26.05.2026;S;Kuld;290;13;277;168;122
+26.05.2026;S;Ivalo;189;0;189;150;39
+26.05.2026;S;Professor T.;248;0;248;139;109
+26.05.2026;S;Pulss;135;0;135;131;4
+26.05.2026;S;Tuulepealne maa;150;0;150;128;22
+26.05.2026;S;Kuninglik skandaal;163;0;163;128;35
+26.05.2026;S;Sissi;137;0;137;120;17
+26.05.2026;S;Lühhike öppetus Eesti kultuurist;165;0;165;117;48
+26.05.2026;S;Lahku. Barcelona;174;0;174;113;61
+26.05.2026;S;Hotell Portofino;132;0;132;106;26
+26.05.2026;S;Osoon;115;0;115;98;17
+26.05.2026;S;Teel jalgpalli MM-ile;128;57;72;98;30
+26.05.2026;S;Kuula rändajat;91;0;91;91;0
+26.05.2026;S;Minu meri;105;4;101;88;17
+26.05.2026;S;Marie Antoinette;118;8;110;88;30
+26.05.2026;S;Õhinapõhised;115;0;115;80;35
+26.05.2026;S;Elukaaslased;115;0;115;80;35
+26.05.2026;S;Nota bene! Teatriluulud;80;58;22;80;0
+26.05.2026;S;Nullpunkt;80;0;80;80;0
+26.05.2026;S;Varastatud lootus: Armukelm;108;0;108;73;35
+26.05.2026;S;Reetur;121;4;117;69;52
+26.05.2026;S;Surm paradiisis;82;0;82;69;13
+26.05.2026;S;Eesti lugu;69;0;69;69;0
+26.05.2026;S;Kõik patud;117;0;117;69;48
+26.05.2026;S;See ei ole mõrvamüsteerium;96;8;88;66;30
+26.05.2026;S;Põrsas Peppa;875;11;864;66;809
+26.05.2026;S;Prillitoos;62;4;58;62;0
+26.05.2026;S;Segased;66;0;66;62;4
+26.05.2026;S;"Järjejutt. David Herbert Lawrence ""Inglismaa, mu Inglismaa"" ja ""Pime mees""";62;0;62;62;0
+26.05.2026;S;"Järjejutt. Jari Järvelä ""Mozzarellakuu""";58;0;58;58;0
+26.05.2026;S;Maailm ja mõnda;93;8;85;58;35
+26.05.2026;S;Ukraina stuudio;80;0;80;58;22
+26.05.2026;S;Käbi ei kuku...;62;7;55;58;4
+26.05.2026;S;Sherlock Holmesi lood;58;0;58;58;0
+26.05.2026;S;OP;77;9;68;55;22
+26.05.2026;S;TV 10 olümpiastarti;68;56;11;55;13
+26.05.2026;S;Erakordsed Šveitsi mägiraudteed;55;36;18;55;0
+26.05.2026;S;Archie;64;0;64;55;9
+26.05.2026;S;Õhukesel jääl. Putin ja Greenpeace;77;4;72;55;22
+26.05.2026;S;Välistund;55;0;55;55;0
+26.05.2026;S;Reykjavíki fusioon;72;0;72;55;17
+26.05.2026;S;Milderid Marokos;94;4;90;55;39
+26.05.2026;S;Kunagi pole liiga hilja;68;0;68;55;13
+26.05.2026;S;Parlament;73;0;73;51;22
+26.05.2026;S;Mullist välja;68;0;68;51;17
+26.05.2026;S;Plekktrumm;64;0;64;51;13
+26.05.2026;S;Eurovisiooni lauluvõistlus 2026;160;0;160;51;109
+26.05.2026;S;Eesti (täielik ja kontrollitud) ajalugu;64;0;64;51;13
+26.05.2026;S;Wikmani poisid;55;0;55;51;4
+26.05.2026;S;Joanna Lumley Suurbritannia avastusretk;60;11;49;47;13
+26.05.2026;S;Kah mul sugulased;51;0;51;47;4
+26.05.2026;S;Tšornobõli katastroof;51;0;51;47;4
+26.05.2026;S;Lammas Shaun;138;26;113;47;91
+26.05.2026;S;Von Fock;44;0;44;44;0
+26.05.2026;S;Klass: elu pärast;44;0;44;44;0
+26.05.2026;S;Samost ja Aaspõllu;44;0;44;44;0
+26.05.2026;S;Davos 1917;70;0;70;44;26
+26.05.2026;S;????+;114;92;22;40;74
+26.05.2026;S;Tuled kodusadamas;79;4;75;36;43
+26.05.2026;S;Vaikimiskoodeks;49;0;49;36;13
+26.05.2026;S;Hommikumaa vägevad;36;0;36;36;0
+26.05.2026;S;Hercule Poirot' lood;36;0;36;36;0
+26.05.2026;S;Dalgliesh;72;0;72;33;39
+26.05.2026;S;Ajalugu viie minutiga;33;0;33;33;0
+26.05.2026;S;"Järjejutt. Agatha Christie ""Haripunkti poole""";33;0;33;33;0
+26.05.2026;S;?????????? ??????;90;40;57;33;57
+26.05.2026;S;Ridley;55;4;50;33;22
+26.05.2026;S;Shetland;37;0;37;33;4
+26.05.2026;S;Võimla;33;11;22;33;0
+26.05.2026;S;Kalifaat;46;18;28;33;13
+26.05.2026;S;7 vaprat. Unplugged;42;19;22;33;9
+26.05.2026;S;Muutuv planeet;42;0;42;33;9
+26.05.2026;S;Öine rong;63;0;63;33;30
+26.05.2026;S;Vera;46;0;46;29;17
+26.05.2026;S;Vikerhommik;29;29;0;29;0
+26.05.2026;S;4x4;33;0;33;29;4
+26.05.2026;S;Kes tappis Otto Mülleri?;38;0;38;29;9
+26.05.2026;S;Unustamatu;42;0;42;29;13
+26.05.2026;S;Elu võimalikkusest maal;30;0;30;26;4
+26.05.2026;S;Jälg;30;0;30;26;4
+26.05.2026;S;Järjejutt. Jojo Moyes ''Kui kõik kokku liita'';26;0;26;26;0
+26.05.2026;S;Argentina, äärmuste maa;52;0;52;26;26
+26.05.2026;S;"Järjejutt. Dale Carnegie ""Kuidas võita sõpru ja mõjustada inimesi""";26;0;26;26;0
+26.05.2026;S;Midsomeri mõrvad;35;0;35;26;9
+26.05.2026;S;Operatsioon Ai;126;15;111;26;100
+26.05.2026;S;????????;74;57;21;26;48
+26.05.2026;S;Kadumiste kolmnurk;52;0;52;26;26
+26.05.2026;S;Meie kirjanduse lugu;26;0;26;26;0
+26.05.2026;S;Eesti Laul 2025. Proovipäev;26;22;4;26;0
+26.05.2026;S;Riigimehed;35;0;35;26;9
+26.05.2026;S;Reispass;26;0;26;26;0
+26.05.2026;S;"Järjejutt. Kaur Riismaa ""Väsinud valguse teooria""";22;0;22;22;0
+26.05.2026;S;"Järjejutt. Ain Kütt ""Kolme kaardi mõistatus""";22;0;22;22;0
+26.05.2026;S;Pühapäevalõuna;22;0;22;22;0
+26.05.2026;S;Päevakaja;31;11;20;22;9
+26.05.2026;S;100 000 minutit ninapidi koos;44;0;44;22;22
+26.05.2026;S;Okavango – unistuste jõgi;22;0;22;22;0
+26.05.2026;S;Stella ja Sam;48;19;29;22;26
+26.05.2026;S;Kontserdisaalis;22;0;22;22;0
+26.05.2026;S;Stanley Tucci avastamas Itaaliat;70;4;65;22;48
+26.05.2026;S;???????? ????;39;35;8;22;17
+26.05.2026;S;Ükskord laupäeval;44;0;44;22;22
+26.05.2026;S;?????????? ?????? 18:00;31;15;15;22;9
+26.05.2026;S;Rakett 69;48;0;48;22;26
+26.05.2026;S;Kultuuriuudised;22;18;4;22;0
+26.05.2026;S;Huvitaja;18;0;18;18;0
+26.05.2026;S;Nicolas le Floch;31;0;31;18;13
+26.05.2026;S;Buratino tegutseb jälle;96;0;96;18;78
+26.05.2026;S;Müür;22;0;22;18;4
+26.05.2026;S;Kultuuristuudio. Kirjandusministri juures;18;0;18;18;0
+26.05.2026;S;Hei, turbod!;135;20;116;18;117
+26.05.2026;S;Susapusa Okidos;96;20;77;18;78
+26.05.2026;S;"Järjejutt. Andrus Kivirähk ""Ivan Orava mälestused""";18;0;18;18;0
+26.05.2026;S;Martin Clunesiga Atlandi ookeani saartel;22;0;22;18;4
+26.05.2026;S;David Attenborough' värvide maailm;22;0;22;18;4
+26.05.2026;S;Röövlitütar Ronja;22;4;19;18;4
+26.05.2026;S;Heureka;22;0;22;18;4
+26.05.2026;S;????;35;24;11;18;17
+26.05.2026;S;Homme põgeneme;22;0;22;18;4
+26.05.2026;S;Reporteritund;18;15;4;18;0
+26.05.2026;S;Räpane neljas võim;31;0;31;18;13
+26.05.2026;S;Otse uudistemajast;22;0;22;18;4
+26.05.2026;S;Sina ja mina;18;0;18;18;0
+26.05.2026;S;?????;44;37;8;18;26
+26.05.2026;S;?????? ?? ????;31;28;4;18;13
+26.05.2026;S;Sherwood;22;0;22;18;4
+26.05.2026;S;Elu allpool nulli;18;4;15;18;0
+26.05.2026;S;Järjejutt;18;11;7;18;0
+26.05.2026;S;Unistuste maja;18;0;18;18;0
+26.05.2026;S;Uudistesaated;18;11;7;18;0
+26.05.2026;S;Suuruurijad;114;24;90;18;96
+26.05.2026;S;Litvinenko;22;0;22;18;4
+26.05.2026;S;Sherlock;40;0;40;18;22
+26.05.2026;S;Reisile minuga;15;0;15;15;0
+26.05.2026;S;Lepatriinu ja Musta Kassi imelised lood;228;0;228;15;213
+26.05.2026;S;Isa Browni lood;15;0;15;15;0
+26.05.2026;S;MEIE BINGO!;19;0;19;15;4
+26.05.2026;S;Rohelised niidud;19;0;19;15;4
+26.05.2026;S;Ellis;24;0;24;15;9
+26.05.2026;S;Loetud ja kirjutatud;15;0;15;15;0
+26.05.2026;S;Burattino;37;0;37;15;22
+26.05.2026;S;Kalamaja blues;15;0;15;15;0
+26.05.2026;S;Rahva teenrid;15;0;15;15;0
+26.05.2026;S;"Järjejutt. Eet Tuule ""Kimalased Piksekivil""";15;0;15;15;0
+26.05.2026;S;Eesti aja lood;15;0;15;15;0
+26.05.2026;S;18-aastane oligarh;19;0;19;15;4
+26.05.2026;S;PANK;24;0;24;15;9
+26.05.2026;S;Stuudios on Andres Oja;15;15;0;15;0
+26.05.2026;S;Eesti eurolaul;15;7;7;15;0
+26.05.2026;S;Telelavastus. Rudolf ja Irma;15;0;15;15;0
+26.05.2026;S;Psühho;15;0;15;15;0
+26.05.2026;S;Mulgikeelsed uudised;19;15;4;15;4
+26.05.2026;S;Kolm rubiini;19;0;19;15;4
+26.05.2026;S;Õhtujutt;15;11;4;15;0
+26.05.2026;S;Uudis+;15;7;7;15;0
+26.05.2026;S;Teatrietendus. Silme ees läheb mustaks;15;0;15;15;0
+26.05.2026;S;Maailm linnulennult;15;0;15;15;0
+26.05.2026;S;Miss Marple'i lood;28;0;28;15;13
+26.05.2026;S;Miks mitte?!;15;0;15;15;0
+26.05.2026;S;Lotte lood;106;0;106;15;91
+26.05.2026;S;100 ????? ????? ??????;24;19;4;15;9
+26.05.2026;S;Harald ja Sonja;24;0;24;15;9
+26.05.2026;S;?????????????;32;32;0;15;17
+26.05.2026;S;Pips ja Popi;80;15;65;15;65
+26.05.2026;S;TeadusEST;15;0;15;15;0
+26.05.2026;S;Tegus Timmu;63;4;63;15;48
+26.05.2026;S;Aasta planeedil Maa;15;0;15;15;0
+26.05.2026;S;Auschwitzi tätoveerija;24;0;24;15;9
+26.05.2026;S;Rebased ja mägrad;28;15;13;15;13
+26.05.2026;S;Vanad ja kobedad;19;0;19;15;4
+26.05.2026;S;Truu naine;28;0;28;15;13
+26.05.2026;S;Päevatee;15;0;15;15;0
+26.05.2026;S;NOVA;11;0;11;11;0
+26.05.2026;S;Nukuvalitsus;11;0;11;11;0
+26.05.2026;S;Tuta asjad;168;0;168;11;157
+26.05.2026;S;Kultuuri kodu;11;0;11;11;0
+26.05.2026;S;"Järjejutt. Ain Kütt ""Risti soldati mõistatus. Sagadi paruni mõrvalood""";11;0;11;11;0
+26.05.2026;S;Major Skovoroda;20;0;20;11;9
+26.05.2026;S;Laske mind Lavale;11;0;11;11;0
+26.05.2026;S;Tants aurukatla ümber;11;0;11;11;0
+26.05.2026;S;Üks lugu;20;0;20;11;9
+26.05.2026;S;Sinu uus sugulane;11;0;11;11;0
+26.05.2026;S;Juhan Viiding 75 täispikad intervjuud;11;0;11;11;0
+26.05.2026;S;Jutusaade;11;0;11;11;0
+26.05.2026;S;Claude;28;15;13;11;17
+26.05.2026;S;Ringvaade suvel;11;0;11;11;0
+26.05.2026;S;Ajavaod;20;0;20;11;9
+26.05.2026;S;Öko? Loogiline;11;0;11;11;0
+26.05.2026;S;Agatha Christie Hjerson;11;0;11;11;0
+26.05.2026;S;Doktor Nadežda;11;0;11;11;0
+26.05.2026;S;Vanaaja seitse maailmaimet;20;0;20;11;9
+26.05.2026;S;Aktuaalne kaamera (viipekeeles);15;15;0;11;4
+26.05.2026;S;Mnemoturniir;15;0;15;11;4
+26.05.2026;S;"Järjejutt. Urmas Vadi ""Kuu teine pool""";11;0;11;11;0
+26.05.2026;S;Tallinn Express;11;0;11;11;0
+26.05.2026;S;Jane Eyre;11;0;11;11;0
+26.05.2026;S;Hakkab jälle pihta;11;0;11;11;0
+26.05.2026;S;Süü;11;0;11;11;0
+26.05.2026;S;Kreisiraadio;20;0;20;11;9
+26.05.2026;S;Päästa mind;20;0;20;11;9
+26.05.2026;S;EV108;11;0;11;11;0
+26.05.2026;S;Maailm leekides;11;0;11;11;0
+26.05.2026;S;"XXVIII laulu- ja XXI tantsupidu ""Iseoma""";11;0;11;11;0
+26.05.2026;S;Labor;11;0;11;11;0
+26.05.2026;S;Kodukäijad;11;0;11;11;0
+26.05.2026;S;Isapuhkus;11;0;11;11;0
+26.05.2026;S;Veronika;11;0;11;11;0
+26.05.2026;S;"Kristiina Kass ""Lõvi Leo""";15;0;15;11;4
+26.05.2026;S;Muusika;11;11;0;11;0
+26.05.2026;S;Uudishimu tippkeskus;11;0;11;11;0
+26.05.2026;S;Floor paneb reeglid paika!;189;11;178;11;178
+26.05.2026;S;Jäähoki MM I divisjon;15;0;15;11;4
+26.05.2026;S;Must klahv, valge klahv;11;0;11;11;0
+26.05.2026;S;Vabadussõja lugu;11;0;11;11;0
+26.05.2026;S;Eesti pilvepiirilt;15;0;15;11;4
+26.05.2026;S;Stuudios on Sten Teppan;11;0;11;11;0
+26.05.2026;S;Eesti mäng;15;0;15;11;4
+26.05.2026;S;"Järjejutt. Viivi Luik ""Seitsmes rahukevad""";11;0;11;11;0
+26.05.2026;S;Saladuslik Aafrika;11;0;11;11;0
+26.05.2026;S;Piirilinnus;11;0;11;11;0
+26.05.2026;S;Tantsutüdrukud;11;0;11;11;0
+26.05.2026;S;"Järjejutt. Karl Ristikivi ""Imede saar""";11;0;11;11;0
+26.05.2026;S;Meloturniir;11;0;11;11;0
+26.05.2026;S;Meie hõimlased;11;0;11;11;0
+26.05.2026;S;Kauamängiv;11;7;7;11;0
+26.05.2026;S;Aastavahetus 2018/2019;7;0;7;7;0
+26.05.2026;S;Surma ei otsinud keegi;7;0;7;7;0
+26.05.2026;S;Erinnüsed;7;0;7;7;0
+26.05.2026;S;Klassikatelevisioon;7;0;7;7;0
+26.05.2026;S;Teise mätta otsast;7;0;7;7;0
+26.05.2026;S;Hiina - iidne looduse kuningriik;20;0;20;7;13
+26.05.2026;S;"Järjejutt. Georges Simenon ""Uustulnuk""";7;0;7;7;0
+26.05.2026;S;Muumioru lood;203;0;203;7;196
+26.05.2026;S;Vahur Kersna 40/60;7;0;7;7;0
+26.05.2026;S;Päästa ema;7;0;7;7;0
+26.05.2026;S;Reedene intervjuu;7;0;7;7;0
+26.05.2026;S;Tuntud muinaslood;7;0;7;7;0
+26.05.2026;S;Queen of F*cking Everything;7;0;7;7;0
+26.05.2026;S;"Järjejutt. Joe Alex ""Andekad näitlejad""";7;0;7;7;0
+26.05.2026;S;Väinad maa ja mere vahel;7;0;7;7;0
+26.05.2026;S;Teatrietendus. Mees, naine ja kontsert;7;0;7;7;0
+26.05.2026;S;Tähelepanu! Tegemist on teadusega;7;0;7;7;0
+26.05.2026;S;Ühe minuti filmid 2025 - Loovus vs Loodus;7;0;7;7;0
+26.05.2026;S;Rannahotell;7;0;7;7;0
+26.05.2026;S;NOVA seletab;7;0;7;7;0
+26.05.2026;S;Tagamõtsa;7;0;7;7;0
+26.05.2026;S;Surm paradiisis. Jõulu-eri;7;0;7;7;0
+26.05.2026;S;Minemine;7;0;7;7;0
+26.05.2026;S;Pilvede värvid;7;0;7;7;0
+26.05.2026;S;Putini salarelvad;7;0;7;7;0
+26.05.2026;S;Ruudu ja Tupsu;59;11;48;7;52
+26.05.2026;S;Ühe minuti filmid 2023 - Märk ja meel;7;0;7;7;0
+26.05.2026;S;Väike luulesaade;7;0;7;7;0
+26.05.2026;S;Ärapanija;11;0;11;7;4
+26.05.2026;S;Teatrietendus. Kes kardab Virginia Woolfi?;7;0;7;7;0
+26.05.2026;S;Tähelaev;7;0;7;7;0
+26.05.2026;S;Bettany Hughesi suur reisituur: Pariisist Rooma;11;0;11;7;4
+26.05.2026;S;Stepilõvi Celaleddin;7;0;7;7;0
+26.05.2026;S;Naine ajas;7;0;7;7;0
+26.05.2026;S;Viimane kiri kallimalt;7;0;7;7;0
+26.05.2026;S;?????? ???????. ????????? ???????;11;8;4;7;4
+26.05.2026;S;Räpane sport - laskesuusatamise skandaal;7;0;7;7;0
+26.05.2026;S;Luise ja Oliver;150;0;150;7;143
+26.05.2026;S;Kirjutatud armastus;7;0;7;7;0
+26.05.2026;S;Eesti novell;7;0;7;7;0
+26.05.2026;S;"Ilmar Tomusk ""Isamoodi unejutud""";11;0;11;7;4
+26.05.2026;S;"Järjejutt. Agatha Christie ""Risti kuningas"" ja ""Rhodose kolmnurk""";7;0;7;7;0
+26.05.2026;S;IT-vaatlik;7;0;7;7;0
+26.05.2026;S;Eesti filmi- ja teleauhinnad;7;0;7;7;0
+26.05.2026;S;Vana aja asjad;7;0;7;7;0
+26.05.2026;S;Juurdlust toimetab Lucy Worsley;7;0;7;7;0
+26.05.2026;S;Teatrietendus. Kes aevastas?;7;0;7;7;0
+26.05.2026;S;"Järjejutt. A. H. Tammsaare ""Põrgupõhja uus Vanapagan""";7;0;7;7;0
+26.05.2026;S;Tšingis-khaani Mongoolia;7;0;7;7;0
+26.05.2026;S;Perepidu;7;0;7;7;0
+26.05.2026;S;???? ? ?????;24;24;0;7;17
+26.05.2026;S;Hiir Hops;33;7;26;7;26
+26.05.2026;S;Maailma kõige targem rahvas;7;0;7;7;0
+26.05.2026;S;Suus sulav Eesti;7;0;7;7;0
+26.05.2026;S;Viis minutit veel;7;0;7;7;0
+26.05.2026;S;Legend eluajal;7;0;7;7;0
+26.05.2026;S;"Järjejutt. Peedu Saar ""Mailased""";7;0;7;7;0
+26.05.2026;S;Raadiosaated ringhäälingu ajaloost;7;0;7;7;0
+26.05.2026;S;Reis loomariigis;7;0;7;7;0
+26.05.2026;S;Vürtside võlumaailm;11;0;11;7;4
+26.05.2026;S;D'Artagnan ja kolm musketäri;7;0;7;7;0
+26.05.2026;S;Selge pilt;7;0;7;7;0
+26.05.2026;S;Ühe minuti filmid 2022 - Keha ja keel;7;0;7;7;0
+26.05.2026;S;Jäine planeet II;7;0;7;7;0
+26.05.2026;S;?????? ???????? ??????: ????????????? ???????;11;11;0;7;4
+26.05.2026;S;Tee oma tee;7;0;7;7;0
+26.05.2026;S;"Järjejutt. Kjell Westö ""Tritonus""";7;0;7;7;0
+26.05.2026;S;"Järjejutt. Mihkel Mutt ""Pingviin ja raisakass""";7;0;7;7;0
+26.05.2026;S;Kunstiministeerium;7;0;7;7;0
+26.05.2026;S;OP lood;7;4;4;7;0
+26.05.2026;S;"Järjejutt. Reeli Reinaus ""Kuidas mu isa endale uue naise sai""";7;0;7;7;0
+26.05.2026;S;"Järjejutt. Andrus Kivirähk ""Rehepapp""";7;0;7;7;0
+26.05.2026;S;"Järjejutt. George Orwell ""Loomade farm""";7;0;7;7;0
+26.05.2026;S;Ajalootund;7;0;7;7;0
+26.05.2026;S;R2 Minilaiv laulud UUS;7;0;7;7;0
+26.05.2026;S;Põlev maa;7;0;7;7;0
+26.05.2026;S;Öökapi raamat;7;0;7;7;0
+26.05.2026;S;Taanimaa imeline taltsutamata loodus;7;0;7;7;0
+26.05.2026;S;Terve vaim;7;0;7;7;0
+26.05.2026;S;Üks koorilaul;7;0;7;7;0
+26.05.2026;S;Tabuun;7;0;7;7;0
+26.05.2026;S;Elu loomaaias;7;0;7;7;0
+26.05.2026;S;Alpimaja;7;0;7;7;0
+26.05.2026;S;Kahe sõbra lood;7;0;7;7;0
+26.05.2026;S;"Järjejutt. Jean Webster ""Pikakoivaline isa""";7;0;7;7;0
+26.05.2026;S;Ada. Rääkimata lugu;11;0;11;7;4
+26.05.2026;S;Euroopa aeg;7;0;7;7;0
+26.05.2026;S;Kirjanike radadel Richard E. Grantiga;7;0;7;7;0
+26.05.2026;S;"Järjejutt. Antoine de Saint-Exupéry ""Väike prints""";4;0;4;4;0
+26.05.2026;S;"Järjejutt. Claude Duneton ""Punaste metsade taga""";4;0;4;4;0
+26.05.2026;S;"Kuuldemäng. Eno Raud ""Jälle need Naksitrallid""";4;0;4;4;0
+26.05.2026;S;"Järjekuuldemäng. Vambola Rähn ""Mõrv puiesteel""";4;0;4;4;0
+26.05.2026;S;"Järjejutt. Tiina Laanem ""Liisu laseb jalga""";4;0;4;4;0
+26.05.2026;S;Raadioteater;4;0;4;4;0
+26.05.2026;S;"Järjejutt. Karel ?apek ""Inglise kirjad""";4;0;4;4;0
+26.05.2026;S;Tujurikkuja;13;0;13;4;9
+26.05.2026;S;Alexander Armstrong Sri Lankal;4;0;4;4;0
+26.05.2026;S;Palgamõrvar;4;0;4;4;0
+26.05.2026;S;Kontakt;4;0;4;4;0
+26.05.2026;S;Lumekuninganna;4;0;4;4;0
+26.05.2026;S;Aare Toikka - 60!;4;0;4;4;0
+26.05.2026;S;Kinomaja filmikooli lühifilmide paremik;4;0;4;4;0
+26.05.2026;S;Kull ja kiri. Maailmaimed;4;0;4;4;0
+26.05.2026;S;Lahutus Läti moodi;4;0;4;4;0
+26.05.2026;S;Noored maailmamuutjad;4;0;4;4;0
+26.05.2026;S;Zoja;4;0;4;4;0
+26.05.2026;S;Kunstiskandaalid;4;0;4;4;0
+26.05.2026;S;Vaikimine;4;0;4;4;0
+26.05.2026;S;Õppetund;4;0;4;4;0
+26.05.2026;S;Kuulsuste lahing;4;0;4;4;0
+26.05.2026;S;Vaga vesi;4;0;4;4;0
+26.05.2026;S;Keel ja kool;4;0;4;4;0
+26.05.2026;S;Hiirelõks kassile;4;0;4;4;0
+26.05.2026;S;"Järjejutt. John O'Hara ""Arsti poeg""";4;0;4;4;0
+26.05.2026;S;Naeroobika;8;0;8;4;4
+26.05.2026;S;Sipsiku laulud;13;0;13;4;9
+26.05.2026;S;Järjejutt. Tove Jansson ,,Suveraamat'';4;0;4;4;0
+26.05.2026;S;"Järjejutt. Mats Traat ""Kohvioad""";4;0;4;4;0
+26.05.2026;S;"Järjejutt. F. S. Fitzgerald ""Teemant nii suur nagu Ritz-hotell""";4;0;4;4;0
+26.05.2026;S;Armastan sind igavesti;4;0;4;4;0
+26.05.2026;S;Kalale Koržetsiga;4;0;4;4;0
+26.05.2026;S;7 vaprat. Kontsert;4;0;4;4;0
+26.05.2026;S;"Järjejutt. Ernst Enno ""Minu sõbrad""";4;0;4;4;0
+26.05.2026;S;Mark Soosaar. Kollektsioon;4;0;4;4;0
+26.05.2026;S;Ita Ever kuuldemängudes;4;0;4;4;0
+26.05.2026;S;Hajameelselt abielus;4;0;4;4;0
+26.05.2026;S;Pikk vari;4;0;4;4;0
+26.05.2026;S;Eesti Televisioon;4;0;4;4;0
+26.05.2026;S;Tuleb tuttav ette;4;0;4;4;0
+26.05.2026;S;Salaopakad;4;0;4;4;0
+26.05.2026;S;Lugusid teatrist ja teatritegijatest;4;0;4;4;0
+26.05.2026;S;Meediapädevuse õppevideod;4;0;4;4;0
+26.05.2026;S;"Järjejutt. Katrin Laur ""Atlantis""";4;0;4;4;0
+26.05.2026;S;"Järjejutt. Andrus Kasemaa ""Ema tuba""";4;0;4;4;0
+26.05.2026;S;"Järjekuuldemäng. Urmas Vadi ""Varasta veel võõraid karusid!""";4;0;4;4;0
+26.05.2026;S;"Järjejutt. Jonas Jonasson ""Saja-aastane, kes hüppas aknast välja ja kadus""";4;0;4;4;0
+26.05.2026;S;R2 Päev intervjuud;4;0;4;4;0
+26.05.2026;S;Eurolaul / Eesti laul;4;0;4;4;0
+26.05.2026;S;Head lood;4;0;4;4;0
+26.05.2026;S;ehh, uhhuduur;4;0;4;4;0
+26.05.2026;S;Margarita Voites. Kollektsioon;4;0;4;4;0
+26.05.2026;S;Aeg peatub;4;0;4;4;0
+26.05.2026;S;Teatrietendus. Kevade;4;0;4;4;0
+26.05.2026;S;XXXIV Pärnu Filmifestival;4;0;4;4;0
+26.05.2026;S;"Otfried Preussler ""Väike nõid""";8;0;8;4;4
+26.05.2026;S;"Järjejutt. Mati Kuntro ""Armastuse ausammas""";4;0;4;4;0
+26.05.2026;S;"Järjejutt. Kristjan Sander ""13 talvist hetke""";4;0;4;4;0
+26.05.2026;S;Laskesuusatamise MK-etapp Otepääl;4;0;4;4;0
+26.05.2026;S;"Järjejutt. Joel Jans ""Põrgutõld""";4;0;4;4;0
+26.05.2026;S;Andrus Kivirähk. Kuuldemängud;4;0;4;4;0
+26.05.2026;S;Rauataltsutajad;4;0;4;4;0
+26.05.2026;S;Peakoka auroog;4;0;4;4;0
+26.05.2026;S;"Järjejutt. Erle Stanley Gardner ""Sentimentaalne mõrvalugu""";4;0;4;4;0
+26.05.2026;S;Lahutus Eesti moodi;8;0;8;4;4
+26.05.2026;S;So Long, Marianne;4;0;4;4;0
+26.05.2026;S;Järjejutt. Carolina Pihelgas ,,Lõikejoon'';4;0;4;4;0
+26.05.2026;S;Teatrietendus. Pilvede värvid;4;0;4;4;0
+26.05.2026;S;Eesti retromultikad;8;0;8;4;4
+26.05.2026;S;"Järjejutt. Fred Jüssi ""Reisikirju""";4;0;4;4;0
+26.05.2026;S;"Järjejutt. George Orwell ""1984""";4;0;4;4;0
+26.05.2026;S;"Kuuldemäng. Sofi Oksanen ""Puhastus""";4;0;4;4;0
+26.05.2026;S;???? ??????;4;0;4;4;0
+26.05.2026;S;Spordis ainult tüdrukud;4;0;4;4;0
+26.05.2026;S;Öised lood;4;0;4;4;0
+26.05.2026;S;Ema valik;4;0;4;4;0
+26.05.2026;S;Eurovisiooni laulud;4;0;4;4;0
+26.05.2026;S;Meie õpetajad;4;0;4;4;0
+26.05.2026;S;Esimesed päevad;4;0;4;4;0
+26.05.2026;S;Progressioon;4;0;4;4;0
+26.05.2026;S;Aasta kool 2026 finalistid;4;0;4;4;0
+26.05.2026;S;Järjejutt. Kristiina Ehin ,,Südametammide taga'';4;0;4;4;0
+26.05.2026;S;"Järjejutt. Mart Kase ""Metsik päevaraamat""";4;0;4;4;0
+26.05.2026;S;"Järjejutt. ""Lady Almina ja tegelik Downton Abbey""";4;0;4;4;0
+26.05.2026;S;Pea ees vette. Tai Kuningriigis;4;0;4;4;0
+26.05.2026;S;Telelavastus. Pildikesi Paunverest;4;0;4;4;0
+26.05.2026;S;100 spordihetke;4;0;4;4;0
+26.05.2026;S;"Järjejutt. Joe Alex ""Ööliblikas""";4;0;4;4;0
+26.05.2026;S;Loodud kestma;4;0;4;4;0
+26.05.2026;S;Eesti Laul 2025;4;0;4;4;0
+26.05.2026;S;Kadumise lühikursus lühifilmid;4;0;4;4;0
+26.05.2026;S;Saatuse kiuste;4;0;4;4;0
+26.05.2026;S;Elu parim nali;4;0;4;4;0
+26.05.2026;S;Teine maailmasõda. Eesti kroonikad;4;0;4;4;0
+26.05.2026;S;8 mm elu;4;0;4;4;0
+26.05.2026;S;Teatriõhtu;4;0;4;4;0
+26.05.2026;S;Üle parda;4;0;4;4;0
+26.05.2026;S;Teatrietendus. Arkaadia;8;0;8;4;4
+26.05.2026;S;Moodsa aja geniaalsed alustalad;4;0;4;4;0
+26.05.2026;S;Koomikud ja küsimused;4;0;4;4;0
+26.05.2026;S;"Järjejutt. Susanne Lieder ""Astrid Lindgren""";4;0;4;4;0
+26.05.2026;S;Öömuusika;4;4;0;4;0
+26.05.2026;S;Illiku maa helid;4;0;4;4;0
+26.05.2026;S;Salmonid;8;0;8;4;4
+26.05.2026;S;Tom Gatesi äge maailm;69;4;65;4;65
+26.05.2026;S;Noor meister;4;0;4;4;0
+26.05.2026;S;"Järjejutt. Helena Marchmont ""Mõrv eesriide taga""";4;0;4;4;0
+26.05.2026;S;"Järjejutt. Tenzing Norgay ""Lumetiiger""";4;0;4;4;0
+26.05.2026;S;Värvimuusika;4;0;4;4;0
+26.05.2026;S;"Järjejutt. August Kitzberg ""Püve Peetri riukad""";4;0;4;4;0
+26.05.2026;S;Ahvatlev ettepanek;4;0;4;4;0
+26.05.2026;S;Hendrik Relvega Borneo vihmametsas;4;0;4;4;0
+26.05.2026;S;Kuidas meist said sõdurid;4;0;4;4;0
+26.05.2026;S;"Järjejutt. August Mälk ""Suur vesi""";4;0;4;4;0
+26.05.2026;S;"Järjejutt. Leonie Swann ""Glennkill""";4;0;4;4;0
+26.05.2026;S;Legendaarsed kangelased;4;0;4;4;0
+26.05.2026;S;"Järjejutt. A. H. Tammsaare ""Kõrboja peremees""";4;0;4;4;0
+26.05.2026;S;"Järjejutt. Charlotte Brontë ""Shirley""";4;0;4;4;0
+26.05.2026;S;Lennud;8;0;8;4;4
+26.05.2026;S;"Järjejutt. Agatha Christie ""Süüdistuse tunnistaja""";4;0;4;4;0
+26.05.2026;S;Hetk ajaloos;4;0;4;4;0
+26.05.2026;S;Aegluubis maailm. Maroko;4;0;4;4;0
+26.05.2026;S;Sulle tehti tüng!;4;0;4;4;0
+26.05.2026;S;Uue aja asjad;4;0;4;4;0
+26.05.2026;S;Eesti nüüd siis Vabariik;8;0;8;4;4
+26.05.2026;S;Äratundmised;4;0;4;4;0
+26.05.2026;S;Oma kodu;4;0;4;4;0
+26.05.2026;S;Kui kardad, naerata;4;0;4;4;0
+26.05.2026;S;RUUM;4;0;4;4;0
+26.05.2026;S;Teatrietendus. Hapu vein ja sinihape;4;0;4;4;0
+26.05.2026;S;Kultuuristuudio. Arutelu;4;0;4;4;0
+26.05.2026;S;Tulevik ülaltvaates;4;0;4;4;0
+26.05.2026;S;Tartu muusikapäevad;4;0;4;4;0
+26.05.2026;S;Tõde ja valed;4;0;4;4;0
+26.05.2026;S;Peresaade;4;0;4;4;0
+26.05.2026;S;Anna ja sõbrad;17;4;13;4;13
+26.05.2026;S;Kirjandusfestival HeadRead;4;0;4;4;0
+26.05.2026;S;Hei, Kutsa!;152;4;147;4;148
+26.05.2026;S;Eesti Laul 2024;4;0;4;4;0
+26.05.2026;S;Karumõmm Pups;21;0;21;4;17
+26.05.2026;S;"Järjejutt. Lawrence Durrell ""Küprose kibedad sidrunid""";4;0;4;4;0
+26.05.2026;S;Pöörane aasta Aafrikas;4;0;4;4;0
+26.05.2026;S;"Järjejutt. Tiina Laanem ""Pildilt kukkujad""";4;0;4;4;0
+26.05.2026;S;Ei mingit kahtlust;4;0;4;4;0
+26.05.2026;S;Kuri tegu;4;0;4;4;0
+26.05.2026;S;Järjejutt. Mehis Heinsaare lugusid;4;0;4;4;0
+26.05.2026;S;Kasakad. Läbi ja lõhki väljamõeldud lugu;4;0;4;4;0
+26.05.2026;S;Õpe ei lõpe;4;0;4;4;0
+26.05.2026;S;Järjejutt. Karl Ristikivi ,,Hingede öö'';4;0;4;4;0
+26.05.2026;S;Annika;4;0;4;4;0
+26.05.2026;S;Dünastiad;8;0;8;4;4
+26.05.2026;S;Onu Tik-Taki seiklused;4;0;4;4;0
+26.05.2026;S;Kaadris;4;0;4;4;0
+26.05.2026;S;Teatrietendus. Mäng lossis;4;0;4;4;0
+26.05.2026;S;"Andrus Kivirähk ""Sirli, Siim ja saladused""";4;0;4;4;0
+26.05.2026;S;ETV kuld;4;0;4;4;0
+26.05.2026;S;Keelesaade;8;4;4;4;4
+26.05.2026;S;Puu, mis varjutab metsa;4;0;4;4;0
+26.05.2026;S;Püramiidi tipus;4;0;4;4;0
+26.05.2026;S;Jõulud Inglismaa aadlimõisates;4;0;4;4;0
+26.05.2026;S;"Järjejutt. Birk Rohelend ""Sa pead suudlema Silvat""";4;0;4;4;0
+26.05.2026;S;Jalgpalli Premium Liiga;8;0;8;4;4
+26.05.2026;S;Nostalgia;4;0;4;4;0
+26.05.2026;S;"Järjejutt. Kristi Küppar ""Viimane lusikas""";4;0;4;4;0
+26.05.2026;S;Jaht Monteperdidos;4;0;4;4;0
+26.05.2026;S;Teatrietendus. Roosiaed;4;0;4;4;0
+26.05.2026;S;Eesti Laul 2026. Etteasted ja muusikavideod;4;0;4;4;0
+26.05.2026;S;Laskesuusatamise MK etapid;4;0;4;4;0
+26.05.2026;S;Vallatud kurvid;8;0;8;4;4
+26.05.2026;S;Siin ja praegu;4;0;4;4;0
+26.05.2026;S;Ühe minuti filmid 2024 - AI=TA;4;0;4;4;0
+26.05.2026;S;"Kuuldemäng. Eduard Vilde ""Tabamata ime""";4;0;4;4;0
+26.05.2026;S;Vanusevahe;8;0;8;4;4
+26.05.2026;S;Tugitooliteater;4;0;4;4;0
+26.05.2026;S;Teoteatri filmilaagri lühifilmid 2024;4;0;4;4;0
+26.05.2026;S;Jäähoki MM;4;0;4;4;0
+26.05.2026;S;Andres Otsa raadiolugemisi;4;0;4;4;0
+26.05.2026;S;Must ja valge koer;30;0;30;4;26
+26.05.2026;S;Da capo;4;0;4;4;0
+26.05.2026;S;"Järjejutt. Jerome K. Jerome ""Kolm meest paadis, koerast rääkimata""";4;0;4;4;0
+26.05.2026;S;"Järjejutt. P. D. James ""Mõrvamõtted""";4;0;4;4;0
+26.05.2026;S;Maitse sünd;4;0;4;4;0
+26.05.2026;S;"Järjejutt. Cornell Woolrich ""Mõrsja riietub musta""";4;0;4;4;0
+26.05.2026;S;"XII noorte laulu- ja tantsupidu ""Mina jään""";4;0;4;4;0
+26.05.2026;S;Eestimaa kuulsad inimesed;4;0;4;4;0
+26.05.2026;S;Arhitektuurime;4;0;4;4;0
+26.05.2026;S;Teemaõhtu: Jaan Tätte 55;4;0;4;4;0
+26.05.2026;S;Köögikodanikud;4;0;4;4;0
+26.05.2026;S;"Järjejutt. Miika Nousiainen ""Juureravi""";4;0;4;4;0
+26.05.2026;S;"Järjejutt. Elo Selirand ""Punane päevik""";4;0;4;4;0
+26.05.2026;S;Metsavennad;4;0;4;4;0
+26.05.2026;S;"Järjejutt. Indrek Hargla ""Kadunud hingede ajaraamat""";4;0;4;4;0
+26.05.2026;S;Amadeus +;4;0;4;4;0
+26.05.2026;S;Kontserdisaal;4;0;4;4;0
+26.05.2026;S;Iluuisutamise MM Prahas;4;0;4;4;0
+26.05.2026;S;Pöörane aasta;4;0;4;4;0
+26.05.2026;S;"Järjejutt. Arvo Valton ""Õndsusesse kulgev päev""";4;0;4;4;0
+26.05.2026;S;"Järjejutt. Juhan Liiv ""Nõia tütar""";4;0;4;4;0
+26.05.2026;S;"Järjejutt. Anton Hansen Tammsaare ""Tõde ja õigus""";4;0;4;4;0
+26.05.2026;S;Külamehe luiskelood;4;0;4;4;0
+26.05.2026;S;Atentaat;4;0;4;4;0
+26.05.2026;S;Arktikast Antarktikasse;4;0;4;4;0
+26.05.2026;S;Maitserännak Eestimaal;4;0;4;4;0
+26.05.2026;S;Joanna Lumley Indias;8;0;8;4;4
+26.05.2026;S;Kaduva maailma lävel;4;0;4;4;0
+26.05.2026;S;Järelkuma;4;0;4;4;0
+26.05.2026;S;Kord olid niidud - Kiidjärve laulud;8;0;8;4;4
+26.05.2026;S;Telelavastus. 1991;4;0;4;4;0
+26.05.2026;S;Teletutvus;4;0;4;4;0
+26.05.2026;S;Johannese lähetamine;4;0;4;4;0
+26.05.2026;S;"Järjejutt. August Mälk ""Kadunud päike""";4;0;4;4;0
+26.05.2026;S;Telelavastus. Koera süda;4;0;4;4;0
+26.05.2026;S;Järjejutt. Daphne du Maurier ,,Mitte pärast keskööd'';4;0;4;4;0
+26.05.2026;S;Tornikell minu külas;4;0;4;4;0
+26.05.2026;S;Papi;4;0;4;4;0
+26.05.2026;S;TECHnolik;4;4;0;4;0
+26.05.2026;S;Läks aga Läände;4;0;4;4;0
+26.05.2026;S;Eesti imelised aastaajad;8;0;8;4;4
+26.05.2026;S;Vanad ajad;4;0;4;4;0
+26.05.2026;S;Korvpalli valikmängud;4;0;4;4;0
+26.05.2026;S;Mina ka;4;0;4;4;0
+26.05.2026;S;Ilmakaar;4;0;4;4;0
+26.05.2026;S;Aja kõlad;4;0;4;4;0
+26.05.2026;S;"Järjejutt. Leelo Tungal ""Naisekäe puudutus""";4;0;4;4;0
+26.05.2026;S;Harri Tiido taustajutud;4;0;4;4;0
+26.05.2026;S;Sisekergejõustiku MM Torunis;4;0;4;4;0
+26.05.2026;S;Õnnemajake;4;0;4;4;0
+26.05.2026;S;Metslased;4;0;4;4;0
+26.05.2026;S;Järjejutt. Voldemar Panso raadiolugemisi;4;0;4;4;0
+26.05.2026;S;"Järjejutt. Stefan Zweig ""Hirm""";4;0;4;4;0
+26.05.2026;S;"Järjejutt. Arthur Conan Doyle ""Kirst nr 249"" ""Suur Keinplatzi eksperiment""";4;0;4;4;0
+26.05.2026;S;Valimisstuudio;4;0;4;4;0
+26.05.2026;S;"Järjejutt. Margaret E. Brown ""Läbi kassi silmade""";4;0;4;4;0
+26.05.2026;S;"Järjejutt. Eduard Bornhöhe ""Vürst Gabriel""";4;0;4;4;0
+26.05.2026;S;Veetee;4;0;4;4;0
+26.05.2026;S;Ükskord Odessas;8;0;8;4;4
+26.05.2026;S;Gogol;4;0;4;4;0
+26.05.2026;S;Kümnendite jõulumuusika;4;0;4;4;0
+26.05.2026;S;"Järjejutt. Thomas Mann ""Tristan""";4;0;4;4;0
+26.05.2026;S;Esto TV;4;0;4;4;0
+26.05.2026;S;Teatrietendus. Pisuhänd;4;0;4;4;0
+26.05.2026;S;Järjejutt. Lewis Carroll ,,Alice Imedemaal'';4;0;4;4;0
+26.05.2026;S;OM 2026;4;0;4;4;0
+26.05.2026;S;Avatud toimik;4;0;4;4;0
+26.05.2026;S;"Alan Alexander Milne ""Karupoeg Puhh""";4;0;4;4;0
+26.05.2026;S;"Järjejutt. Anne Brontë ""Wildfelli härrastemaja rentnik""";4;0;4;4;0
+26.05.2026;S;"Järjejutt. Kai Vare ""Linnupesa elevandirajal""";4;0;4;4;0
+26.05.2026;S;Teater laulab;8;0;8;4;4
+26.05.2026;S;"Kairi Look ""Piia Präänik ja sõnasööbik""";4;0;4;4;0
+26.05.2026;S;"Järjejutt. Tõnis Tootsen ""Ahvide pasteet""";4;0;4;4;0
+26.05.2026;S;"Järjejutt. Urmas Vadi ""Neverland""";4;0;4;4;0
+26.05.2026;S;Planeet Maa III;4;0;4;4;0
+26.05.2026;S;Naisspioonid II maailmasõjas;4;0;4;4;0
+26.05.2026;S;ÖÖ TV;4;0;4;4;0
+26.05.2026;S;"Järjejutt. Agatha Christie ""Kriminaalsed armastuslood""";4;0;4;4;0
+26.05.2026;S;Oodo;30;4;26;4;26
+26.05.2026;S;"Järjejutt. Eeva Park ""Lõks lõpmatuses""";4;0;4;4;0
+26.05.2026;S;Joanna Lumley Siiditee seiklus;4;0;4;4;0
+26.05.2026;Y;Jaanuari kaks palet;1660;0;1660;1138;522
+26.05.2026;Y;Juhan Viiding. Eesti Hamlet;966;853;131;923;43
+26.05.2026;Y;55 sammu;521;0;521;412;109
+26.05.2026;Y;Kaitsmas Euroopat;459;92;371;346;113
+26.05.2026;Y;Ämblikmees: Kodust kaugel;354;0;354;328;26
+26.05.2026;Y;Margherita teel tähtede poole;377;0;377;325;52
+26.05.2026;Y;Osoon. Inimesed ja elevandid;285;186;102;259;26
+26.05.2026;Y;Alcarràs;276;0;276;237;39
+26.05.2026;Y;Armastuse olemus;284;0;284;219;65
+26.05.2026;Y;Südamepere;263;0;263;215;48
+26.05.2026;Y;Murieli pulm;181;0;181;168;13
+26.05.2026;Y;Ekraaniproovid Köler Prize'ile 2026;135;117;18;135;0
+26.05.2026;Y;Eine murul;183;0;183;131;52
+26.05.2026;Y;ERR.ee uudised;128;128;0;128;0
+26.05.2026;Y;Cheri lugu;144;0;144;109;35
+26.05.2026;Y;Armunud Orphea;137;29;108;102;35
+26.05.2026;Y;Pianist;124;0;124;98;26
+26.05.2026;Y;Kirsitubakas;106;0;106;84;22
+26.05.2026;Y;Reekviem Irenale;110;0;110;84;26
+26.05.2026;Y;Ingeborg Bachmann – teekond kõrbe;88;7;81;84;4
+26.05.2026;Y;Anna Pihl sõdurirännakul;81;4;77;77;4
+26.05.2026;Y;Seltsimees laps;103;8;95;77;26
+26.05.2026;Y;Sügisball;94;0;94;77;17
+26.05.2026;Y;Emalõvi;90;4;86;73;17
+26.05.2026;Y;Das Boot. Ühe allveelaeva lugu;88;0;88;66;22
+26.05.2026;Y;Aastad;75;0;75;66;9
+26.05.2026;Y;Korporatiivne toit;83;0;83;66;17
+26.05.2026;Y;Siin. Praegu. Pärast;80;0;80;58;22
+26.05.2026;Y;Kild minu südamest;68;0;68;55;13
+26.05.2026;Y;Vetikate lummuses;68;22;45;55;13
+26.05.2026;Y;Röövime panka!;116;0;116;55;61
+26.05.2026;Y;Härra Eikeegi Putini vastu;77;0;77;51;26
+26.05.2026;Y;Perekonnata;51;0;51;47;4
+26.05.2026;Y;28 päeva hiljem;51;0;51;47;4
+26.05.2026;Y;Torn;79;0;79;44;35
+26.05.2026;Y;KLASS;44;0;44;44;0
+26.05.2026;Y;Hitleri toidumaitsjad;62;0;62;40;22
+26.05.2026;Y;Lansky. Ameerika vägevaim gangster;83;0;83;40;43
+26.05.2026;Y;Elu on töö on elu;66;0;66;36;30
+26.05.2026;Y;Armastus kolme apelsini vastu. Lõpuetendus;36;0;36;36;0
+26.05.2026;Y;Viimne reliikvia;42;0;42;33;9
+26.05.2026;Y;Nõusolek;46;0;46;33;13
+26.05.2026;Y;Kafka teine armastus;37;0;37;33;4
+26.05.2026;Y;Linnahall;50;0;50;33;17
+26.05.2026;Y;Shirley;42;0;42;29;13
+26.05.2026;Y;Põhjaekspress;46;0;46;29;17
+26.05.2026;Y;Tulivesi;29;0;29;29;0
+26.05.2026;Y;Hiilgus;26;0;26;26;0
+26.05.2026;Y;Rong väljaspool sõiduplaani;35;0;35;26;9
+26.05.2026;Y;Suur võidusõit. Lancia Audi vastu;30;0;30;26;4
+26.05.2026;Y;Lõpmatu armastus;30;0;30;26;4
+26.05.2026;Y;Soovide puu;35;0;35;26;9
+26.05.2026;Y;Vanameeste paradiis;30;0;30;26;4
+26.05.2026;Y;Teised;43;0;43;26;17
+26.05.2026;Y;Telelavastus. Pisuhänd;39;0;39;26;13
+26.05.2026;Y;Süvamaa;30;0;30;26;4
+26.05.2026;Y;Räägi temaga;35;0;35;26;9
+26.05.2026;Y;Uskumatu, aga tõsi;31;0;31;22;9
+26.05.2026;Y;Ma armastan oma isa;22;0;22;22;0
+26.05.2026;Y;Väljasuremine: faktid;22;0;22;22;0
+26.05.2026;Y;Loomariigi lapsevanemad;31;0;31;22;9
+26.05.2026;Y;Edmond;22;0;22;22;0
+26.05.2026;Y;Perpetuum mobile;35;0;35;22;13
+26.05.2026;Y;Sangarid;39;0;39;22;17
+26.05.2026;Y;Kelly: kellegi teise unistus;22;0;22;22;0
+26.05.2026;Y;Maria Montessori;40;0;40;18;22
+26.05.2026;Y;Eesti Rotary lugu;31;0;31;18;13
+26.05.2026;Y;Kilplased;53;0;53;18;35
+26.05.2026;Y;Imehea;22;0;22;18;4
+26.05.2026;Y;"Ööülikool. Ene-Liis Semper ""Inimeseks olemise võim""";22;0;22;18;4
+26.05.2026;Y;Teatrietendus. Kolm korda üle õla;18;0;18;18;0
+26.05.2026;Y;Kangelase naasmine;22;0;22;18;4
+26.05.2026;Y;Mehed ei nuta;18;0;18;18;0
+26.05.2026;Y;Nähtamatu võitlus;22;0;22;18;4
+26.05.2026;Y;Kahtluste võrk;31;0;31;18;13
+26.05.2026;Y;Sensatsioon;24;0;24;15;9
+26.05.2026;Y;Taevatrepp;19;0;19;15;4
+26.05.2026;Y;Jumalamaa;15;0;15;15;0
+26.05.2026;Y;Meeletu;15;0;15;15;0
+26.05.2026;Y;2 päeva New Yorgis;15;0;15;15;0
+26.05.2026;Y;Disko ja tuumasõda;15;0;15;15;0
+26.05.2026;Y;Veipimissõltlased;15;0;15;15;0
+26.05.2026;Y;Palais royal!;15;0;15;15;0
+26.05.2026;Y;Ja kuningas ütles, kui imeline masin;19;0;19;15;4
+26.05.2026;Y;Ei meelest läe mul iial. Eesti filmilaulud;24;0;24;15;9
+26.05.2026;Y;Igavesti noor Bruce Lee;15;0;15;15;0
+26.05.2026;Y;??? ???? ??????;15;15;0;15;0
+26.05.2026;Y;Foto;32;0;32;15;17
+26.05.2026;Y;Lõhestatud NATO;19;0;19;15;4
+26.05.2026;Y;Gloria!;32;0;32;15;17
+26.05.2026;Y;Aasta Jaapani looduses;24;0;24;15;9
+26.05.2026;Y;Koerkorter;24;0;24;15;9
+26.05.2026;Y;Täna öösel me ei maga;15;0;15;15;0
+26.05.2026;Y;Noored ja ilusad;15;0;15;15;0
+26.05.2026;Y;Abramovitš: oligarh Putini hõlma all;19;0;19;15;4
+26.05.2026;Y;Üks mu sõber;11;0;11;11;0
+26.05.2026;Y;Hernehirmutised;15;0;15;11;4
+26.05.2026;Y;Vastutav. Laastatud planeedil äri ajada ei saa;11;0;11;11;0
+26.05.2026;Y;Muusad ei vaikinud;15;0;15;11;4
+26.05.2026;Y;Huumoriklubi esitleb: Jan Uuspõllu röst;11;0;11;11;0
+26.05.2026;Y;Teatrietendus. Säärane mulk ehk Sada vakka tangusoola;11;0;11;11;0
+26.05.2026;Y;Võidab see, kellel on kõige hullem mees;15;0;15;11;4
+26.05.2026;Y;Antipolis;15;0;15;11;4
+26.05.2026;Y;Kliimakatastroof: surmav uputus;15;0;15;11;4
+26.05.2026;Y;Mida täiskasvanud mängivad?;11;0;11;11;0
+26.05.2026;Y;Süütu;15;0;15;11;4
+26.05.2026;Y;Saint-Exupéry;11;0;11;11;0
+26.05.2026;Y;"Kuuldemäng. Jaan Kross ""Mardileib""";11;0;11;11;0
+26.05.2026;Y;Amundsen;11;0;11;11;0
+26.05.2026;Y;Ei-ei kosmoses;24;15;9;11;13
+26.05.2026;Y;Sinine;20;0;20;11;9
+26.05.2026;Y;Natalie Portman, luik, mässaja, ikoon;24;0;24;11;13
+26.05.2026;Y;Vara küps;15;0;15;11;4
+26.05.2026;Y;Täiuslikud võõrad;11;0;11;11;0
+26.05.2026;Y;Röövlirahnu Martin;20;0;20;11;9
+26.05.2026;Y;"Kuuldemäng. August Gailit ""Seeba kuninganna""";11;0;11;11;0
+26.05.2026;Y;"Kuuldemäng. Andres Noormets ""Asjad""";11;0;11;11;0
+26.05.2026;Y;Magusad tärnid;15;0;15;11;4
+26.05.2026;Y;Trammisõit. Juhan Viiding;11;0;11;11;0
+26.05.2026;Y;Londoni linnaloodus;20;0;20;11;9
+26.05.2026;Y;Sandarm ja sandarmipreilid;11;0;11;11;0
+26.05.2026;Y;Rahvalood;11;0;11;11;0
+26.05.2026;Y;Attenborough ja sipelgate kuningriik;11;0;11;11;0
+26.05.2026;Y;Libarebased ja kooljad;11;0;11;11;0
+26.05.2026;Y;Kuldne poiss Franz Klammer;11;0;11;11;0
+26.05.2026;Y;Aitäh, et sa minuga juhtusid;15;0;15;11;4
+26.05.2026;Y;Naksitrallid;33;0;33;11;22
+26.05.2026;Y;Sinu värv;24;0;24;11;13
+26.05.2026;Y;2025 Aktuaalses kaameras;11;0;11;11;0
+26.05.2026;Y;Noémie ütleb jah;11;0;11;11;0
+26.05.2026;Y;Alissa Imedemaal;11;0;11;11;0
+26.05.2026;Y;Al Pacino - staar vastu tahtmist;7;0;7;7;0
+26.05.2026;Y;Viimane reliikvia;7;0;7;7;0
+26.05.2026;Y;Aedniku suvi;11;0;11;7;4
+26.05.2026;Y;Hingede torm;7;0;7;7;0
+26.05.2026;Y;Teatrietendus. Isamaa pääsukesed;11;0;11;7;4
+26.05.2026;Y;Telelavastus. Odav spetsialist;7;0;7;7;0
+26.05.2026;Y;Võlg;7;0;7;7;0
+26.05.2026;Y;Teatrietendus. Mikumärdi;7;0;7;7;0
+26.05.2026;Y;Spordilinn Pärnu;7;0;7;7;0
+26.05.2026;Y;Mariah Carey. Südikus ja sära;7;0;7;7;0
+26.05.2026;Y;Üks ilus hommik;7;0;7;7;0
+26.05.2026;Y;Mäkrade salaelu;7;0;7;7;0
+26.05.2026;Y;"Kuuldemäng. A. H. Tammsaare ""Noored hinged""";7;0;7;7;0
+26.05.2026;Y;Tuta kontsert;33;0;33;7;26
+26.05.2026;Y;Jane Paberiti lugu;7;0;7;7;0
+26.05.2026;Y;Kuni päikesetõusuni;7;0;7;7;0
+26.05.2026;Y;Ükskord metsas;7;0;7;7;0
+26.05.2026;Y;Sündinud tantsule. Kai Leete;7;0;7;7;0
+26.05.2026;Y;Sandarm võtab naise;7;0;7;7;0
+26.05.2026;Y;Hiidude ajastu;7;0;7;7;0
+26.05.2026;Y;Lennukuurist muuseumiks;11;0;11;7;4
+26.05.2026;Y;Veto: Maailmarahu suurim hädaoht;7;0;7;7;0
+26.05.2026;Y;Telelavastus. Kuulsuse narrid;7;0;7;7;0
+26.05.2026;Y;Mauno saladuslik kadumine;7;0;7;7;0
+26.05.2026;Y;Kuldsed hääled;7;0;7;7;0
+26.05.2026;Y;"Grzegorz Walczak ""Kaktus""";7;0;7;7;0
+26.05.2026;Y;Sandarm jääb pensionile;11;0;11;7;4
+26.05.2026;Y;Vali kord;7;0;7;7;0
+26.05.2026;Y;Maailma kaugeim restoran;7;0;7;7;0
+26.05.2026;Y;Teatrietendus. Ingel, ingel, vii mind taeva;7;0;7;7;0
+26.05.2026;Y;Pikim laine;11;0;11;7;4
+26.05.2026;Y;Võlausaldajad;7;0;7;7;0
+26.05.2026;Y;Aedniku kevad;16;0;16;7;9
+26.05.2026;Y;Ryan Gosling. Täies hiilguses;29;0;29;7;22
+26.05.2026;Y;Eurovision Sport;7;0;7;7;0
+26.05.2026;Y;Kroonu onu;7;0;7;7;0
+26.05.2026;Y;Karu südame jälgedes;7;0;7;7;0
+26.05.2026;Y;Härra Barnett;7;0;7;7;0
+26.05.2026;Y;Kallid reisijad;7;0;7;7;0
+26.05.2026;Y;Kuidas peaks seksima?;16;0;16;7;9
+26.05.2026;Y;Cannes. Lõikamata;7;0;7;7;0
+26.05.2026;Y;Nostalgia;7;0;7;7;0
+26.05.2026;Y;Mustamäe tango;11;0;11;7;4
+26.05.2026;Y;Attenborough ja imelised laulud;7;0;7;7;0
+26.05.2026;Y;Igavesti noored;7;0;7;7;0
+26.05.2026;Y;ETV-live;7;7;0;7;0
+26.05.2026;Y;In Paradisum;7;0;7;7;0
+26.05.2026;Y;"Kuuldemäng. Kim Meškov ""Muinasjutt hiirepojast""";7;0;7;7;0
+26.05.2026;Y;Sven Lõhmus. 30 aastat hitte;7;0;7;7;0
+26.05.2026;Y;???: ??????? ? ?????;16;16;0;7;9
+26.05.2026;Y;Ago Anderson. Rõõm on kõige tähtsam;7;0;7;7;0
+26.05.2026;Y;Freya Ridings Baloise Sessionil;7;0;7;7;0
+26.05.2026;Y;Telelavastus. Lunastus;7;0;7;7;0
+26.05.2026;Y;Eesti sõbrad Chicagos;11;4;7;7;4
+26.05.2026;Y;Väike prints. Tähe sünd;7;0;7;7;0
+26.05.2026;Y;Ohtlikult lähedal;11;0;11;7;4
+26.05.2026;Y;Guernsey Kirjandus- ja Kartulikoorepiruka Selts;7;0;7;7;0
+26.05.2026;Y;Jan Uuspõld ja Ago Anderson. Piiri peal;7;0;7;7;0
+26.05.2026;Y;Solsidan;7;0;7;7;0
+26.05.2026;Y;Suvi Provence'is;7;0;7;7;0
+26.05.2026;Y;Savisaar;11;0;11;7;4
+26.05.2026;Y;Külmale maale;7;0;7;7;0
+26.05.2026;Y;"Kuuldemäng. ""Kui me nüüd ei sure, ei sure me kunagi""";7;0;7;7;0
+26.05.2026;Y;Mängupalavik;7;0;7;7;0
+26.05.2026;Y;"Kuuldemäng. ""Joonistasin metsa""";7;0;7;7;0
+26.05.2026;Y;Uljas hing;7;0;7;7;0
+26.05.2026;Y;Vaalamaailm;7;0;7;7;0
+26.05.2026;Y;Head inimesed;7;0;7;7;0
+26.05.2026;Y;Kust konnad tulevad?;7;0;7;7;0
+26.05.2026;Y;Sharon Stone. Ellujäämisinstinkt;7;0;7;7;0
+26.05.2026;Y;Sandarm ja tulnukad;11;0;11;7;4
+26.05.2026;Y;"Kuuldemäng. Hermann Moers ""Võõrkeele kursus""";4;0;4;4;0
+26.05.2026;Y;"Kuuldemäng. Sulev Nõmmik ""Kumuräbalad""";4;0;4;4;0
+26.05.2026;Y;Pärand. Anu Raud;4;0;4;4;0
+26.05.2026;Y;Vehkleja;4;0;4;4;0
+26.05.2026;Y;Telelavastus. Kala neljale;8;0;8;4;4
+26.05.2026;Y;"Ööülikool. Fred Jüssi ""Emakeelest""";4;0;4;4;0
+26.05.2026;Y;Via Dolorosa;4;0;4;4;0
+26.05.2026;Y;Oja juures;4;0;4;4;0
+26.05.2026;Y;"XXVIII laulupidu ""Iseoma"". Kaunid hetked";4;0;4;4;0
+26.05.2026;Y;Eve Kivi. Diivana elatud elu;4;0;4;4;0
+26.05.2026;Y;Kodu on koht, kus ma kunagi olnud ei ole;4;0;4;4;0
+26.05.2026;Y;Pätt või pühak Raul Vaiksoo;4;0;4;4;0
+26.05.2026;Y;Antsla. Sügis 1993;4;0;4;4;0
+26.05.2026;Y;Põrgu katlakütja;13;0;13;4;9
+26.05.2026;Y;Morgani kohtumine organitega. Melonovell;4;0;4;4;0
+26.05.2026;Y;Ühe järve lugu;4;0;4;4;0
+26.05.2026;Y;Vallalisuse võlud;4;0;4;4;0
+26.05.2026;Y;Teatrietendus. Tuvi;4;0;4;4;0
+26.05.2026;Y;Ringrada;4;0;4;4;0
+26.05.2026;Y;Vanilla Ninja. Suhkrust ja terasest;8;0;8;4;4
+26.05.2026;Y;Valik;4;0;4;4;0
+26.05.2026;Y;"""Pealtnägija"": kuidas mõjutab Kristi Loigo ja ""Kodutunde"" juhtum annetuste kogumist?";4;0;4;4;0
+26.05.2026;Y;Kalevi Suursõit 50;4;0;4;4;0
+26.05.2026;Y;Venemaa, Hiina, Iraan - impeeriumide revanš;4;0;4;4;0
+26.05.2026;Y;Pipi ball;4;0;4;4;0
+26.05.2026;Y;Lapsepõlve lemmikkirjanik. Astrid Lindgren;4;0;4;4;0
+26.05.2026;Y;Capone;8;0;8;4;4
+26.05.2026;Y;Punklaulupidu;4;0;4;4;0
+26.05.2026;Y;Aasta täht - SADU;4;0;4;4;0
+26.05.2026;Y;Krüptovale;4;0;4;4;0
+26.05.2026;Y;Kreisiraadio sümfooniaorkester;4;0;4;4;0
+26.05.2026;Y;Peata oma sõbrad;4;0;4;4;0
+26.05.2026;Y;KAMP Arhitektid. Mõtteruum;8;0;8;4;4
+26.05.2026;Y;Telelavastus. Uus jõuluvana;4;0;4;4;0
+26.05.2026;Y;Ükskord elus oli nii...;4;0;4;4;0
+26.05.2026;Y;Lahkumine Tallinnast. 1941;8;0;8;4;4
+26.05.2026;Y;Jääkütid;4;0;4;4;0
+26.05.2026;Y;Näitleja Joller;4;0;4;4;0
+26.05.2026;Y;Notre Dame'i uuestisünd;4;0;4;4;0
+26.05.2026;Y;Jurõk;4;0;4;4;0
+26.05.2026;Y;"Kuuldemäng. Urmas Vadi ""Maailma parim küla""";4;0;4;4;0
+26.05.2026;Y;Maksusõjad;4;0;4;4;0
+26.05.2026;Y;Tšornobõl 22;4;0;4;4;0
+26.05.2026;Y;Selgitus kõigele;4;0;4;4;0
+26.05.2026;Y;Marju Lepajõe. Päevade sõnad;4;0;4;4;0
+26.05.2026;Y;Telelavastus. Armujook;4;0;4;4;0
+26.05.2026;Y;33451;4;0;4;4;0
+26.05.2026;Y;Armastan sind, kuni...;8;0;8;4;4
+26.05.2026;Y;Isad ja pojad;4;0;4;4;0
+26.05.2026;Y;100 aastat elu;4;0;4;4;0
+26.05.2026;Y;Telelavastus. Vigased pruudid;8;0;8;4;4
+26.05.2026;Y;Rita Ray. Ilusa hingega laulja;4;0;4;4;0
+26.05.2026;Y;Rohelisem Tallinn;4;0;4;4;0
+26.05.2026;Y;Eurovisiooni lauluvõistlus 2026. Finaal (eesti viipekeeles);8;0;8;4;4
+26.05.2026;Y;Ühe suve akvarellid;4;0;4;4;0
+26.05.2026;Y;Teatrietendus. Skangpoomijad;4;0;4;4;0
+26.05.2026;Y;Telelavastus. Musta katuse all;4;0;4;4;0
+26.05.2026;Y;Aita mul seda ise teha. Montessori meetod;4;0;4;4;0
+26.05.2026;Y;On meie keskel suvi;13;0;13;4;9
+26.05.2026;Y;"Kuuldemäng. Nikolai Gogol ""Surnud hinged""";4;0;4;4;0
+26.05.2026;Y;Tõnu Aav. Ilma naljata;4;0;4;4;0
+26.05.2026;Y;Olete te õnnelik, Ita Ever?;4;0;4;4;0
+26.05.2026;Y;Seltsimees laps. Filmi lugu;8;0;8;4;4
+26.05.2026;Y;Teisikud;4;0;4;4;0
+26.05.2026;Y;"Kuuldemäng. Jüri Tuulik ""Kurgede minek""";4;0;4;4;0
+26.05.2026;Y;Lend Singapuri;4;0;4;4;0
+26.05.2026;Y;??????? rus.err.ee;8;8;0;4;4
+26.05.2026;Y;Vahimehed suure järve rannal;4;0;4;4;0
+26.05.2026;Y;"Kuuldemäng. Aleksander Allen ""Elu sees""";4;0;4;4;0
+26.05.2026;Y;Meie mees Ameerikas;8;0;8;4;4
+26.05.2026;Y;Koit ja Hämarik;4;0;4;4;0
+26.05.2026;Y;Etüüdid modelliga;4;0;4;4;0
+26.05.2026;Y;Anne Veski tuledemeres;4;0;4;4;0
+26.05.2026;Y;Mõnuste paemurru lugu;13;0;13;4;9
+26.05.2026;Y;Eesti Laul 2026. Finaali eel;4;0;4;4;0
+26.05.2026;Y;Elu õpetaja;4;0;4;4;0
+26.05.2026;Y;Tartu aknad, mu arm;8;0;8;4;4
+26.05.2026;Y;Laulavad Anne Veski ja Tõnis Mägi;4;0;4;4;0
+26.05.2026;Y;Keskpäev;17;0;17;4;13
+26.05.2026;Y;Aino Talvi;4;0;4;4;0
+26.05.2026;Y;Kõhuhääl;4;0;4;4;0
+26.05.2026;Y;Ettevaatust, habras! Brenne'i järved;4;0;4;4;0
+26.05.2026;Y;My Way;4;0;4;4;0
+26.05.2026;Y;?????????: ???????? ??????? ?????? ? ???????? ??????? ???????? ? ???? ?? ??????????????? ???? ????????;4;0;4;4;0
+26.05.2026;Y;Teatrietendus. Kauka jumal;4;0;4;4;0
+26.05.2026;Y;Jaan Tätte. Sõbrad, teiega on hea;4;0;4;4;0
+26.05.2026;Y;Kõik saab korda;4;0;4;4;0
+26.05.2026;Y;Tuulepealne maa. Ei ole sõda noortele meestele;4;0;4;4;0
+26.05.2026;Y;"Urmas Vadit ajendasid romaani ""Ballettmeister"" kirjutama Pätsi mõtted";4;0;4;4;0
+26.05.2026;Y;"Kuuldemäng. Andrus Kivirähk ""Suur lahing Petuulia linna all""";4;0;4;4;0
+26.05.2026;Y;Väikelinna detektiivid ja Valge Daami saladus;13;0;13;4;9
+26.05.2026;Y;Jussikese seitse sõpra;248;0;248;4;244
+26.05.2026;Y;Oravaemand;4;0;4;4;0
+26.05.2026;Y;Ann Vaida stand-up. Aasta kokkuvõte;4;0;4;4;0
+26.05.2026;Y;Kutsutud külaline. Enn Eesmaa;4;0;4;4;0
+26.05.2026;Y;Euroopa päeva kontsert;4;0;4;4;0
+26.05.2026;Y;Telelavastus. Puhkepäev;4;0;4;4;0
+26.05.2026;Y;Tõde ja õigus. Filmi lugu;4;0;4;4;0
+26.05.2026;Y;Uni;4;0;4;4;0
+26.05.2026;Y;"Ööülikool. Jaan Undusk ja Marek Tamm ""Digimaailm ja mõnda""";4;0;4;4;0
+26.05.2026;Y;Joaquin Phoenix, tundekunst;4;0;4;4;0
+26.05.2026;Y;Maailm linnulennult;4;0;4;4;0
+26.05.2026;Y;"Tants ""Kullaketrajad""";4;0;4;4;0
+26.05.2026;Y;"Kuuldemäng. Friedrich Dürrenmatt ""Sügisõhtul""";4;0;4;4;0
+26.05.2026;Y;"Kuuldemäng. August Gailit ""Päev Terikeste külas""";4;0;4;4;0
+26.05.2026;Y;Tehisaru ja töö;4;0;4;4;0
+26.05.2026;Y;Veteranirock 2025;4;0;4;4;0
+26.05.2026;Y;Teatrietendus. Ühe koosoleku protokoll;4;0;4;4;0
+26.05.2026;Y;Varastatud kohtumine;8;0;8;4;4
+26.05.2026;Y;Väike nõid;17;0;17;4;13
+26.05.2026;Y;Meri ja Orav;4;0;4;4;0
+26.05.2026;Y;Malev;8;0;8;4;4
+26.05.2026;Y;Ikoonide maailm;4;0;4;4;0
+26.05.2026;Y;"Kuuldemäng. Veijo Meri ""Soome parim näitleja""";4;0;4;4;0
+26.05.2026;Y;Telelavastus. Püha Susanna ehk Meistrite kool;4;0;4;4;0
+26.05.2026;Y;Wunderbar Vaarik;13;0;13;4;9
+26.05.2026;Y;Iraan, Iisrael ja tuumapomm;4;0;4;4;0
+26.05.2026;Y;"""Laine"" laulab laevalael";4;0;4;4;0
+26.05.2026;Y;Teatrietendus. Obinitsa;8;0;8;4;4
+26.05.2026;Y;Sportimise mõju vaimsele tervisele;4;0;4;4;0
+26.05.2026;Y;Austusavaldus Tema Majesteedile kuningannale;4;0;4;4;0
+26.05.2026;Y;Teatrietendus. Topeltkokteil;4;0;4;4;0
+26.05.2026;Y;Oma Maapäev;4;0;4;4;0
+26.05.2026;Y;Olav Ehala 70. Juubelikontsert;8;0;8;4;4
+26.05.2026;Y;12 punkti! Eurovisiooni hitid;4;0;4;4;0
+26.05.2026;Y;"Kuuldemäng. A. H. Tammsaare ""Kärbes""";4;0;4;4;0
+26.05.2026;Y;"Kuuldemäng. Patrick Besson ""Dialoog""";4;0;4;4;0
+26.05.2026;Y;Maapäevalised;4;0;4;4;0
+26.05.2026;Y;"Kuuldemäng. Elwyn Brooks White ""Charlotte koob võrku""";4;0;4;4;0
+26.05.2026;Y;"Kuuldemäng. A. H. Tammsaare ""Kõrboja peremees""";4;0;4;4;0
+26.05.2026;Y;Jaak Joala 70. Juubelikontsert Naerata;4;0;4;4;0
+26.05.2026;Y;Tuulearmuke;4;0;4;4;0
+26.05.2026;Y;Piison, preeria valitseja;4;0;4;4;0
+26.05.2026;Y;Tommy Cash. Espresso Estonia;4;0;4;4;0
+26.05.2026;Y;Korsaaž;4;0;4;4;0
+26.05.2026;Y;"Ööülikool. Doris Kareva ""Olemise kõla""";4;0;4;4;0
+26.05.2026;Y;"Kuuldemäng. Arthur Conan Doyle ""Kolm jalarauda mustal taustal""";4;0;4;4;0
+26.05.2026;Y;La Peebo läbi peegli;4;0;4;4;0
+26.05.2026;Y;Glastonbury 2024;4;0;4;4;0
+26.05.2026;Y;Šokolaadisõda;4;0;4;4;0
+26.05.2026;Y;III Eesti Naiste Tantsupidu PereLugu;4;0;4;4;0
+26.05.2026;Y;Juhan Peegel. Esimesed 100 aastat;4;0;4;4;0
+26.05.2026;Y;Mees Riost;4;0;4;4;0
+26.05.2026;Y;"Kuuldemäng. Pirkko Jaakola ""Loogiline telefonikõne""";4;0;4;4;0
+26.05.2026;Y;Väikevend ja Karlsson katuselt;13;0;13;4;9
+26.05.2026;Y;Pingeväljade aednik;4;0;4;4;0
+26.05.2026;Y;Ma olen Heath Ledger;4;0;4;4;0
+26.05.2026;Y;Postimaja;4;0;4;4;0
+26.05.2026;Y;Hämmastavad taimed;4;0;4;4;0
+26.05.2026;Y;Tordidünastia;8;0;8;4;4
+26.05.2026;Y;"Luuleruum. Binaarpoeesia ""Isamaa mu aps"".";4;0;4;4;0
+26.05.2026;Y;Lee;4;0;4;4;0
+26.05.2026;Y;"Kuuldemäng. Friedrich Dürrenmatt ""Protsess eesli varju pärast""";4;0;4;4;0
+26.05.2026;Y;"Luuleruum. Ilmar Laaban ""Rroosi Selaviste""";4;0;4;4;0
+26.05.2026;Y;Jaanituli. Rakvere Teater;4;0;4;4;0
+26.05.2026;Y;Kaktusehotell;4;0;4;4;0
+26.05.2026;Y;Minu lemmikkook;4;0;4;4;0
+26.05.2026;Y;Noor pensionär;21;0;21;4;17
+26.05.2026;Y;"Kuuldemäng. Oskar Luts ""Paunvere""";4;0;4;4;0
+26.05.2026;Y;"Kuuldemäng. Jaan Kruusvall ""Sild""";4;0;4;4;0
+26.05.2026;Y;Lendutõus. Ants Laikmaa;4;0;4;4;0
+26.05.2026;Y;Saint-Tropez' sandarm;4;0;4;4;0
+26.05.2026;Y;Enam kui elu;4;0;4;4;0
+26.05.2026;Y;Diplodocus: tilluke dinosaurus;617;0;617;4;613
+26.05.2026;Y;Emadepäeva kontsert;8;0;8;4;4
+26.05.2026;Y;Elu maitse;13;0;13;4;9
+26.05.2026;Y;"Kuuldemäng. Barbro Holmberg, Eira Johansson ""Veneetsia geto""";4;0;4;4;0
+26.05.2026;Y;Vendade Grimmide muinasjutumets;4;0;4;4;0
+26.05.2026;Y;Reet Linna: Elame veel!;4;0;4;4;0
+26.05.2026;Y;Apelsin ei asenda armastust;4;0;4;4;0
+26.05.2026;Y;Nutineedus. Vahur Kersna vestleb aju-uurija Jaan Aruga;4;0;4;4;0
+26.05.2026;Y;Hiirelõks. Marika Vaarik;4;0;4;4;0
+26.05.2026;Y;Konstantin Vassiljev. Kastist väljas;4;0;4;4;0
+26.05.2026;Y;Silvi Vrait;4;0;4;4;0
+26.05.2026;Y;Jaak Joala;4;0;4;4;0
+26.05.2026;Y;Maastiku mustrid;4;0;4;4;0
+26.05.2026;Y;Lõppematu päev;4;0;4;4;0
+26.05.2026;Y;Unustamatu JAM;8;0;8;4;4
+26.05.2026;Y;Sulev Nõmmik;4;0;4;4;0
+26.05.2026;Y;"Märt Avandi ja Ott Sepa lauluvõistlus ""Pean saama Eurovisioonile, muidu suren 2010""";4;0;4;4;0
+26.05.2026;Y;"Kuuldemäng. Tiit Palu ""Rooma maraton""";4;0;4;4;0
+26.05.2026;Y;Piret Kalda. Sõprus ja armastus;4;0;4;4;0
+26.05.2026;Y;Monumendid ja apelsinid;4;0;4;4;0
+26.05.2026;Y;Illusionist Aarne Üksküla;4;0;4;4;0
+26.05.2026;Y;"Ööülikool. Riste Sofie Käär ja Valdur Mikita ""Valesti tegemisest""";4;0;4;4;0
+26.05.2026;Y;Baleriin;61;0;61;4;57
+26.05.2026;Y;Siin me oleme!;8;0;8;4;4
+26.05.2026;Y;Aarne Rannamäe. Ajakirjaniku ajastu;4;0;4;4;0
+26.05.2026;Y;Arvo Kruusement. Filmirežissöör;8;0;8;4;4
+26.05.2026;Y;Leping saatanaga. Vahur Kersna vestleb spordifilosoof Paavo Kivisega;4;0;4;4;0
+26.05.2026;Y;Kallis kolmeteistaastane;4;0;4;4;0
+26.05.2026;Y;Õnnelind flamingo;8;0;8;4;4
+26.05.2026;Y;Paharet;139;0;139;4;135
+26.05.2026;Y;Pardiralli 2023;4;0;4;4;0
+26.05.2026;Y;Peiar;4;0;4;4;0
+26.05.2026;Y;"Luuleruum. Madis Kõiv ""Meil aiaäärne tänavas. Analüüs""";4;0;4;4;0
+26.05.2026;Y;Rock-Hotel. Kuidas läks sul see mäng;4;0;4;4;0
+26.05.2026;S;Mystery Lane'i põnevad juhtumid;309;0;309;0;309
+26.05.2026;S;Veider Kamp;278;0;278;0;278
+26.05.2026;S;Numbriklotsid;248;0;248;0;248
+26.05.2026;S;Robot Ruudi avastab maailma;213;0;213;0;213
+26.05.2026;S;Hei, turbod;117;0;117;0;117
+26.05.2026;S;Aktuaalne kaamera. Ilm;113;0;113;0;113
+26.05.2026;S;BooSnoo!;104;0;104;0;104
+26.05.2026;S;Kito, Maaja ja jutulaegas;100;0;100;0;100
+26.05.2026;S;Vegesaurused;91;0;91;0;91
+26.05.2026;S;Karu Karla;83;0;83;0;83
+26.05.2026;S;Máxima;78;0;78;0;78
+26.05.2026;S;Pisikesed olendid;70;0;70;0;70
+26.05.2026;S;Angelo reeglid;57;0;57;0;57
+26.05.2026;S;Mina ja Miia;57;0;57;0;57
+26.05.2026;S;Pepa, Pipo ja Pups;57;0;57;0;57
+26.05.2026;S;Lolala Muusikamaa;52;0;52;0;52
+26.05.2026;S;Lucas;48;0;48;0;48
+26.05.2026;S;Ninjakunstnik;43;0;43;0;43
+26.05.2026;S;Tuta tantsurütmid;43;0;43;0;43
+26.05.2026;S;Doktor Panda;43;0;43;0;43
+26.05.2026;S;Kosmo;39;0;39;0;39
+26.05.2026;S;Pisid;39;0;39;0;39
+26.05.2026;S;Sam ja Julia;30;0;30;0;30
+26.05.2026;S;Luise ja Oliver kutsuvad mängima!;22;0;22;0;22
+26.05.2026;S;Rõõmus Koll;22;0;22;0;22
+26.05.2026;S;(other);22;0;22;0;22
+26.05.2026;S;Looduse superkangelased;22;0;22;0;22
+26.05.2026;S;Must ja valge koer: Lennutrikid;17;0;17;0;17
+26.05.2026;S;Must ja valge koer: Vihmane hommik;17;0;17;0;17
+26.05.2026;S;Vegesaurused. Tegelaste tutvustus;17;0;17;0;17
+26.05.2026;S;Luka lustisõidurong;17;0;17;0;17
+26.05.2026;S;Must ja valge koer: Jõumehed;17;0;17;0;17
+26.05.2026;S;Must ja valge koer: Suurpuhastus;17;0;17;0;17
+26.05.2026;S;Imeline inimene;17;0;17;0;17
+26.05.2026;S;Must ja valge koer: Matk kuumaõhupalliga;17;0;17;0;17
+26.05.2026;S;4?4. ??????? ??????;17;9;9;0;17
+26.05.2026;S;Kõlakoguja;17;0;17;0;17
+26.05.2026;S;Must ja valge koer: Veemõnud;17;0;17;0;17
+26.05.2026;S;Audrey varjupaik;13;0;13;0;13
+26.05.2026;S;Piip ja Tuut hoiavad Eesti lippu kõrgel: Võidupüha;13;0;13;0;13
+26.05.2026;S;Teel jalgpalli MM 2026 finaalturniirile;13;0;13;0;13
+26.05.2026;S;Kuu laul;13;0;13;0;13
+26.05.2026;S;Rottide laul;13;0;13;0;13
+26.05.2026;S;Kui ma suureks saan;13;0;13;0;13
+26.05.2026;S;Must ja valge koer: Koerte võistlus;13;0;13;0;13
+26.05.2026;S;Piip ja Tuut hoiavad Eesti lippu kõrgel: Euroopa päev;13;0;13;0;13
+26.05.2026;S;Piip ja Tuut köögis: porgandiburger;13;0;13;0;13
+26.05.2026;S;Piraadi laul;13;0;13;0;13
+26.05.2026;S;Õhinapõhised Nicaraguas;13;0;13;0;13
+26.05.2026;S;Claude'i lühilood;13;0;13;0;13
+26.05.2026;S;Nöbinina;13;0;13;0;13
+26.05.2026;S;Must ja valge koer: Tõbised;13;0;13;0;13
+26.05.2026;S;Must ja valge koer: Matk lossi juurde;13;0;13;0;13
+26.05.2026;S;Ernest ja Celestine;13;0;13;0;13
+26.05.2026;S;Pätu;13;0;13;0;13
+26.05.2026;S;Sipsiku laul;13;0;13;0;13
+26.05.2026;S;"Piip ja Tuut ""Sibula unistus""";13;0;13;0;13
+26.05.2026;S;Ujun, ujun;13;0;13;0;13
+26.05.2026;S;Vend jääb vennaks, õde õeks;13;0;13;0;13
+26.05.2026;S;Sõprade laul;9;0;9;0;9
+26.05.2026;S;Vembu ja Tembu seiklused;9;0;9;0;9
+26.05.2026;S;Piip ja Tuut köögis: Banaanikana;9;0;9;0;9
+26.05.2026;S;"Piip ja Tuut ""Liha iha""";9;0;9;0;9
+26.05.2026;S;Tammetõru seiklused;9;0;9;0;9
+26.05.2026;S;Piip ja Tuut hoiavad Eesti lippu kõrgel: Jüripäev;9;0;9;0;9
+26.05.2026;S;Laulupesa. Hambutu laul;9;0;9;0;9
+26.05.2026;S;Laulupesa. Nutipõlv;9;0;9;0;9
+26.05.2026;S;Piip ja Tuut hoiavad Eesti lippu kõrgel: Emakeelepäev;9;0;9;0;9
+26.05.2026;S;Piip ja Tuut hoiavad Eesti lippu kõrgel: Hõimupäev;9;0;9;0;9
+26.05.2026;S;Piip ja Tuut köögis: Suvikõrvitsa nuudlid;9;0;9;0;9
+26.05.2026;S;Lumejänesed;9;0;9;0;9
+26.05.2026;S;Kõik on tipp-topp 2;9;0;9;0;9
+26.05.2026;S;Kõik on tipp-topp;9;0;9;0;9
+26.05.2026;S;Loomarahva TV;9;0;9;0;9
+26.05.2026;S;Kutsikate ja kassipoegade imeline maailm;9;0;9;0;9
+26.05.2026;S;Ploomid, lapsed, herilased;9;0;9;0;9
+26.05.2026;S;Aktuaalne kaamera. Nädal;9;0;9;0;9
+26.05.2026;S;Piip ja Tuut hoiavad Eesti lippu kõrgel: Hingedepäev;9;0;9;0;9
+26.05.2026;S;Rõõmutirts;9;0;9;0;9
+26.05.2026;S;Piip ja Tuut astuvad teatrist välja;9;0;9;0;9
+26.05.2026;S;Must ja valge koer: Koerte kool;9;0;9;0;9
+26.05.2026;S;Must ja valge koer: Iludusvõistlus;9;0;9;0;9
+26.05.2026;S;"Piip ja Tuut ""Jõulude aeg""";9;0;9;0;9
+26.05.2026;S;"Piip ja Tuut ""Kuulus kurk ja tundmatu tomat""";9;0;9;0;9
+26.05.2026;S;Must ja valge koer: Skulptorid;9;0;9;0;9
+26.05.2026;S;Mullist välja - väike venemaa;9;0;9;0;9
+26.05.2026;S;Okkake ja Nõelake;9;0;9;0;9
+26.05.2026;S;Piip ja Tuut hoiavad Eesti lippu kõrgel: Iseseisvuspäev;9;0;9;0;9
+26.05.2026;S;Piip ja Tuut hoiavad Eesti lippu kõrgel: Toomapäev;9;0;9;0;9
+26.05.2026;S;"Piip ja Tuut ""Trenni ei tee""";9;0;9;0;9
+26.05.2026;S;Piip ja Tuut hoiavad Eesti lippu kõrgel: Vanavanemate päev;9;0;9;0;9
+26.05.2026;S;Laulupesa. Las ma joonistan;9;0;9;0;9
+26.05.2026;S;Köögivilja teater - porgand;9;0;9;0;9
+26.05.2026;S;Köögivilja teater - põder ja jahimees;9;0;9;0;9
+26.05.2026;S;Laulupesa. Pesupäev;9;0;9;0;9
+26.05.2026;S;Piip ja Tuut köögis: jäätis;9;0;9;0;9
+26.05.2026;S;Konnalaul;9;0;9;0;9
+26.05.2026;S;Köögivilja teater - sibul;9;0;9;0;9
+26.05.2026;S;Must ja valge koer: Jõulurahu;9;0;9;0;9
+26.05.2026;S;"Piip ja Tuut ""Me tahaks tantsida""";9;0;9;0;9
+26.05.2026;S;Pildikesi Paunverest;9;0;9;0;9
+26.05.2026;S;Kessu;9;0;9;0;9
+26.05.2026;S;Piip ja Tuut Leiavad Vanalinnast Nimeta Tee!;9;0;9;0;9
+26.05.2026;S;Piip ja Tuut köögis: sibulasupp;9;0;9;0;9
+26.05.2026;S;Laulupesa. Pühapäev;9;0;9;0;9
+26.05.2026;S;Piip ja Tuut hoiavad Eesti lippu kõrgel: Taasiseseisvumispäev;9;0;9;0;9
+26.05.2026;S;Taavi-Peeter Liiv - Oh tõde meie juurde jää (kuid meie veel ei jää) (kaver);4;0;4;0;4
+26.05.2026;S;Volli treenib oma lokaatorit;4;0;4;0;4
+26.05.2026;S;Luise ja Oliver mängivad;4;0;4;0;4
+26.05.2026;S;"Piip ja Tuut ""Linnas koolivaheajal""";4;0;4;0;4
+26.05.2026;S;Lastetuba;4;0;4;0;4
+26.05.2026;S;Reis loomariigis. Kliimapagulane punalutikas;4;0;4;0;4
+26.05.2026;S;Piip ja Tuut köögis: pastaroog;4;0;4;0;4
+26.05.2026;S;Sotsiaalmeediata säm;4;0;4;0;4
+26.05.2026;S;Hei, pöialpoisid!;4;0;4;0;4
+26.05.2026;S;Eurovisiooni laulud 2026 (eesti viipekeeles);4;0;4;0;4
+26.05.2026;S;Laulupesa. Kätepesulaul;4;0;4;0;4
+26.05.2026;S;FINAAL: Anni-Amii Purga;4;0;4;0;4
+26.05.2026;S;Aktuaalne kaamera (eesti viipekeeles);4;0;4;0;4
+26.05.2026;S;"Piip ja Tuut ""Piim läks hapuks""";4;0;4;0;4
+26.05.2026;S;Eesti Laul 2025. Finaal (viipekeelse tõlkega);4;0;4;0;4
+26.05.2026;S;Piip ja Tuut köögis: Jõulukeeks;4;0;4;0;4
+26.05.2026;S;"Kristiina Kass ""Õpetaja Kusti kummitab""";4;0;4;0;4
+26.05.2026;S;Lõbusad limakud;4;0;4;0;4
+26.05.2026;S;Rahva oma kaitse. Mart Juur & Andrus Kivirähk;4;0;4;0;4
+26.05.2026;S;???????;4;4;0;0;4
+26.05.2026;S;??????;4;4;0;0;4
+26.05.2026;S;?????? ?????? ? ??????? ?????????????? ??????;4;0;4;0;4
+26.05.2026;S;"Piip ja Tuut ""Legend herneperest""";4;0;4;0;4
+26.05.2026;S;Õhinapõhised Peruus;4;0;4;0;4
+26.05.2026;S;Sirli, Siim ja saladused;4;0;4;0;4
+26.05.2026;S;Reis loomariigis. Osav õhukütt kiil;4;0;4;0;4
+26.05.2026;S;Vapratest vapramad;4;0;4;0;4
+26.05.2026;S;"Reispass. ""Houston, we don´t have a problem whatsoever!""";4;0;4;0;4
+26.05.2026;S;Džässikontsert. Anett Tamm & David Chevallier Trio;4;0;4;0;4
+26.05.2026;S;Laulupesa. Kuusebeebi;4;0;4;0;4
+26.05.2026;S;Piip ja Tuut köögis: Benedicti muna;4;0;4;0;4
+26.05.2026;S;Lotte reis Lõunamaale;4;0;4;0;4
+26.05.2026;S;"Piip ja Tuut ""Kallis kartul""";4;0;4;0;4
+26.05.2026;S;Köögivilja teater - muna;4;0;4;0;4
+26.05.2026;S;Džässikontsert. Tiit Paulus 80;4;0;4;0;4
+26.05.2026;S;Piip ja Tuut köögis: kartuliroog;4;0;4;0;4
+26.05.2026;S;Prügikast 2 ehk Põhi paistab;4;0;4;0;4
+26.05.2026;S;"Maarja Kangro ""Isa kõrvad""";4;0;4;0;4
+26.05.2026;S;"XXVIII laulupidu ""Iseoma"". Suurkontsert (viipekeeles) jätkub";4;0;4;0;4
+26.05.2026;S;Laulupesa laulud;4;0;4;0;4
+26.05.2026;S;Kolm kõla. I Otsides Aliinat;4;0;4;0;4
+26.05.2026;S;Mutihärra Mutik;4;0;4;0;4
+26.05.2026;S;Reis loomariigis. Visa jahimees punarebane;4;0;4;0;4
+26.05.2026;S;"""Tähtede lava"" laulud";4;0;4;0;4
+26.05.2026;S;"Piip ja Tuut ""Kuule tüüp""";4;0;4;0;4
+26.05.2026;S;Volli on lind. Volli peseb hambaid.;4;0;4;0;4
+26.05.2026;S;Route 66. Ameerika kahel pool maanteed;4;0;4;0;4
+26.05.2026;S;Volli isa ostab videomaki. Volli teeb imevedelikku.;4;0;4;0;4
+26.05.2026;S;Köögivilja teater - piim;4;0;4;0;4
+26.05.2026;S;Köögivilja teater - pasta;4;0;4;0;4
+26.05.2026;S;"Järjejutt. Jaan Kaplinski ""Mõtsa ja tagasi""";4;0;4;0;4
+26.05.2026;S;Iluuisutamise EM Tallinnas;4;0;4;0;4
+26.05.2026;S;Kergejõustiku MM Tokyos;4;0;4;0;4
+26.05.2026;S;Volli teeb merepilti. Volli käib isa ja vanaemaga Soomes.;4;0;4;0;4
+26.05.2026;S;Eesti teatri auhinnad 2026;4;0;4;0;4
+26.05.2026;S;Laulupesa. Tänu teile;4;0;4;0;4
+26.05.2026;S;EnsV (Eesti nüüd siis Vabariik);4;0;4;0;4
+26.05.2026;S;Laulupesa. Maalides head;4;0;4;0;4
+26.05.2026;S;Hunt Kriimsilm;4;0;4;0;4
+26.05.2026;S;Tagurpidi maailm. Indoneesia;4;0;4;0;4
+26.05.2026;S;4x4. Aafrika;4;0;4;0;4
+26.05.2026;S;Silme ees läheb mustaks;4;0;4;0;4
+26.05.2026;S;Reis loomariigis. Rohusööja põder võtab elu mõnuga;4;0;4;0;4
+26.05.2026;S;Reispass. Glämm ja gutši-mutši;4;0;4;0;4
+26.05.2026;S;Volli on suhtekorraldaja;4;0;4;0;4
+26.05.2026;S;Laulupesa. Iseenda moodi laps;4;0;4;0;4
+26.05.2026;S;Prügihunt ja Superjänes;4;0;4;0;4
+26.05.2026;S;Õpiõu!;4;0;4;0;4
+26.05.2026;S;Ühe maja lugu;4;0;4;0;4
+26.05.2026;S;Isamoodi unejutud;4;0;4;0;4
+26.05.2026;S;Džässikontsert. Jazzkaar 2024. Eve Risser Red Desert Orchestra (Prantsusmaa);4;0;4;0;4
+26.05.2026;S;"Piip ja Tuut ""Kõrvitsaprintsess""";4;0;4;0;4
+26.05.2026;S;Laulupesa. Pehmed käpad;4;0;4;0;4
+26.05.2026;S;Kihnu lapsed ning...;4;0;4;0;4
+26.05.2026;S;Noorte stuudio. Lasnamäe muusikakooli sümfooniaorkester;4;0;4;0;4
+26.05.2026;S;Unerohi 1;4;0;4;0;4
+26.05.2026;S;Täna õhtul...;4;0;4;0;4
+26.05.2026;S;Pailapsiin;4;0;4;0;4
+26.05.2026;S;"Kristiina Kass ""Käru-Kaarel""";4;0;4;0;4
+26.05.2026;S;"Helena Koch ""Kõhu mäss"" 6. osa";4;0;4;0;4
+26.05.2026;S;? ??????????? ?? ????;4;4;0;0;4
+26.05.2026;S;"Uus sari ""Hommikumaa vägevad"" kõneleb Aasia võimuperekondadest";4;0;4;0;4
+26.05.2026;S;Volli teretab politseinikke;4;0;4;0;4
+26.05.2026;S;Reispass. Laulev koomik laias maailmas.;4;0;4;0;4
+26.05.2026;S;Reis loomariigis. Varblase mitte just kõige roosilisem elu;4;0;4;0;4
+26.05.2026;S;Reis loomariigis. Topisteõgija riidekoi;4;0;4;0;4
+26.05.2026;S;"XXI tantsupidu ""Iseoma""";4;0;4;0;4
+26.05.2026;S;Spordimeeste suurnäitus;4;0;4;0;4
+26.05.2026;S;Köögivilja teater - kõrvits;4;0;4;0;4
+26.05.2026;S;Isa kõrvad;4;0;4;0;4
+26.05.2026;S;Müür: Klooster;4;0;4;0;4
+26.05.2026;S;Reis loomariigis. Metssead hoiavad ühte;4;0;4;0;4
+26.05.2026;S;Piia Präänik ja sõnasööbik;4;0;4;0;4
+26.05.2026;S;Volli lööb onu Pauli suusaga. Volli on jazz.;4;0;4;0;4
+26.05.2026;S;Laulupesa. Beebiboss;4;0;4;0;4
+26.05.2026;S;Õhtujutt lastele. Piko ja Oliko;4;0;4;0;4
+26.05.2026;S;Köögivilja teater - jõululugu;4;0;4;0;4
+26.05.2026;S;4x4. Island;4;0;4;0;4
+26.05.2026;S;Härra Lapsti lasteteater;4;0;4;0;4
+26.05.2026;S;Reis loomariigis. Lepatriinude kiire elu;4;0;4;0;4
+26.05.2026;S;Laulupesa. Laagrilaul;4;0;4;0;4
+26.05.2026;S;Reis loomariigis, Herilane: mürgiastlaga lenduri ohtlik operatsioon;4;0;4;0;4
+26.05.2026;S;Köögivilja teater - marjad;4;0;4;0;4
+26.05.2026;S;Pealtnägija tähed;4;0;4;0;4
+26.05.2026;S;Reis loomariigis. Veteröövel haug;4;0;4;0;4
+26.05.2026;S;Kes aevastas?;4;0;4;0;4
+26.05.2026;S;Džässikontsert. Beatlejazz - Reunion (Yama Records, 2025);4;0;4;0;4
+26.05.2026;S;Reispass. Jaapani toidukultuur Shikoku saare näitel;4;0;4;0;4
+26.05.2026;S;Tere, Volli! Volli võitleb prussakaga;4;0;4;0;4
+26.05.2026;S;4x4. Magadan;4;0;4;0;4
+26.05.2026;S;Heli nälg. Margus Põldsepp;4;0;4;0;4
+26.05.2026;S;Elu lugu;4;0;4;0;4
+26.05.2026;S;Köögivilja teater - perekond kartul;4;0;4;0;4
+26.05.2026;S;Piip ja Tuut köögis: Marjamagustoidud;4;0;4;0;4
+26.05.2026;S;Kihnukeelsed uudised;4;0;4;0;4
+26.05.2026;S;Porilaul;4;0;4;0;4
+26.05.2026;S;Sulle-mulle;4;0;4;0;4
+26.05.2026;S;Estraadisangarid;4;4;0;0;4
+26.05.2026;S;Võidumees;4;0;4;0;4
+26.05.2026;S;Kikerikii;4;0;4;0;4
+26.05.2026;S;Laulupesa. Mina ei tea;4;0;4;0;4
+26.05.2026;S;Laste Ööülikooli rännakud;4;0;4;0;4
+26.05.2026;S;Pealtnägija+;4;0;4;0;4
+26.05.2026;S;Tabamata ime;4;0;4;0;4
+26.05.2026;S;Klassikatähed 2013;4;0;4;0;4
+26.05.2026;S;Volli ja isa teevad emale lõhnaõli;4;0;4;0;4
+26.05.2026;S;Laulupesa. Närvikõdi;4;0;4;0;4
+26.05.2026;S;Edmond ja Lucy;4;0;4;0;4
+26.05.2026;S;Konstaabli armastuslaul;4;0;4;0;4
+26.05.2026;S;?????;4;4;0;0;4
+26.05.2026;S;Steroididel olümpia;4;0;4;0;4
+26.05.2026;S;Luise ja Oliver kutsuvad õue mängima!;4;0;4;0;4
+26.05.2026;S;Piip ja Tuut köögis: Tomatisupp;4;0;4;0;4
+26.05.2026;S;Ajalugu viie minutiga.;4;0;4;0;4
+26.05.2026;S;Osooni loomalood;4;0;4;0;4
+26.05.2026;S;Simon Reeve'iga Skandinaavias;4;0;4;0;4
+26.05.2026;S;Laikrete perebänd;4;0;4;0;4
+26.05.2026;S;Köögivilja teater - tomat ja kurk;4;0;4;0;4
+26.05.2026;S;Piip ja Tuut köögis: Läätsesupp;4;0;4;0;4
+26.05.2026;S;Setukeelsed uudised;4;0;4;0;4
+26.05.2026;S;Majakas-23;4;0;4;0;4
+26.05.2026;S;Ella, Oscar ja Huu;4;0;4;0;4
+26.05.2026;S;Suur pahandus;4;0;4;0;4
+26.05.2026;S;???????? ??????;4;4;0;0;4
+26.05.2026;S;Köögivilja teater - oad;4;0;4;0;4
+26.05.2026;S;Magus Molekul;4;0;4;0;4
+26.05.2026;S;Volli käib poes;4;0;4;0;4
+26.05.2026;S;Puuonni lood;4;0;4;0;4
+26.05.2026;S;Telepoiss. ETV lastelaulud;4;0;4;0;4
+26.05.2026;S;Volli parandab arvutit. Volli teeb isaga tuulelohet.;4;0;4;0;4
+26.05.2026;S;O???????;4;4;0;0;4
+26.05.2026;S;???? ???????. ???? ???-???????: ????? ? ???????;4;4;0;0;4
+26.05.2026;S;4x4. Kaukaasia;4;0;4;0;4
+26.05.2026;Y;Lassie - uus seiklus;135;0;135;0;135
+26.05.2026;Y;Meemeistrite linn;117;0;117;0;117
+26.05.2026;Y;Tegus Timmu. Timmu rannaskäik;91;0;91;0;91
+26.05.2026;Y;Röövel Hotzenplotz;74;0;74;0;74
+26.05.2026;Y;Kadunud sokid;52;0;52;0;52
+26.05.2026;Y;Jäneste kool - kuldse muna valvurid;52;0;52;0;52
+26.05.2026;Y;Karud armastavad mind;48;0;48;0;48
+26.05.2026;Y;Frikadellid ja pelmeenid;43;0;43;0;43
+26.05.2026;Y;Mesilane Maia 3: Kuldne kera;39;0;39;0;39
+26.05.2026;Y;Kärnkonn südames;35;0;35;0;35
+26.05.2026;Y;Nõialuud ja kõik muud;35;0;35;0;35
+26.05.2026;Y;Zibilla;30;0;30;0;30
+26.05.2026;Y;Pipraterad ja süvamere aare;26;0;26;0;26
+26.05.2026;Y;Maagiliste olendite kool 2;26;0;26;0;26
+26.05.2026;Y;Väike merineitsi;26;0;26;0;26
+26.05.2026;Y;Minu käpardist õnnehaldjas;22;0;22;0;22
+26.05.2026;Y;Ei-Ei kahaneb;22;0;22;0;22
+26.05.2026;Y;Kunksmoor;22;0;22;0;22
+26.05.2026;Y;Veel üks Lotte;17;0;17;0;17
+26.05.2026;Y;Uitav kitarr;17;0;17;0;17
+26.05.2026;Y;Röövelrott;17;0;17;0;17
+26.05.2026;Y;Viis sõpra 4;17;0;17;0;17
+26.05.2026;Y;???????? ????????;13;13;0;0;13
+26.05.2026;Y;Rannakarp;13;0;13;0;13
+26.05.2026;Y;Ernest ja Celestine. Reis Ogarmaale;13;0;13;0;13
+26.05.2026;Y;Lotta jabur elu jätkub;13;0;13;0;13
+26.05.2026;Y;Auhtanian ja kolm musketäri;13;0;13;0;13
+26.05.2026;Y;Telelavastus. Džuudopoisid;9;0;9;0;9
+26.05.2026;Y;Alfons Zitterbacke - kaos klassireisil;9;0;9;0;9
+26.05.2026;Y;Tuta ootab jõule;9;0;9;0;9
+26.05.2026;Y;Keisri uued rõivad;9;0;9;0;9
+26.05.2026;Y;Sandarm New Yorgis;9;0;9;0;9
+26.05.2026;Y;Viis sõpra ja dinosauruste org;9;0;9;0;9
+26.05.2026;Y;Viis sõpra 3;9;0;9;0;9
+26.05.2026;Y;Peegliahv;9;0;9;0;9
+26.05.2026;Y;Wendy lugu;9;0;9;0;9
+26.05.2026;Y;Agu Sihvka annab aru;9;0;9;0;9
+26.05.2026;Y;Huviline filmikaamera;9;0;9;0;9
+26.05.2026;Y;Meie Uduvere;9;0;9;0;9
+26.05.2026;Y;Lendav vaip;4;0;4;0;4
+26.05.2026;Y;Kodune kontsert. Liisi Koikson ja Joel Remmel;4;0;4;0;4
+26.05.2026;Y;Kevad südames;4;0;4;0;4
+26.05.2026;Y;Välisteenistus: Euroopa diplomaatia keskmes;4;0;4;0;4
+26.05.2026;Y;Kodused kontserdid. Voorand / Koikson / Sooäär / Daniel;4;0;4;0;4
+26.05.2026;Y;Igihaljas vaatemäng;4;0;4;0;4
+26.05.2026;Y;"Aapeli ""Vinski ja Vinsentti""";4;0;4;0;4
+26.05.2026;Y;Aeg maha;4;0;4;0;4
+26.05.2026;Y;Aedniku talv;4;0;4;0;4
+26.05.2026;Y;Lotta jabur elu;4;0;4;0;4
+26.05.2026;Y;Pidulik merelaulude kontsert Vana madrus;4;0;4;0;4
+26.05.2026;Y;????????;4;0;4;0;4
+26.05.2026;Y;Winny Puhh: maailma veidraim bänd;4;0;4;0;4
+26.05.2026;Y;Kallis Härra Q;4;0;4;0;4
+26.05.2026;Y;Amanda ja kõige tähtsam sõna;4;0;4;0;4
+26.05.2026;Y;Kaleva hääled;4;0;4;0;4
+26.05.2026;Y;Mees ja naine;4;0;4;0;4
+26.05.2026;Y;Võtmeküsimus;4;0;4;0;4
+26.05.2026;Y;Õmblusmasin;4;0;4;0;4
+26.05.2026;Y;Teatrietendus. Hiirelõks;4;0;4;0;4
+26.05.2026;Y;Wendy. Sõbrad igaveseks;4;0;4;0;4
+26.05.2026;Y;Põrgupõhja uus Vanapagan;4;0;4;0;4
+26.05.2026;Y;Amanda ja uus poiss;4;0;4;0;4
+26.05.2026;Y;Kolme katku vahel;4;0;4;0;4
+26.05.2026;Y;Entel-tenteli laululood;4;0;4;0;4
+26.05.2026;Y;"Järvide ""Loojangukontsert"" Leigol";4;0;4;0;4
+26.05.2026;Y;"Järvide ""Tule ja vee kontsert"" Leigol";4;0;4;0;4
+26.05.2026;Y;Piljardi Eesti meistrivõistlused. 9-palli finaal;4;0;4;0;4
+26.05.2026;Y;XIII noorte tantsupidu Sillad;4;0;4;0;4
+26.05.2026;Y;Kummalised linnud;4;0;4;0;4
+26.05.2026;Y;Tiim Marco;4;0;4;0;4
+26.05.2026;Y;Leiutajateküla Lotte;4;0;4;0;4
+26.05.2026;Y;Hunt ja lõvi;4;0;4;0;4
+26.05.2026;Y;Grand Dorado;4;0;4;0;4
+26.05.2026;Y;Ahvatluste tund;4;0;4;0;4
