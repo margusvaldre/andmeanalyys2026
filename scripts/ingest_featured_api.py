@@ -21,6 +21,7 @@ from psycopg2.extras import execute_batch
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from daily_archive import export_featured_day
 from db import finish_run, get_connection, start_run, utc_now
 from prominence_api import fetch_featured_rows, load_config
 
@@ -115,6 +116,9 @@ def ingest_featured(*, feature_date: date | None = None) -> int:
         print(f"  feature_date: {snapshot_date}")
         print(f"  kustutatud: {deleted}")
         print(f"  lisatud: {len(insert_rows)}")
+        export_code = export_featured_day(snapshot_date)
+        if export_code != 0:
+            return export_code
         return 0
 
     except Exception as exc:

@@ -3,11 +3,12 @@
 See fail ei tee ise andmetöötlust. Ta käivitab teisi skripte õiges järjekorras.
 
 Praegused käsud:
+- ingest-archives — päevased arhiivid (featured + catalog_daily) CSV-st
 - ingest-catalog  — ERR API -> staging.catalog
 - ingest-viewers  — CSV failid -> staging.viewers_raw
 - ingest-featured — ERR API -> staging.featured_daily
 - ingest-metadata — meta CSV -> staging.content_metadata
-- ingest-all      — kõik neli järjest
+- ingest-all      — arhiivid + kõik neli järjest
 - transform       — SQL: staging -> mart
 - quality         — SQL: kirjutab quality.* tulemused (vt init/07_quality_objects.sql)
 
@@ -27,12 +28,16 @@ from db import get_connection
 SCRIPTS_DIR = Path(__file__).resolve().parent
 TRANSFORM_SQL = SCRIPTS_DIR / "01_transform.sql"
 
+ARCHIVE_INGEST_STEPS = ("ingest_daily_archives.py",)
+
 INGEST_STEPS = (
     "ingest_catalog_api.py",
     "ingest_viewers_csv.py",
     "ingest_featured_api.py",
     "ingest_metadata_csv.py",
 )
+
+ALL_INGEST_STEPS = ARCHIVE_INGEST_STEPS + INGEST_STEPS
 
 
 def run_transform() -> int:
@@ -153,6 +158,10 @@ def main() -> int:
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     subparsers.add_parser(
+        "ingest-archives",
+        help="Lae päevased arhiivid CSV-st (data/featured, data/catalog_daily).",
+    )
+    subparsers.add_parser(
         "ingest-catalog",
         help="Lae videokataloog API-st tabelisse staging.catalog.",
     )
@@ -199,8 +208,11 @@ def main() -> int:
     if args.command == "ingest-metadata":
         return run_script("ingest_metadata_csv.py")
 
+    if args.command == "ingest-archives":
+        return run_script("ingest_daily_archives.py")
+
     if args.command == "ingest-all":
-        for step in INGEST_STEPS:
+        for step in ALL_INGEST_STEPS:
             code = run_script(step)
             if code != 0:
                 return code
@@ -213,7 +225,7 @@ def main() -> int:
         return run_quality()
 
     if args.command == "run-all":
-        for step in INGEST_STEPS:
+        for step in ALL_INGEST_STEPS:
             code = run_script(step)
             if code != 0:
                 return code

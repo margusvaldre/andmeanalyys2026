@@ -2,7 +2,23 @@
 -- Käivita pärast ingest-all:
 --   docker compose exec pipeline python scripts/run_pipeline.py transform
 
+CREATE TABLE IF NOT EXISTS mart.content_structure_period_pct (
+    grain TEXT NOT NULL CHECK (grain IN ('daily', 'weekly')),
+    period_start DATE NOT NULL,
+    period_end DATE NOT NULL,
+    activity_date DATE NOT NULL,
+    structure_type TEXT NOT NULL CHECK (structure_type IN ('catalog', 'presented', 'viewed')),
+    dimension TEXT NOT NULL CHECK (dimension IN ('origin_country', 'content_type')),
+    category_code TEXT NOT NULL,
+    category_label TEXT NOT NULL,
+    measure_value NUMERIC NOT NULL,
+    pct NUMERIC(5, 2) NOT NULL,
+    transformed_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    PRIMARY KEY (grain, period_start, period_end, structure_type, dimension, category_code)
+);
+
 TRUNCATE TABLE
+    mart.content_structure_period_pct,
     mart.content_structure_pct,
     mart.title_match_daily,
     mart.content_by_source,
@@ -350,13 +366,8 @@ FROM mart.fact_content_daily
 WHERE in_featured
 GROUP BY activity_date;
 
--- Struktuuri protsendid meta CSV põhjal (küsimus 1 diagrammid).
-WITH latest_day AS (
-    SELECT COALESCE(MAX(feature_date), CURRENT_DATE) AS activity_date
-    FROM staging.featured_daily
-),
-
-meta AS (
+-- Struktuuri protsendid meta CSV põhjal (päev + nädal).
+WITH meta AS (
     SELECT
         mart.normalize_title(title) AS title_normalized,
         origin_code,
@@ -364,138 +375,281 @@ meta AS (
     FROM staging.content_metadata
     WHERE mart.normalize_title(title) IS NOT NULL
 ),
-
-viewers_latest AS (
+catalog_daily_norm AS (
+    SELECT DISTINCT ON (snapshot_date, mart.normalize_title(heading))
+        snapshot_date,
+        mart.normalize_title(heading) AS title_normalized
+    FROM staging.catalog_daily
+    WHERE mart.normalize_title(heading) IS NOT NULL
+    ORDER BY snapshot_date, mart.normalize_title(heading), catalog_id
+),
+viewers_daily_latest AS (
     SELECT DISTINCT ON (period_start, period_end, title)
         view_date,
         title,
+        mart.normalize_title(title) AS title_normalized,
         total
     FROM staging.viewers_raw
     WHERE grain = 'daily'
     ORDER BY period_start, period_end, title, loaded_at DESC
 ),
-
+viewers_weekly_latest AS (
+    SELECT DISTINCT ON (period_start, period_end, title)
+        period_start,
+        period_end,
+        title,
+        mart.normalize_title(title) AS title_normalized,
+        total
+    FROM staging.viewers_raw
+    WHERE grain = 'weekly'
+    ORDER BY period_start, period_end, title, loaded_at DESC
+),
+periods AS (
+    SELECT
+        'daily'::TEXT AS grain,
+        d.activity_date AS period_start,
+        d.activity_date AS period_end,
+        d.activity_date
+    FROM (
+        SELECT snapshot_date AS activity_date FROM staging.catalog_daily
+        UNION
+        SELECT feature_date AS activity_date FROM staging.featured_daily
+        UNION
+        SELECT view_date AS activity_date FROM viewers_daily_latest
+    ) AS d
+    UNION ALL
+    SELECT
+        'weekly'::TEXT AS grain,
+        w.period_start,
+        w.period_end,
+        w.period_end AS activity_date
+    FROM (SELECT DISTINCT period_start, period_end FROM viewers_weekly_latest) AS w
+),
 structure_counts AS (
     -- Kataloog: pealkirjade arv
     SELECT
-        ld.activity_date,
+        p.grain,
+        p.period_start,
+        p.period_end,
+        p.activity_date,
         'catalog'::TEXT AS structure_type,
         'origin_country'::TEXT AS dimension,
         m.origin_code AS category_code,
         COALESCE(ol.origin_label, m.origin_code) AS category_label,
         COUNT(*)::NUMERIC AS measure_value
-    FROM staging.catalog AS c
+    FROM periods AS p
+    INNER JOIN catalog_daily_norm AS c
+        ON (
+            (p.grain = 'daily' AND c.snapshot_date = p.period_start)
+            OR (p.grain = 'weekly' AND c.snapshot_date BETWEEN p.period_start AND p.period_end)
+        )
     INNER JOIN meta AS m
-        ON mart.normalize_title(c.heading) = m.title_normalized
-    CROSS JOIN latest_day AS ld
+        ON c.title_normalized = m.title_normalized
     LEFT JOIN mart.ref_origin_labels AS ol
         ON m.origin_code = ol.origin_code
-    GROUP BY ld.activity_date, m.origin_code, ol.origin_label
+    GROUP BY p.grain, p.period_start, p.period_end, p.activity_date, m.origin_code, ol.origin_label
 
     UNION ALL
 
     SELECT
-        ld.activity_date,
+        p.grain,
+        p.period_start,
+        p.period_end,
+        p.activity_date,
         'catalog',
         'content_type',
         m.content_type_code,
         COALESCE(tl.content_type_label, m.content_type_code),
         COUNT(*)::NUMERIC
-    FROM staging.catalog AS c
+    FROM periods AS p
+    INNER JOIN catalog_daily_norm AS c
+        ON (
+            (p.grain = 'daily' AND c.snapshot_date = p.period_start)
+            OR (p.grain = 'weekly' AND c.snapshot_date BETWEEN p.period_start AND p.period_end)
+        )
     INNER JOIN meta AS m
-        ON mart.normalize_title(c.heading) = m.title_normalized
-    CROSS JOIN latest_day AS ld
+        ON c.title_normalized = m.title_normalized
     LEFT JOIN mart.ref_content_type_labels AS tl
         ON m.content_type_code = tl.content_type_code
-    GROUP BY ld.activity_date, m.content_type_code, tl.content_type_label
+    GROUP BY p.grain, p.period_start, p.period_end, p.activity_date, m.content_type_code, tl.content_type_label
 
     UNION ALL
 
-    -- Esitatud: esiletõstmise skooride summa viimase päeva kohta (meta-ühendatud pealkirjad).
+    -- Esitatud: päev/ nädal summa.
     SELECT
-        ld.activity_date,
+        p.grain,
+        p.period_start,
+        p.period_end,
+        p.activity_date,
         'presented',
         'origin_country',
         m.origin_code,
         COALESCE(ol.origin_label, m.origin_code),
         SUM(f.prominence_score_total)::NUMERIC
-    FROM staging.featured_daily AS f
+    FROM periods AS p
+    INNER JOIN staging.featured_daily AS f
+        ON (
+            (p.grain = 'daily' AND f.feature_date = p.period_start)
+            OR (p.grain = 'weekly' AND f.feature_date BETWEEN p.period_start AND p.period_end)
+        )
     INNER JOIN meta AS m
         ON mart.normalize_title(f.title) = m.title_normalized
-    CROSS JOIN latest_day AS ld
     LEFT JOIN mart.ref_origin_labels AS ol
         ON m.origin_code = ol.origin_code
-    WHERE f.feature_date = ld.activity_date
-      AND f.prominence_score_total IS NOT NULL
-    GROUP BY ld.activity_date, m.origin_code, ol.origin_label
+    WHERE f.prominence_score_total IS NOT NULL
+    GROUP BY p.grain, p.period_start, p.period_end, p.activity_date, m.origin_code, ol.origin_label
 
     UNION ALL
 
     SELECT
-        ld.activity_date,
+        p.grain,
+        p.period_start,
+        p.period_end,
+        p.activity_date,
         'presented',
         'content_type',
         m.content_type_code,
         COALESCE(tl.content_type_label, m.content_type_code),
         SUM(f.prominence_score_total)::NUMERIC
-    FROM staging.featured_daily AS f
+    FROM periods AS p
+    INNER JOIN staging.featured_daily AS f
+        ON (
+            (p.grain = 'daily' AND f.feature_date = p.period_start)
+            OR (p.grain = 'weekly' AND f.feature_date BETWEEN p.period_start AND p.period_end)
+        )
     INNER JOIN meta AS m
         ON mart.normalize_title(f.title) = m.title_normalized
-    CROSS JOIN latest_day AS ld
     LEFT JOIN mart.ref_content_type_labels AS tl
         ON m.content_type_code = tl.content_type_code
-    WHERE f.feature_date = ld.activity_date
-      AND f.prominence_score_total IS NOT NULL
-    GROUP BY ld.activity_date, m.content_type_code, tl.content_type_label
+    WHERE f.prominence_score_total IS NOT NULL
+    GROUP BY p.grain, p.period_start, p.period_end, p.activity_date, m.content_type_code, tl.content_type_label
 
     UNION ALL
 
-    -- Vaadatud: vaatamiste summa viimase päeva kohta
+    -- Vaadatud: päeval daily CSV, nädalal weekly CSV.
     SELECT
-        ld.activity_date,
+        p.grain,
+        p.period_start,
+        p.period_end,
+        p.activity_date,
         'viewed',
         'origin_country',
         m.origin_code,
         COALESCE(ol.origin_label, m.origin_code),
         SUM(v.total)::NUMERIC
-    FROM viewers_latest AS v
+    FROM periods AS p
+    INNER JOIN (
+        SELECT
+            'daily'::TEXT AS grain,
+            view_date AS period_start,
+            view_date AS period_end,
+            title_normalized,
+            total
+        FROM viewers_daily_latest
+        UNION ALL
+        SELECT
+            'weekly'::TEXT AS grain,
+            period_start,
+            period_end,
+            title_normalized,
+            total
+        FROM viewers_weekly_latest
+    ) AS v
+        ON p.grain = v.grain
+       AND p.period_start = v.period_start
+       AND p.period_end = v.period_end
     INNER JOIN meta AS m
-        ON mart.normalize_title(v.title) = m.title_normalized
-    CROSS JOIN latest_day AS ld
+        ON v.title_normalized = m.title_normalized
     LEFT JOIN mart.ref_origin_labels AS ol
         ON m.origin_code = ol.origin_code
-    WHERE v.view_date = ld.activity_date
-    GROUP BY ld.activity_date, m.origin_code, ol.origin_label
+    GROUP BY p.grain, p.period_start, p.period_end, p.activity_date, m.origin_code, ol.origin_label
 
     UNION ALL
 
     SELECT
-        ld.activity_date,
+        p.grain,
+        p.period_start,
+        p.period_end,
+        p.activity_date,
         'viewed',
         'content_type',
         m.content_type_code,
         COALESCE(tl.content_type_label, m.content_type_code),
         SUM(v.total)::NUMERIC
-    FROM viewers_latest AS v
+    FROM periods AS p
+    INNER JOIN (
+        SELECT
+            'daily'::TEXT AS grain,
+            view_date AS period_start,
+            view_date AS period_end,
+            title_normalized,
+            total
+        FROM viewers_daily_latest
+        UNION ALL
+        SELECT
+            'weekly'::TEXT AS grain,
+            period_start,
+            period_end,
+            title_normalized,
+            total
+        FROM viewers_weekly_latest
+    ) AS v
+        ON p.grain = v.grain
+       AND p.period_start = v.period_start
+       AND p.period_end = v.period_end
     INNER JOIN meta AS m
-        ON mart.normalize_title(v.title) = m.title_normalized
-    CROSS JOIN latest_day AS ld
+        ON v.title_normalized = m.title_normalized
     LEFT JOIN mart.ref_content_type_labels AS tl
         ON m.content_type_code = tl.content_type_code
-    WHERE v.view_date = ld.activity_date
-    GROUP BY ld.activity_date, m.content_type_code, tl.content_type_label
+    GROUP BY p.grain, p.period_start, p.period_end, p.activity_date, m.content_type_code, tl.content_type_label
 ),
-
 structure_totals AS (
     SELECT
+        grain,
+        period_start,
+        period_end,
         activity_date,
         structure_type,
         dimension,
         SUM(measure_value) AS structure_total
     FROM structure_counts
-    GROUP BY activity_date, structure_type, dimension
+    GROUP BY grain, period_start, period_end, activity_date, structure_type, dimension
 )
+INSERT INTO mart.content_structure_period_pct (
+    grain,
+    period_start,
+    period_end,
+    activity_date,
+    structure_type,
+    dimension,
+    category_code,
+    category_label,
+    measure_value,
+    pct,
+    transformed_at
+)
+SELECT
+    sc.grain,
+    sc.period_start,
+    sc.period_end,
+    sc.activity_date,
+    sc.structure_type,
+    sc.dimension,
+    sc.category_code,
+    sc.category_label,
+    sc.measure_value,
+    ROUND(100.0 * sc.measure_value / NULLIF(st.structure_total, 0), 2) AS pct,
+    now() AS transformed_at
+FROM structure_counts AS sc
+INNER JOIN structure_totals AS st
+    ON sc.grain = st.grain
+   AND sc.period_start = st.period_start
+   AND sc.period_end = st.period_end
+   AND sc.activity_date = st.activity_date
+   AND sc.structure_type = st.structure_type
+   AND sc.dimension = st.dimension;
 
+-- Tagasiühilduvus: hoia ka vana päevatabel ainult viimase päeva jaoks.
 INSERT INTO mart.content_structure_pct (
     activity_date,
     structure_type,
@@ -507,19 +661,22 @@ INSERT INTO mart.content_structure_pct (
     transformed_at
 )
 SELECT
-    sc.activity_date,
-    sc.structure_type,
-    sc.dimension,
-    sc.category_code,
-    sc.category_label,
-    sc.measure_value,
-    ROUND(100.0 * sc.measure_value / NULLIF(st.structure_total, 0), 2) AS pct,
-    now() AS transformed_at
-FROM structure_counts AS sc
-INNER JOIN structure_totals AS st
-    ON sc.activity_date = st.activity_date
-   AND sc.structure_type = st.structure_type
-   AND sc.dimension = st.dimension;
+    p.activity_date,
+    p.structure_type,
+    p.dimension,
+    p.category_code,
+    p.category_label,
+    p.measure_value,
+    p.pct,
+    p.transformed_at
+FROM mart.content_structure_period_pct AS p
+INNER JOIN (
+    SELECT MAX(period_start) AS latest_day
+    FROM mart.content_structure_period_pct
+    WHERE grain = 'daily'
+) AS d
+    ON p.grain = 'daily'
+   AND p.period_start = d.latest_day;
 
 -- Vaated Superseti jaoks.
 
@@ -538,19 +695,8 @@ FROM mart.fact_content_daily AS f
 INNER JOIN mart.v_latest_featured_day AS d
     ON f.activity_date = d.latest_feature_date;
 
--- Viimase esiletõstmise päev; kui sama päeva viewers puudub, täida viimase olemasoleva päeva vaatega.
+-- Viimase esiletõstmise päev (ilma fallbackita).
 CREATE OR REPLACE VIEW mart.v_featured_viewership AS
-WITH latest_viewers_by_title AS (
-    SELECT DISTINCT ON (title_normalized)
-        title_normalized,
-        views_total,
-        views_web,
-        views_app
-    FROM mart.fact_content_daily
-    WHERE in_viewers
-      AND views_total IS NOT NULL
-    ORDER BY title_normalized, activity_date DESC
-)
 SELECT
     f.activity_date,
     f.title_normalized,
@@ -558,19 +704,138 @@ SELECT
     f.primary_category_name,
     f.content_type,
     f.prominence_score_total,
-    COALESCE(f.views_total, lv.views_total) AS views_total,
-    COALESCE(f.views_web, lv.views_web) AS views_web,
-    COALESCE(f.views_app, lv.views_app) AS views_app
+    f.views_total,
+    f.views_web,
+    f.views_app
 FROM mart.v_content_latest_day AS f
-LEFT JOIN latest_viewers_by_title AS lv
-    ON f.title_normalized = lv.title_normalized
 WHERE f.in_featured
   AND f.prominence_score_total IS NOT NULL;
+
+-- Perioodipõhine vaade TOP-i ja korrelatsiooni jaoks.
+CREATE OR REPLACE VIEW mart.v_featured_viewership_period AS
+WITH featured_daily AS (
+    SELECT
+        'daily'::TEXT AS grain,
+        f.feature_date AS period_start,
+        f.feature_date AS period_end,
+        f.feature_date AS activity_date,
+        mart.normalize_title(f.title) AS title_normalized,
+        f.title,
+        SUM(f.prominence_score_total)::NUMERIC(12,4) AS prominence_score_total
+    FROM staging.featured_daily AS f
+    WHERE mart.normalize_title(f.title) IS NOT NULL
+      AND f.prominence_score_total IS NOT NULL
+    GROUP BY f.feature_date, mart.normalize_title(f.title), f.title
+),
+featured_weekly AS (
+    SELECT
+        'weekly'::TEXT AS grain,
+        w.period_start,
+        w.period_end,
+        w.period_end AS activity_date,
+        mart.normalize_title(f.title) AS title_normalized,
+        MAX(f.title) AS title,
+        SUM(f.prominence_score_total)::NUMERIC(12,4) AS prominence_score_total
+    FROM (SELECT DISTINCT period_start, period_end FROM staging.viewers_raw WHERE grain = 'weekly') AS w
+    INNER JOIN staging.featured_daily AS f
+        ON f.feature_date BETWEEN w.period_start AND w.period_end
+    WHERE mart.normalize_title(f.title) IS NOT NULL
+      AND f.prominence_score_total IS NOT NULL
+    GROUP BY w.period_start, w.period_end, mart.normalize_title(f.title)
+),
+viewers_daily AS (
+    SELECT DISTINCT ON (period_start, period_end, title)
+        'daily'::TEXT AS grain,
+        view_date AS period_start,
+        view_date AS period_end,
+        view_date AS activity_date,
+        mart.normalize_title(title) AS title_normalized,
+        total::INTEGER AS views_total
+    FROM staging.viewers_raw
+    WHERE grain = 'daily'
+      AND mart.normalize_title(title) IS NOT NULL
+    ORDER BY period_start, period_end, title, loaded_at DESC
+),
+viewers_weekly AS (
+    SELECT DISTINCT ON (period_start, period_end, title)
+        'weekly'::TEXT AS grain,
+        period_start,
+        period_end,
+        period_end AS activity_date,
+        mart.normalize_title(title) AS title_normalized,
+        total::INTEGER AS views_total
+    FROM staging.viewers_raw
+    WHERE grain = 'weekly'
+      AND mart.normalize_title(title) IS NOT NULL
+    ORDER BY period_start, period_end, title, loaded_at DESC
+),
+catalog_presence_daily AS (
+    SELECT DISTINCT
+        'daily'::TEXT AS grain,
+        snapshot_date AS period_start,
+        snapshot_date AS period_end,
+        snapshot_date AS activity_date,
+        mart.normalize_title(heading) AS title_normalized
+    FROM staging.catalog_daily
+    WHERE mart.normalize_title(heading) IS NOT NULL
+),
+catalog_presence_weekly AS (
+    SELECT DISTINCT
+        'weekly'::TEXT AS grain,
+        w.period_start,
+        w.period_end,
+        w.period_end AS activity_date,
+        mart.normalize_title(c.heading) AS title_normalized
+    FROM (SELECT DISTINCT period_start, period_end FROM staging.viewers_raw WHERE grain = 'weekly') AS w
+    INNER JOIN staging.catalog_daily AS c
+        ON c.snapshot_date BETWEEN w.period_start AND w.period_end
+    WHERE mart.normalize_title(c.heading) IS NOT NULL
+)
+SELECT
+    f.grain,
+    f.period_start,
+    f.period_end,
+    f.activity_date,
+    f.title_normalized,
+    f.title,
+    d.primary_category_name,
+    f.prominence_score_total,
+    v.views_total,
+    (v.views_total IS NULL) AS viewers_missing,
+    (cp.title_normalized IS NOT NULL) AS in_catalog
+FROM (
+    SELECT * FROM featured_daily
+    UNION ALL
+    SELECT * FROM featured_weekly
+) AS f
+LEFT JOIN (
+    SELECT * FROM viewers_daily
+    UNION ALL
+    SELECT * FROM viewers_weekly
+) AS v
+    ON f.grain = v.grain
+   AND f.period_start = v.period_start
+   AND f.period_end = v.period_end
+   AND f.title_normalized = v.title_normalized
+LEFT JOIN (
+    SELECT * FROM catalog_presence_daily
+    UNION ALL
+    SELECT * FROM catalog_presence_weekly
+) AS cp
+    ON f.grain = cp.grain
+   AND f.period_start = cp.period_start
+   AND f.period_end = cp.period_end
+   AND f.title_normalized = cp.title_normalized
+LEFT JOIN mart.dim_content AS d
+    ON f.title_normalized = d.title_normalized;
 
 -- Superseti vaated (vt init/10_superset_views.sql).
 -- Kui meta CSV on laetud, kasuta content_structure_pct; muidu vana vaheversioon.
 CREATE OR REPLACE VIEW mart.v_superset_structure_pct AS
 SELECT
+    grain,
+    period_start,
+    period_end,
     activity_date,
     CASE structure_type
         WHEN 'catalog' THEN '1. Kataloogi struktuur'
@@ -581,13 +846,16 @@ SELECT
     category_label AS segment,
     measure_value,
     pct
-FROM mart.content_structure_pct
+FROM mart.content_structure_period_pct
 WHERE dimension = 'content_type'
-  AND EXISTS (SELECT 1 FROM mart.content_structure_pct LIMIT 1)
+  AND EXISTS (SELECT 1 FROM mart.content_structure_period_pct LIMIT 1)
 
 UNION ALL
 
 SELECT
+    b.grain,
+    b.period_start,
+    b.period_end,
     b.activity_date,
     b.structure_label,
     b.source,
@@ -597,6 +865,9 @@ SELECT
 FROM (
     WITH base AS (
         SELECT
+            'daily'::TEXT AS grain,
+            activity_date AS period_start,
+            activity_date AS period_end,
             activity_date,
             CASE source
                 WHEN 'catalog' THEN '1. Kataloogi struktuur'
@@ -618,13 +889,19 @@ FROM (
     ),
     totals AS (
         SELECT
+            grain,
+            period_start,
+            period_end,
             activity_date,
             structure_label,
             SUM(measure_value) AS structure_total
         FROM base
-        GROUP BY activity_date, structure_label
+        GROUP BY grain, period_start, period_end, activity_date, structure_label
     )
     SELECT
+        b.grain,
+        b.period_start,
+        b.period_end,
         b.activity_date,
         b.structure_label,
         b.source,
@@ -633,16 +910,22 @@ FROM (
         ROUND(100.0 * b.measure_value / NULLIF(t.structure_total, 0), 2) AS pct
     FROM base AS b
     INNER JOIN totals AS t
-        ON b.activity_date = t.activity_date
+        ON b.grain = t.grain
+       AND b.period_start = t.period_start
+       AND b.period_end = t.period_end
+       AND b.activity_date = t.activity_date
        AND b.structure_label = t.structure_label
 ) AS b
-WHERE NOT EXISTS (SELECT 1 FROM mart.content_structure_pct LIMIT 1);
+WHERE NOT EXISTS (SELECT 1 FROM mart.content_structure_period_pct LIMIT 1);
 
 DROP VIEW IF EXISTS mart.v_superset_origin_pct;
 DROP VIEW IF EXISTS mart.v_superset_content_type_pct;
 
 CREATE VIEW mart.v_superset_origin_pct AS
 SELECT
+    grain,
+    period_start,
+    period_end,
     activity_date,
     CASE structure_type
         WHEN 'catalog' THEN 'Kataloogi struktuur'
@@ -668,11 +951,14 @@ SELECT
     END AS segment_sort,
     measure_value,
     pct
-FROM mart.content_structure_pct
+FROM mart.content_structure_period_pct
 WHERE dimension = 'origin_country';
 
 CREATE VIEW mart.v_superset_content_type_pct AS
 SELECT
+    grain,
+    period_start,
+    period_end,
     activity_date,
     CASE structure_type
         WHEN 'catalog' THEN 'Kataloogi struktuur'
@@ -703,18 +989,35 @@ SELECT
     END AS segment_sort,
     measure_value,
     pct
-FROM mart.content_structure_pct
+FROM mart.content_structure_period_pct
 WHERE dimension = 'content_type';
 
 CREATE OR REPLACE VIEW mart.v_superset_featured_top AS
 SELECT
+    v.grain,
+    v.period_start,
+    v.period_end,
+    v.activity_date,
     v.title,
     v.prominence_score_total,
     v.views_total,
-    f.in_catalog,
+    CASE WHEN v.views_total IS NULL THEN 'N/A' ELSE NULL END AS views_note,
+    v.in_catalog,
     v.primary_category_name
-FROM mart.v_featured_viewership AS v
-INNER JOIN mart.v_content_latest_day AS f
-    ON v.title_normalized = f.title_normalized
+FROM mart.v_featured_viewership_period AS v
 ORDER BY v.prominence_score_total DESC
-LIMIT 50;
+LIMIT 500;
+
+CREATE OR REPLACE VIEW mart.v_superset_featured_correlation AS
+SELECT
+    grain,
+    period_start,
+    period_end,
+    activity_date,
+    COUNT(*) FILTER (
+        WHERE prominence_score_total IS NOT NULL
+          AND views_total IS NOT NULL
+    ) AS pair_count,
+    corr(prominence_score_total::DOUBLE PRECISION, views_total::DOUBLE PRECISION) AS corr_prominence_views
+FROM mart.v_featured_viewership_period
+GROUP BY grain, period_start, period_end, activity_date;

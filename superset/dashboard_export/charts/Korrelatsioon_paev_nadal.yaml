@@ -1,0 +1,18 @@
+slice_name: Korrelatsioon (päev/nädal)
+description: Pearsoni korrelatsioon valitud päeva või nädala lõikes.
+viz_type: table
+params:
+  datasource: c2222222-2222-4222-8222-000000000007__table
+  viz_type: table
+  query_mode: raw
+  all_columns:
+  - period_start
+  - period_end
+  - pair_count
+  - corr_prominence_views
+  order_desc: true
+  row_limit: 200
+cache_timeout: 30
+uuid: caaaaaaa-aaaa-4aaa-8aaa-000000000007
+version: 1.0.0
+dataset_uuid: c2222222-2222-4222-8222-000000000007

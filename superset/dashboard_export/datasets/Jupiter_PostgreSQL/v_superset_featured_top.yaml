@@ -1,5 +1,5 @@
 table_name: v_superset_featured_top
-description: Viimase päeva kõrgeima esiletõstmisega pealkirjad.
+description: Päeva ja nädala TOP pealkirjad (vaikimisi prominence DESC, row_limit 20 chartis).
 schema: mart
 catalog: __POSTGRES_DB__
 sql: null
@@ -8,6 +8,34 @@ version: 1.0.0
 database_uuid: c1111111-1111-4111-8111-000000000001
 metrics: []
 columns:
+  - column_name: grain
+    verbose_name: grain
+    is_dttm: false
+    is_active: true
+    type: TEXT
+    groupby: true
+    filterable: true
+  - column_name: period_start
+    verbose_name: period_start
+    is_dttm: true
+    is_active: true
+    type: DATE
+    groupby: true
+    filterable: true
+  - column_name: period_end
+    verbose_name: period_end
+    is_dttm: true
+    is_active: true
+    type: DATE
+    groupby: true
+    filterable: true
+  - column_name: activity_date
+    verbose_name: activity_date
+    is_dttm: true
+    is_active: true
+    type: DATE
+    groupby: true
+    filterable: true
   - column_name: title
     verbose_name: title
     is_dttm: false
@@ -26,7 +54,14 @@ columns:
     verbose_name: views_total
     is_dttm: false
     is_active: true
-    type: INTEGER
+    type: NUMERIC
+    groupby: true
+    filterable: true
+  - column_name: views_note
+    verbose_name: views_note
+    is_dttm: false
+    is_active: true
+    type: TEXT
     groupby: true
     filterable: true
   - column_name: in_catalog

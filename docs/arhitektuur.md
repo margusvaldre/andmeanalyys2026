@@ -11,9 +11,9 @@ Küsimuse 1 vastus on kaks **100% virnlintdiagrammi** (horisontaalne virn, telg 
 
 | Rida diagrammil | Andmestik (pärast transformi) | Sisendallikad |
 |-----------------|------------------------------|---------------|
-| **Kataloogi struktuur** | `mart.content_structure_pct` (`structure_type = catalog`) | `staging.catalog` + `staging.content_metadata` |
+| **Kataloogi struktuur** | `mart.content_structure_period_pct` (`structure_type = catalog`) | `staging.catalog_daily` + `staging.content_metadata` |
 | **Esitatud sisu struktuur** | sama (`presented`) | `staging.featured_daily` + meta |
-| **Vaadatud sisu struktuur** | sama (`viewed`) | `staging.viewers_raw` (päevane) + meta |
+| **Vaadatud sisu struktuur** | sama (`viewed`) | `staging.viewers_raw` (`daily` või `weekly`) + meta |
 
 Küsimuse 1 täisdiagrammid eeldavad metaandmete CSV-d (`data/metadata/jupiter_metadata.csv` → `staging.content_metadata`). **Ilma meta laadimiseta** jääb alles vaheversioon (nt kataloogi API kategooria või vaadatavuse toor-`content_type`), mis ei vasta allikdiagrammidele.
 
@@ -36,13 +36,13 @@ Iga sisunimetuse paigutus Jupiteri platvormil annab sisule teatud arvu punkte s�
 
 **Arvutus iga rea kohta:**
 
-| Rida | Arvutusloogika (`mart.content_structure_pct`) |
+| Rida | Arvutusloogika (`mart.content_structure_period_pct`) |
 |------|----------------|
 | Kataloog | `COUNT` meta-ühendatud pealkirju kataloogis → protsent (100%) |
-| Esitatud | `SUM(prominence_score_total)` viimasel esiletõstmise päeval, meta-ühendatud pealkirjad → protsent (100%) |
-| Vaadatud | `SUM` päevasest vaadatavuse CSV-st (`viewers_raw.total`, `grain = daily`) samal `activity_date` → protsent (100%) |
+| Esitatud | `SUM(prominence_score_total)` valitud perioodis (päev või nädal), meta-ühendatud pealkirjad → protsent (100%) |
+| Vaadatud | `SUM(viewers_raw.total)` valitud perioodis (`grain = daily` või `weekly`) → protsent (100%) |
 
-Kõik kolm rida arvutatakse **ühe** `activity_date` kohta (viimane `staging.featured_daily.feature_date`). Ainult pealkirjad, millel on meta (`staging.content_metadata`). Nii nähtub nihe kataloogi (pealkirjade arv), esiletõstetuse (skooride summa) ja vaatamise (vaatamiste summa) vahel — nt väikese katalogiosaga sisu võib saada suurema skoori või vaatamiste osa.
+Kõik kolm rida arvutatakse valitud perioodi kohta (`grain`, `period_start`, `period_end`). Päevavaates kasutatakse konkreetset päeva. Nädalavaates on kataloog **union** üle nädala päevade snapshot’ide (`staging.catalog_daily`), esitatud sisu on nädala päevade skooride summa ning vaadatud sisu tuleb nädala CSV-st (`jupiter_w_*`). Ainult pealkirjad, millel on meta (`staging.content_metadata`). Nii nähtub nihe kataloogi (pealkirjade arv), esiletõstetuse (skooride summa) ja vaatamise (vaatamiste summa) vahel.
 
 #### Mõõdik 1B: Sisutüübid (`Sisutüübid`)
 
@@ -68,7 +68,7 @@ Diagrammid peaksid võimaldama näha **nihet** kataloogi, esiletõstetuse ja vaa
 - Eesti sisu suur osa kataloogist, kesmine nähtavuses, väiksem osa vaatamistest.
 - UK või sarjad: väiksem kataloogiosakaal, suurem nähtavuses, suurem vaatamiste osakaal.
 
-Supersetis: horisontaalne **100% stacked bar chart**, mõõt `SUM(pct)`, dimensioonid `structure_label` + `segment` (andmestikud `mart.v_superset_origin_pct`, `mart.v_superset_content_type_pct`).
+Supersetis: horisontaalne **100% stacked bar chart**, mõõt `SUM(pct)`, dimensioonid `structure_label` + `segment` (andmestikud `mart.v_superset_origin_pct`, `mart.v_superset_content_type_pct`) ning ühine filter `grain` + periood.
 
 ### Äriküsimus 2 — mõõdikud
 
@@ -76,10 +76,11 @@ Supersetis: horisontaalne **100% stacked bar chart**, mõõt `SUM(pct)`, dimensi
 
 Võrdlus **pealkirjade kaupa**: esiletõstmise skoor (`prominence_score_total`) ja vaatamised (`views_total`).
 
-- **Andmestik:** `mart.v_featured_viewership` (viimase esiletõstmise päev).
-- **Dashboard:** tabel; scatter/bubble on valikuline Supersetis (vt `docs/superset.md`).
-- Toru **ei arvuta** automaatselt Pearsoni korrelatsioonikordajat — seda saab teha analüütiku tööriistaga või Superseti chart tüübiga, kui sama päeva andmed on olemas.
-- Kui sama päeva viewers CSV puudub, võib `views_total` tulla viimasest olemasolevast päevast sama pealkirja kohta (`COALESCE` transformis).
+- **Andmestik:** `mart.v_featured_viewership_period` (päev ja nädal).
+- **Dashboard:** TOP tabel + eraldi korrelatsiooni vaade (`mart.v_superset_featured_correlation`).
+- Korrelatsioon arvutatakse PostgreSQL-is: `corr(prominence_score_total, views_total)` perioodi kaupa.
+- Arvutusse lähevad read, kus mõlemad väärtused on olemas; lisaks kuvatakse `pair_count`.
+- Kui valitud päeval viewers puudub, jääb `views_total` tühjaks (`N/A`), fallback’i ei kasutata.
 
 ## Andmeallikad
 
@@ -87,7 +88,9 @@ Võrdlus **pealkirjade kaupa**: esiletõstmise skoor (`prominence_score_total`) 
 |---------|------|--------------|------|
 | ERR videokataloog | HTTP API | Jah, iga päev | Kataloogi koosseis (`catalog_id`, pealkiri, kategooria) |
 | Jupiteri kategoorialehed (esiletõstmine) | HTTP API + konfig CSV | Jah, iga päev | Esiletõstmise skoor (`data/prominence/*.csv`) |
-| Vaadatavus | CSV (`data/viewers/`) | Jah, iga päev | Päevafail `jupiter_d_*.csv` → mart; nädalafail `jupiter_w_*.csv` laetakse stagingusse, kuid transform kasutab ainult `grain = daily` |
+| Vaadatavus | CSV (`data/viewers/`) | Jah, iga päev | Päevafail `jupiter_d_*.csv` ja nädalafail `jupiter_w_*.csv` laetakse stagingusse ning transform kasutab mõlemat (`daily` + `weekly`) |
+| Esiletõstmise arhiiv | CSV (`data/featured/`) | Iga cron-päev | `jupiter_f_YYYYMMDD-YYYYMMDD.csv` — eksport pärast API ingestit; `run-all` laeb enne API-d |
+| Kataloogi snapshot arhiiv | CSV (`data/catalog_daily/`) | Iga cron-päev | `jupiter_c_YYYYMMDD-YYYYMMDD.csv` — sama loogika |
 | Sisu metaandmed | CSV (`data/metadata/jupiter_metadata.csv`) | ~nädalas | **Sisutüüp** ja **päritolumaa** pealkirja kohta (küsimus 1 diagrammid) |
 
 **Ühendusvõti** kõigi allikate vahel on **pealkiri** (`heading` kataloogis, `title` vaadatavuses ja esiletõstmises). Transform kasutab funktsiooni `mart.normalize_title()` (trim, üleliigsed tühikud).
@@ -102,12 +105,19 @@ flowchart LR
     csvMeta[Meta CSV] --> ingestMeta[ingest_metadata_csv]
     configProminence[data/prominence/*.csv] --> ingestFeatured
 
+    csvFeatured[data/featured CSV] --> ingestArchives[ingest_daily_archives]
+    csvCatalog[data/catalog_daily CSV] --> ingestArchives
+    ingestArchives --> stagingFeatured[(staging.featured_daily)]
+    ingestArchives --> stagingCatalogDaily[(staging.catalog_daily)]
+
     ingestCatalog --> stagingCatalog[(staging.catalog)]
-    ingestFeatured --> stagingFeatured[(staging.featured_daily)]
+    ingestCatalog --> stagingCatalogDaily
+    ingestFeatured --> stagingFeatured
     ingestViewers --> stagingViewers[(staging.viewers_raw)]
     ingestMeta --> stagingMeta[(staging.content_metadata)]
 
     stagingCatalog --> transform[01_transform.sql]
+    stagingCatalogDaily --> transform
     stagingFeatured --> transform
     stagingViewers --> transform
     stagingMeta --> transform
@@ -116,18 +126,21 @@ flowchart LR
     transform --> factDaily[(mart.fact_content_daily)]
     transform --> bySource[(mart.content_by_source)]
     transform --> matchDaily[(mart.title_match_daily)]
-    transform --> structurePct[(mart.content_structure_pct)]
+    transform --> structurePeriodPct[(mart.content_structure_period_pct)]
 
-    structurePct --> vOrigin[(v_superset_origin_pct)]
-    structurePct --> vType[(v_superset_content_type_pct)]
-    factDaily --> vFeatured[(v_featured_viewership)]
+    structurePeriodPct --> vOrigin[(v_superset_origin_pct)]
+    structurePeriodPct --> vType[(v_superset_content_type_pct)]
+    transform --> vFeaturedPeriod[(v_featured_viewership_period)]
+    vFeaturedPeriod --> vCorr[(v_superset_featured_correlation)]
 
     vOrigin --> superset[Superset]
     vType --> superset
-    vFeatured --> superset
+    vFeaturedPeriod --> superset
+    vCorr --> superset
     matchDaily --> superset
 
     scheduler[Scheduler cron 06:00] --> runAll[run_pipeline.py run-all]
+    runAll --> ingestArchives
     runAll --> ingestCatalog
     runAll --> ingestViewers
     runAll --> ingestFeatured
@@ -154,9 +167,10 @@ Iga ingest kirjutab käivituse logi tabelisse `staging.pipeline_runs` (`run_id`,
 | Tabel | Kirjeldus |
 |-------|-----------|
 | `staging.catalog` | Üks rida `catalog_id` kohta; uued read ja pealkirja muutused (ingest kasutab seda, mitte `catalog_raw`) |
+| `staging.catalog_daily` | Päevane kataloogi snapshot (`snapshot_date`), mida kasutatakse päeva/nädala struktuuriarvutuses |
 | `staging.catalog_title_changes` | Logi, kui sama `catalog_id` pealkiri muutub |
 | `staging.featured_daily` | Päevane snapshot: pealkiri + esiletõstmise skoor |
-| `staging.viewers_raw` | Vaadatavus (`grain`: `daily` või `weekly`); **mart** kasutab transformis ainult `daily` |
+| `staging.viewers_raw` | Vaadatavus (`grain`: `daily` või `weekly`); transform kasutab mõlemat |
 | `staging.content_metadata` | Meta CSV snapshot: pealkiri, `origin_code`, `content_type_code` |
 | `staging.pipeline_runs` | Toru käivituste ajalugu |
 
@@ -168,15 +182,18 @@ Iga ingest kirjutab käivituse logi tabelisse `staging.pipeline_runs` (`run_id`,
 | `mart.fact_content_daily` | Päevane ühendus esiletõstmine + vaadatavus + kataloogi kategooria |
 | `mart.content_by_source` | Pealkirjade arv allika lõikes (vaheversioon; kataloogil `activity_date = CURRENT_DATE`) |
 | `mart.title_match_daily` | Päevane ühenduste kvaliteet (`catalog_match_pct`, `viewers_match_pct`, …) |
-| `mart.content_structure_pct` | Struktuuri %: `catalog` (COUNT) / `presented` (SUM skoor) / `viewed` (SUM vaated) × `origin_country` või `content_type`; viimane featured päev |
-| `mart.v_featured_viewership` | Viimase esiletõstmise päeva read (skoor; vaated eelistatult samal päeval) |
+| `mart.content_structure_period_pct` | Struktuuri % päeva ja nädala lõikes: `catalog` (COUNT) / `presented` (SUM skoor) / `viewed` (SUM vaated) × `origin_country` või `content_type` |
+| `mart.content_structure_pct` | Tagasiühilduv päevavaade (viimase päeva väljavõte `content_structure_period_pct` tabelist) |
+| `mart.v_featured_viewership_period` | Perioodipõhine pealkirjavaade TOP-i ja korrelatsiooni jaoks (`grain`, periood, skoor, vaated, `viewers_missing`) |
+| `mart.v_featured_viewership` | Viimase featured päeva read ilma viewers fallback’ita |
 | `mart.v_superset_origin_pct` | Superset: päritolumaa 100% virn |
 | `mart.v_superset_content_type_pct` | Superset: sisutüüpide 100% virn |
 | `mart.v_superset_structure_pct` | Superset: struktuur ilma meta (fallback) |
-| `mart.v_superset_featured_top` | Superset: TOP esiletõstetud (viimane päev) |
+| `mart.v_superset_featured_top` | Superset: TOP esiletõstetud päeva/nädala lõikes (`views_note = N/A`, kui vaadatavus puudub) |
+| `mart.v_superset_featured_correlation` | Superset: Pearsoni korrelatsioon (`corr_prominence_views`) + `pair_count` perioodi kaupa |
 | `mart.v_content_latest_day` | Abivaade: `fact_content_daily` viimase featured päeva kohta |
 
-Tabel `mart.content_structure_pct` täidetakse transformiga: üks rida = `(structure_type, dimension, category_code, category_label, measure_value, pct)`. Meta CSV koodid (`EST`, `FILM`, …) tõlgitakse eestikeelseteks siltideks tabelites `mart.ref_origin_labels` ja `mart.ref_content_type_labels`.
+Tabel `mart.content_structure_period_pct` täidetakse transformiga: üks rida = `(grain, period_start, period_end, structure_type, dimension, category_code, category_label, measure_value, pct)`. Meta CSV koodid (`EST`, `FILM`, …) tõlgitakse eestikeelseteks siltideks tabelites `mart.ref_origin_labels` ja `mart.ref_content_type_labels`.
 
 Transform kustutab mart tabelid ja täidab need uuesti (`scripts/01_transform.sql`). Staging säilitab ajaloo (sh vanemad vaadatavuse laadimised erinevate `run_id`-dega).
 
@@ -188,7 +205,7 @@ Transform kustutab mart tabelid ja täidab need uuesti (`scripts/01_transform.sq
 | `scheduler/crontab` | Iga päev kell **06:00** → `python scripts/run_pipeline.py run-all` (sh transform ja `quality.run_checks`) |
 | `logs/pipeline.log` | Scheduleri standardväljund |
 
-Enne cron'i peab uus vaadatavuse päevafail (`jupiter_d_YYYYMMDD-YYYYMMDD.csv`) olema kaustas `data/viewers/`, et esiletõstmise ja vaadatavuse päevad kattuksid.
+Enne cron'i peavad vajalikud vaadatavuse failid (`jupiter_d_*.csv` ja vajadusel `jupiter_w_*.csv`) olema kaustas `data/viewers/`. Pärast iga edukat kataloogi ja featured ingestit tekivad vastavad arhiivfailid; tiimikaaslane saab need gitist kaasa ja `run-all` täidab ajaloo enne tänase API uuendust.
 
 ## Tööjaotus
 
@@ -203,7 +220,7 @@ Enne cron'i peab uus vaadatavuse päevafail (`jupiter_d_YYYYMMDD-YYYYMMDD.csv`) 
 
 | Risk | Mõju | Maandus |
 |------|------|---------|
-| Puuduv sisunimetus metaandmetes  | Pealkiri ei lähe `content_structure_pct` arvutusse (INNER JOIN meta). | Täita meta CSV; hinnata osakaalu; vajadusel käsitsi täiendus |
+| Puuduv sisunimetus metaandmetes  | Pealkiri ei lähe `content_structure_period_pct` arvutusse (INNER JOIN meta). | Täita meta CSV; hinnata osakaalu; vajadusel käsitsi täiendus |
 | Liiga lühike analüüsiperiood  | Lühike periood võib moonutada tulemust - ühekordne suur "sündmus" | Vältida põhjuslike järelduste tegemist, analüüsi kordamine pikema perioodi jooksul tulevikus |
 | Unikaalse identifikaatori puudumine  | Andmete sidumine toimub pealkirjade järgi, mis võivad allikati erineda  | Lisada andmevoogu andmekvaliteedi kontrollid |
 

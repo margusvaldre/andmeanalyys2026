@@ -74,6 +74,27 @@ ALTER TABLE mart.dim_content
     ADD COLUMN IF NOT EXISTS meta_updated_at DATE,
     ADD COLUMN IF NOT EXISTS in_metadata BOOLEAN NOT NULL DEFAULT false;
 
+-- Kataloogi päevased snapshotid (olemasolev DB).
+CREATE TABLE IF NOT EXISTS staging.catalog_daily (
+    snapshot_date DATE NOT NULL,
+    run_id UUID NOT NULL REFERENCES staging.pipeline_runs (run_id),
+    catalog_id TEXT NOT NULL,
+    schedule_start TEXT,
+    heading TEXT NOT NULL,
+    primary_category_name TEXT,
+    primary_category_path TEXT,
+    vertical_photo_url TEXT,
+    source_url TEXT NOT NULL,
+    loaded_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    PRIMARY KEY (snapshot_date, catalog_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_catalog_daily_heading
+    ON staging.catalog_daily (heading);
+
+CREATE INDEX IF NOT EXISTS idx_catalog_daily_snapshot
+    ON staging.catalog_daily (snapshot_date DESC);
+
 -- Struktuuri % küsimuse 1 diagrammide jaoks.
 CREATE TABLE IF NOT EXISTS mart.content_structure_pct (
     activity_date DATE NOT NULL,
@@ -91,3 +112,25 @@ CREATE TABLE IF NOT EXISTS mart.content_structure_pct (
 
 CREATE INDEX IF NOT EXISTS idx_content_structure_pct_lookup
     ON mart.content_structure_pct (activity_date, dimension, structure_type);
+
+-- Struktuuri % päeva ja nädala lõikes.
+CREATE TABLE IF NOT EXISTS mart.content_structure_period_pct (
+    grain TEXT NOT NULL
+        CHECK (grain IN ('daily', 'weekly')),
+    period_start DATE NOT NULL,
+    period_end DATE NOT NULL,
+    activity_date DATE NOT NULL,
+    structure_type TEXT NOT NULL
+        CHECK (structure_type IN ('catalog', 'presented', 'viewed')),
+    dimension TEXT NOT NULL
+        CHECK (dimension IN ('origin_country', 'content_type')),
+    category_code TEXT NOT NULL,
+    category_label TEXT NOT NULL,
+    measure_value NUMERIC NOT NULL,
+    pct NUMERIC(5, 2) NOT NULL,
+    transformed_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    PRIMARY KEY (grain, period_start, period_end, structure_type, dimension, category_code)
+);
+
+CREATE INDEX IF NOT EXISTS idx_content_structure_period_pct_lookup
+    ON mart.content_structure_period_pct (grain, period_start, period_end, dimension, structure_type);

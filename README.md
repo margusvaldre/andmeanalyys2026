@@ -15,7 +15,7 @@ copy .env.example .env
 docker compose up -d --build
 ```
 
-Scheduler käivitab iga päev kell **06:00** (Europe/Tallinn) käsu `run-all` (kataloog, vaadatavus, esiletõstmine, **meta CSV**, transform, andmekvaliteedi kontrollid). Vaadatavuse CSV peab enne olema kaustas `data/viewers/`.
+Scheduler käivitab iga päev kell **06:00** (Europe/Tallinn) käsu `run-all` (arhiivid, kataloog, vaadatavus, esiletõstmine, **meta CSV**, transform, andmekvaliteedi kontrollid). Vaadatavuse CSV peab enne olema kaustas `data/viewers/`. Iga edukas kataloogi ja esiletõstmise ingest salvestab päeva arhiivi kaustadesse `data/catalog_daily/` ja `data/featured/` — uus keskkond laeb need `run-all` alguses samamoodi nagu viewers CSV-sid.
 
 Logid:
 
@@ -153,17 +153,19 @@ docker compose exec db psql -U praktikum -d praktikum -c "SELECT * FROM quality.
 | `init/01_create_objects.sql` | skeemid ja põhitabelid |
 | `init/03_catalog_incremental.sql` | `staging.catalog` + pealkirja muutuste logi |
 | `scripts/catalog_api.py` | API lugemine (kasutab ingest_catalog_api) |
-| `scripts/ingest_catalog_api.py` | API → `staging.catalog` (ainult uued + muutuste tuvastus) |
+| `scripts/ingest_catalog_api.py` | API → `staging.catalog` + `staging.catalog_daily` + CSV arhiiv |
+| `scripts/ingest_daily_archives.py` | `data/featured/` + `data/catalog_daily/` → staging |
+| `scripts/daily_archive.py` | Arhiivi eksport/import loogika |
 | `scripts/ingest_viewers_csv.py` | CSV → `staging.viewers_raw` |
 | `scripts/prominence_api.py` | Esiletõstmise skooride arvutus API-st |
-| `scripts/ingest_featured_api.py` | API → `staging.featured_daily` |
+| `scripts/ingest_featured_api.py` | API → `staging.featured_daily` + CSV arhiiv |
 | `scripts/ingest_metadata_csv.py` | Meta CSV → `staging.content_metadata` |
 | `data/metadata/jupiter_metadata.csv` | Pealkiri → päritolumaa ja sisutüüp |
 | `data/prominence/*.csv` | Positsioonimaatriks ja lehe koefitsiendid |
 | `init/05_mart_objects.sql` | Mart tabelid ja `normalize_title` funktsioon |
 | `scripts/01_transform.sql` | Staging → mart transformatsioon |
 | `init/07_quality_objects.sql` | `quality` skeemi tabelid + `quality.run_checks()` |
-| `init/08_metadata_staging.sql` | `staging.content_metadata`, viitetabelid, `mart.content_structure_pct` |
+| `init/08_metadata_staging.sql` | `staging.content_metadata`, `staging.catalog_daily`, viitetabelid, `mart.content_structure_period_pct` |
 | `scripts/02_quality_checks.sql` | Käsitsi: `SELECT quality.run_checks(...)` (vt faili sisu) |
 | `scripts/run_pipeline.py` | `ingest-*`, `transform`, `quality`, `run-all` |
 | `docs/arhitektuur.md` | Äriküsimus ja andmevoog |

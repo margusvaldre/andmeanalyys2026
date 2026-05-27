@@ -15,6 +15,7 @@ position:
     - ROW-1
     - ROW-STRUCT
     - ROW-2
+    - ROW-3
     id: GRID_ID
     parents:
     - ROOT_ID
@@ -50,6 +51,16 @@ position:
     - CHART-SCATTER
     - CHART-TOP
     id: ROW-2
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    type: ROW
+  ROW-3:
+    children:
+    - CHART-CORR
+    id: ROW-3
     meta:
       background: BACKGROUND_TRANSPARENT
     parents:
@@ -126,9 +137,98 @@ position:
     - GRID_ID
     - ROW-2
     type: CHART
+  CHART-CORR:
+    children: []
+    id: CHART-CORR
+    meta:
+      chartId: 7
+      height: 36
+      sliceName: Korrelatsioon (päev/nädal)
+      uuid: caaaaaaa-aaaa-4aaa-8aaa-000000000007
+      width: 12
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-3
+    type: CHART
 metadata:
   refresh_frequency: 60
   color_scheme: supersetColors
   cross_filters_enabled: true
+  native_filter_configuration:
+  - id: NATIVE_FILTER_GRAIN
+    controlValues:
+      enableEmptyFilter: false
+      defaultToFirstItem: true
+      multiSelect: false
+      searchAllOptions: false
+      inverseSelection: false
+    defaultDataMask:
+      extraFormData:
+        filters: []
+      filterState:
+        label: null
+        value: null
+    description: Päevane või nädalane vaade
+    filterType: filter_select
+    name: Vaade (grain)
+    scope:
+      rootPath:
+      - ROOT_ID
+      excluded:
+      - CHART-MATCH
+      - CHART-SCATTER
+    tabsInScope: []
+    targets:
+    - datasetUuid: c2222222-2222-4222-8222-000000000005
+      column:
+        name: grain
+    - datasetUuid: c2222222-2222-4222-8222-000000000006
+      column:
+        name: grain
+    - datasetUuid: c2222222-2222-4222-8222-000000000004
+      column:
+        name: grain
+    - datasetUuid: c2222222-2222-4222-8222-000000000007
+      column:
+        name: grain
+    type: NATIVE_FILTER
+  - id: NATIVE_FILTER_PERIOD_START
+    controlValues:
+      enableEmptyFilter: false
+      defaultToFirstItem: true
+      multiSelect: false
+      searchAllOptions: false
+      inverseSelection: false
+    defaultDataMask:
+      extraFormData:
+        filters: []
+      filterState:
+        label: null
+        value: null
+    description: Päeva või nädala algus
+    filterType: filter_select
+    name: Perioodi algus
+    scope:
+      rootPath:
+      - ROOT_ID
+      excluded:
+      - CHART-MATCH
+      - CHART-SCATTER
+    tabsInScope: []
+    targets:
+    - datasetUuid: c2222222-2222-4222-8222-000000000005
+      column:
+        name: period_start
+    - datasetUuid: c2222222-2222-4222-8222-000000000006
+      column:
+        name: period_start
+    - datasetUuid: c2222222-2222-4222-8222-000000000004
+      column:
+        name: period_start
+    - datasetUuid: c2222222-2222-4222-8222-000000000007
+      column:
+        name: period_start
+    type: NATIVE_FILTER
   default_filters: '{}'
 version: 1.0.0

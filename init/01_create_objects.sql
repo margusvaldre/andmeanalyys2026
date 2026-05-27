@@ -59,6 +59,27 @@ CREATE TABLE IF NOT EXISTS staging.catalog (
 CREATE INDEX IF NOT EXISTS idx_catalog_heading
     ON staging.catalog (heading);
 
+-- Päevane kataloogi snapshot analüütika jaoks (päeva/nädala kataloogistruktuur).
+CREATE TABLE IF NOT EXISTS staging.catalog_daily (
+    snapshot_date DATE NOT NULL,
+    run_id UUID NOT NULL REFERENCES staging.pipeline_runs (run_id),
+    catalog_id TEXT NOT NULL,
+    schedule_start TEXT,
+    heading TEXT NOT NULL,
+    primary_category_name TEXT,
+    primary_category_path TEXT,
+    vertical_photo_url TEXT,
+    source_url TEXT NOT NULL,
+    loaded_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    PRIMARY KEY (snapshot_date, catalog_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_catalog_daily_heading
+    ON staging.catalog_daily (heading);
+
+CREATE INDEX IF NOT EXISTS idx_catalog_daily_snapshot
+    ON staging.catalog_daily (snapshot_date DESC);
+
 CREATE TABLE IF NOT EXISTS staging.catalog_title_changes (
     change_id BIGSERIAL PRIMARY KEY,
     run_id UUID NOT NULL REFERENCES staging.pipeline_runs (run_id),

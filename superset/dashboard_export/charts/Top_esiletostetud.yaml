@@ -1,5 +1,5 @@
 slice_name: Top esiletõstetud
-description: Viimase esiletõstmise päeva TOP pealkirjad.
+description: Päeva või nädala TOP pealkirjad (vaikimisi prominence DESC).
 viz_type: table
 params:
   datasource: c2222222-2222-4222-8222-000000000004__table
@@ -9,6 +9,7 @@ params:
   - title
   - prominence_score_total
   - views_total
+  - views_note
   - in_catalog
   - primary_category_name
   order_desc: true

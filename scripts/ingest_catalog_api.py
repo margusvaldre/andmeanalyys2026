@@ -17,13 +17,16 @@ Käivitus:
 from __future__ import annotations
 
 import sys
+from datetime import datetime
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 from psycopg2.extras import execute_batch
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from catalog_api import API_URL, fetch_catalog_items
+from daily_archive import export_catalog_daily_day
 from db import finish_run, get_connection, start_run, utc_now
 
 
@@ -183,6 +186,50 @@ def ingest_catalog() -> int:
                         (now, unchanged_ids),
                     )
 
+                # Hoia iga päeva täielikku kataloogi seisu, et saaks teha päeva/nädala lõikeid.
+                snapshot_date = datetime.now(ZoneInfo("Europe/Tallinn")).date()
+                cur.execute(
+                    """
+                    DELETE FROM staging.catalog_daily
+                    WHERE snapshot_date = %s
+                    """,
+                    (snapshot_date,),
+                )
+                snapshot_rows = [
+                    (
+                        snapshot_date,
+                        str(run_id),
+                        row["catalog_id"],
+                        row["schedule_start"],
+                        row["heading"],
+                        row["primary_category_name"],
+                        row["primary_category_path"],
+                        row["vertical_photo_url"],
+                        API_URL,
+                    )
+                    for row in items
+                ]
+                if snapshot_rows:
+                    execute_batch(
+                        cur,
+                        """
+                        INSERT INTO staging.catalog_daily (
+                            snapshot_date,
+                            run_id,
+                            catalog_id,
+                            schedule_start,
+                            heading,
+                            primary_category_name,
+                            primary_category_path,
+                            vertical_photo_url,
+                            source_url
+                        )
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                        """,
+                        snapshot_rows,
+                        page_size=500,
+                    )
+
                 message = (
                     f"Uusi: {len(new_rows)}, pealkiri muutus: {len(change_log)}, "
                     f"muutumata: {len(unchanged_ids)}."
@@ -200,6 +247,9 @@ def ingest_catalog() -> int:
         print(f"  uusi kirjeid: {len(new_rows)}")
         print(f"  pealkirja muutusi: {len(change_log)}")
         print(f"  muutumata (ainult last_seen_at): {len(unchanged_ids)}")
+        export_code = export_catalog_daily_day(snapshot_date)
+        if export_code != 0:
+            return export_code
         return 0
 
     except Exception as exc:
