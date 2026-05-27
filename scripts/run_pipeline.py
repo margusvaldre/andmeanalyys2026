@@ -10,6 +10,7 @@ Praegused käsud:
 - ingest-all      — kõik neli järjest
 - transform       — SQL: staging -> mart
 - quality         — SQL: kirjutab quality.* tulemused (vt init/07_quality_objects.sql)
+- check           — read-only kontroll: allikas -> staging -> mart -> Superseti vaated
 
 Näide:
     docker compose exec pipeline python scripts/run_pipeline.py ingest-all
@@ -23,6 +24,7 @@ import sys
 from pathlib import Path
 
 from db import get_connection
+from pipeline_check import run_pipeline_check
 
 SCRIPTS_DIR = Path(__file__).resolve().parent
 TRANSFORM_SQL = SCRIPTS_DIR / "01_transform.sql"
@@ -180,6 +182,20 @@ def main() -> int:
         "quality",
         help="Käivita andmekvaliteedi kontrollid (quality.run_checks).",
     )
+    check_parser = subparsers.add_parser(
+        "check",
+        help="Kontrolli toru tervist (read-only, ei lae andmeid).",
+    )
+    check_parser.add_argument(
+        "--strict",
+        action="store_true",
+        help="Loenda WARN staatused veaks (exit 1).",
+    )
+    check_parser.add_argument(
+        "--run-quality",
+        action="store_true",
+        help="Käivita enne kontrolli quality.run_checks.",
+    )
     subparsers.add_parser(
         "run-all",
         help="Lae kõik allikad, käivita transformatsioon ja andmekvaliteedi kontrollid.",
@@ -211,6 +227,14 @@ def main() -> int:
 
     if args.command == "quality":
         return run_quality()
+
+    if args.command == "check":
+        if args.run_quality:
+            code = run_quality()
+            if code != 0:
+                return code
+            print()
+        return run_pipeline_check(strict=args.strict)
 
     if args.command == "run-all":
         for step in INGEST_STEPS:
