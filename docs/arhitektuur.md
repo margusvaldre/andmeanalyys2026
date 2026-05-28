@@ -202,7 +202,7 @@ Transform kustutab mart tabelid ja täidab need uuesti (`scripts/01_transform.sq
 
 Enne cron'i peab uus vaadatavuse päevafail (`jupiter_d_YYYYMMDD-YYYYMMDD.csv`) olema kaustas `data/viewers/`, et esiletõstmise ja vaadatavuse päevad kattuksid.
 
-Kui päevad ei kattu, annab `check` sellest hoiatuse (nt featured päev on uuem kui viewers CSV) ja osa mõõdikuid (nt `views_total` viimase featured päeva jaoks) võib jääda tühjaks.
+Kui päevad ei kattu, annab `check` sellest hoiatuse (nt featured päev on uuem kui viewers CSV). Sel juhul võib `views_total` tulla viimase saadaval oleva viewers päeva pealt sama pealkirja kohta (fallback), mistõttu sama päeva võrdlus ei ole enam puhas.
 
 ## Tööjaotus
 
