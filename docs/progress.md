@@ -14,8 +14,8 @@
 
 ## Järgmised sammud
 
-- Lisada võimalus valida päeva, mille kohta näidikud andmeid kuvavad (ajalugu). Hetkel näidab ainult andmete sisselugemise päeva
-- Nädala vaadatavuse toomine mõõdikulauale. Hetkel salvestatakse andmed baasi aga näidkulauale ei jõua
+- Lisada võimalus valida päeva, mille kohta näidikud andmeid kuvavad (ajalugu). Hetkel näitab ainult andmete sisselugemise päeva
+- Nädala vaadatavuse toomine mõõdikulauale. Hetkel salvestatakse andmed baasi aga näidikulauale ei jõua
 - Esitlusskoori ja vaadatavuse korrelatsiooni lisamine
 - Näidikute vaate seadistamine Supersetis - vaatajasõbralikumaks
 
