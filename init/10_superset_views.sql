@@ -91,12 +91,16 @@ INNER JOIN totals AS t
 
 DROP VIEW IF EXISTS mart.v_superset_origin_pct;
 DROP VIEW IF EXISTS mart.v_superset_content_type_pct;
+DROP VIEW IF EXISTS mart.v_superset_featured_top;
+DROP VIEW IF EXISTS mart.v_superset_featured_correlation;
 
 CREATE VIEW mart.v_superset_origin_pct AS
 SELECT
     'daily'::TEXT AS grain,
     activity_date AS period_start,
+    TO_CHAR(activity_date, 'YYYY-MM-DD') AS period_start_key,
     activity_date AS period_end,
+    TO_CHAR(activity_date, 'YYYY-MM-DD') AS period_end_key,
     activity_date,
     CASE structure_type
         WHEN 'catalog' THEN 'Kataloogi struktuur'
@@ -129,7 +133,9 @@ CREATE VIEW mart.v_superset_content_type_pct AS
 SELECT
     'daily'::TEXT AS grain,
     activity_date AS period_start,
+    TO_CHAR(activity_date, 'YYYY-MM-DD') AS period_start_key,
     activity_date AS period_end,
+    TO_CHAR(activity_date, 'YYYY-MM-DD') AS period_end_key,
     activity_date,
     CASE structure_type
         WHEN 'catalog' THEN 'Kataloogi struktuur'
@@ -167,7 +173,9 @@ CREATE OR REPLACE VIEW mart.v_superset_featured_top AS
 SELECT
     'daily'::TEXT AS grain,
     v.activity_date AS period_start,
+    TO_CHAR(v.activity_date, 'YYYY-MM-DD') AS period_start_key,
     v.activity_date AS period_end,
+    TO_CHAR(v.activity_date, 'YYYY-MM-DD') AS period_end_key,
     v.activity_date,
     v.title,
     v.prominence_score_total,
@@ -186,7 +194,9 @@ CREATE OR REPLACE VIEW mart.v_superset_featured_correlation AS
 SELECT
     'daily'::TEXT AS grain,
     activity_date AS period_start,
+    TO_CHAR(activity_date, 'YYYY-MM-DD') AS period_start_key,
     activity_date AS period_end,
+    TO_CHAR(activity_date, 'YYYY-MM-DD') AS period_end_key,
     activity_date,
     0::BIGINT AS pair_count,
     NULL::DOUBLE PRECISION AS corr_prominence_views

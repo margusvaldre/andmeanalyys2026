@@ -920,12 +920,16 @@ WHERE NOT EXISTS (SELECT 1 FROM mart.content_structure_period_pct LIMIT 1);
 
 DROP VIEW IF EXISTS mart.v_superset_origin_pct;
 DROP VIEW IF EXISTS mart.v_superset_content_type_pct;
+DROP VIEW IF EXISTS mart.v_superset_featured_top;
+DROP VIEW IF EXISTS mart.v_superset_featured_correlation;
 
 CREATE VIEW mart.v_superset_origin_pct AS
 SELECT
     grain,
     period_start,
+    TO_CHAR(period_start, 'YYYY-MM-DD') AS period_start_key,
     period_end,
+    TO_CHAR(period_end, 'YYYY-MM-DD') AS period_end_key,
     activity_date,
     CASE structure_type
         WHEN 'catalog' THEN 'Kataloogi struktuur'
@@ -958,7 +962,9 @@ CREATE VIEW mart.v_superset_content_type_pct AS
 SELECT
     grain,
     period_start,
+    TO_CHAR(period_start, 'YYYY-MM-DD') AS period_start_key,
     period_end,
+    TO_CHAR(period_end, 'YYYY-MM-DD') AS period_end_key,
     activity_date,
     CASE structure_type
         WHEN 'catalog' THEN 'Kataloogi struktuur'
@@ -996,7 +1002,9 @@ CREATE OR REPLACE VIEW mart.v_superset_featured_top AS
 SELECT
     v.grain,
     v.period_start,
+    TO_CHAR(v.period_start, 'YYYY-MM-DD') AS period_start_key,
     v.period_end,
+    TO_CHAR(v.period_end, 'YYYY-MM-DD') AS period_end_key,
     v.activity_date,
     v.title,
     v.prominence_score_total,
@@ -1012,7 +1020,9 @@ CREATE OR REPLACE VIEW mart.v_superset_featured_correlation AS
 SELECT
     grain,
     period_start,
+    TO_CHAR(period_start, 'YYYY-MM-DD') AS period_start_key,
     period_end,
+    TO_CHAR(period_end, 'YYYY-MM-DD') AS period_end_key,
     activity_date,
     COUNT(*) FILTER (
         WHERE prominence_score_total IS NOT NULL

@@ -58,14 +58,16 @@ Menüüst: **Dashboards** → **Jupiteri analüüs**
 
 Vaated `v_superset_*` põhinevad tabelil `mart.content_structure_period_pct` (päev + nädal; ainult meta-ühendatud pealkirjad).
 
-### Ühine filter (kõigile plokkidele)
+### Ühised filtrid
 
-Dashboardil on ühised native filtrid:
+Dashboardil on kaks native filtrit:
 
-- `grain` (`daily` või `weekly`)
-- `period_start` (päeva või nädala algus)
+1. **Vaade (päev/nädal)** — veerg `grain` (`daily` / `weekly`)
+2. **Periood** — veerg `period_start_key` (sõltub valitud vaatest)
 
-Filtrid mõjutavad virndiagramme, TOP tabelit ja korrelatsioonitabelit.
+Filtrid mõjutavad virndiagramme ja TOP tabelit. **Korrelatsioon**, **Ühenduste kvaliteet** ja **Esiletõstmine (sama päev)** on filtritest väljas.
+
+Pärast valikut klõpsa **Apply filters**. Ava dashboard ilma `?native_filters_key=...` URL-parameetrita, kui eelmine seis segab.
 
 ### Esiletõstmine ja vaadatavus (sama päev)
 
@@ -154,6 +156,8 @@ postgresql+psycopg2://praktikum:praktikum@db:5432/praktikum
 | Tühi „Vaadatud” rida virnas | Lisa viewers CSV sama `feature_date` jaoks; kontrolli `mart.title_match_daily` |
 | TOPis `views_total` tühi | Valitud perioodis viewers puudub; tabelis kuvatakse `views_note = N/A` |
 | Tühi korrelatsioon | Kontrolli `pair_count`; kui väärtusi on liiga vähe, `corr` jääb `NULL` |
+| Filtrid ei muuda graafikuid | Vali periood ja klõpsa **Apply filters**; värskenda leht (Ctrl+F5). Kui ikka ei muutu, käivita `apply_virtual_dataset_sql.py` ja `apply_dashboard_filter_defaults.py` (vt import-käsk allpool) |
+| Korrelatsioonis üks rida / `pair_count` = 0 | `staging.featured_daily` ja `staging.viewers_raw` päevad peavad kattuma; lisa `data/viewers/jupiter_d_YYYYMMDD-YYYYMMDD.csv` samadele päevadele mis esiletõstmine ja käivita `ingest-viewers` + `transform` |
 | Tühi esiletõstmise tabel | `SELECT COUNT(*) FROM mart.v_featured_viewership_period`; käivita `run-all` |
 | `superset-import` exit 1 | Logi; `10_superset_views.sql` pärast `08`; `v_featured_viewership` peab init-is olemas (stub OK) |
 | `Columns missing in dataset` | `docker compose run --rm --no-deps superset-import` (sh `sync_datasets.py`) või **Datasets** → **Sync columns from source** |

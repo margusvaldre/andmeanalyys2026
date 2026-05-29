@@ -26,6 +26,14 @@ def main() -> int:
             return 1
 
         for dataset in datasets:
+            # Ära kirjuta üle virtuaalse SQL-andmestiku (Jinja filtrid dashboardil).
+            if dataset.sql and str(dataset.sql).strip():
+                print(
+                    f"  {dataset.table_name}: virtual SQL, jäetakse vahele "
+                    f"({len(dataset.columns)} veergu)"
+                )
+                continue
+
             before = len(dataset.columns)
             try:
                 dataset.fetch_metadata()

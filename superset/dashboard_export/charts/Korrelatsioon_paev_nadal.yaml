@@ -10,9 +10,11 @@ params:
   - period_end
   - pair_count
   - corr_prominence_views
-  order_desc: true
+  order_by_cols:
+  - '["period_start", true]'
+  order_desc: false
   row_limit: 200
-cache_timeout: 30
+cache_timeout: 0
 uuid: caaaaaaa-aaaa-4aaa-8aaa-000000000007
 version: 1.0.0
 dataset_uuid: c2222222-2222-4222-8222-000000000007
