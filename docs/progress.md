@@ -3,7 +3,7 @@
 ## Mis on valmis
 
 - [ ] Docker Compose käivitab PostgreSQL-i, töövoo konteineri, scheduleri ja Superseti näidikulaua.
-- [ ] ERR API-dest saab kätte videokataloogi andmed ning kategoorialehtede esiletõstmise info.
+- [ ] ERR API-dest saab kätte videokataloogi andmed ning sisu esiletõstmise info kategoorialehtedel.
 - [ ] Sisu päritolumaad ja tüübid on eraldi staatilises `staging.content_metadata` tabelis, mis laetakse metaandmete CSV-failist.
 - [ ] Andmed liiguvad `staging` kihist `mart` kihti
 - [ ] Näidikulaud võimaldab võrrelda kataloogi struktuuri ja esiletõstetud sisu struktuure päritolumaade järgi 100% virnlintdiagrammide abil.
