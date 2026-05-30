@@ -16,7 +16,7 @@ Esimene kord võtab Superseti ehitamine mitu minutit. Kontrolli importi:
 docker compose logs superset-import
 ```
 
-Oodatav: zip loomine, dashboard import, `sync_datasets.py` ridade logi (veergude sünk). `superset-import` peab lõppema edukalt — muidu `superset` ei käivitu.
+Oodatav: zip loomine, dashboard import, `apply_chart_export.py` (graffikute YAML → Superset), `sync_datasets.py` ridade logi. `superset-import` peab lõppema edukalt — muidu `superset` ei käivitu.
 
 Ava brauseris: **http://localhost:8089** (või `.env` → `SUPERSET_PORT_HOST`)
 
@@ -52,31 +52,77 @@ Menüüst: **Dashboards** → **Jupiteri analüüs**
 | Ühenduste kvaliteet | `mart.title_match_daily` | Ühenduste kvaliteet päeviti |
 | **Päritolumaad** | `mart.v_superset_origin_pct` | 1A — struktuur % (päritolumaa) |
 | **Sisutüübid** | `mart.v_superset_content_type_pct` | 1B — struktuur % (sisutüüp) |
-| Esiletõstmine ja vaadatavus (sama päev) | `mart.v_featured_viewership` | 2 — viimase päeva read (ilma fallbackita) |
+| Esiletõstmine ja vaadatavus (valitud periood) | `mart.v_superset_featured_viewership` | 2 — skoor ja vaated valitud perioodil |
 | Top esiletõstetud | `mart.v_superset_featured_top` | Päeva/nädala TOP (row_limit 20 chartis) |
 | Korrelatsioon (päev/nädal) | `mart.v_superset_featured_correlation` | 2 — Pearson + paaride arv |
 
-Vaated `v_superset_*` põhinevad tabelil `mart.content_structure_period_pct` (päev + nädal; ainult meta-ühendatud pealkirjad).
+Vaated `v_superset_*` põhinevad `mart.content_structure_period_pct` või `mart.v_featured_viewership_period` (päev + nädal).
 
-### Ühised filtrid
+**Native filtrid** ei impordita automaatselt — loo need käsitsi (vt allpool). Pärast importi on dashboard ilma filtriteta kuni seadistad need UI-s.
 
-Dashboardil on kaks native filtrit:
+### Esiletõstmine ja vaadatavus (valitud periood)
 
-1. **Vaade (päev/nädal)** — veerg `grain` (`daily` / `weekly`)
-2. **Periood** — veerg `period_start_key` (sõltub valitud vaatest)
+- Andmestik: `mart.v_superset_featured_viewership` (põhi: `mart.v_featured_viewership_period`).
+- **daily:** esiletõstmine ja vaated sama päeva kohta.
+- **weekly:** skooride summa nädala jooksul, vaated weekly failist.
+- **`views_note`** — staatus **selle rea** pealkirja kohta, mitte kogu perioodi kohta:
+  - tühi — `views_total` leiti viewers CSV-st (täpne pealkirja vaste valitud perioodil);
+  - **`N/A`** — esiletõstmise pealkirjal **puudub** vastav rida viewers andmes (`views_total` jääb tühjaks).
+- Ühendus on **täpne pealkirja vaste** pärast `mart.normalize_title` (trim, üleliigsed tühikud). Fuzzy match’i ei ole. Näide: featured `Eurovisiooni lauluvõistlus 2026. Finaal (eesti viipekeeles)` ja viewers `Eurovisiooni lauluvõistlus 2026` on erinevad read — teine võib saada vaated, esimene jääb `N/A`-ks.
+- Viewers **fail** võib perioodil olemas olla, aga osa ridu on siiski `N/A` (erinev pealkiri esiletõstmises vs vaatajate ekspordis). Ülevaade: graafik **Ühenduste kvaliteet** → `viewers_match_pct` (nt ~66% 28.05.2026).
+- Vajab dashboardi filtreid `grain` + `period_start_key` (sama loogika mis TOP).
 
-Filtrid mõjutavad virndiagramme ja TOP tabelit. **Korrelatsioon**, **Ühenduste kvaliteet** ja **Esiletõstmine (sama päev)** on filtritest väljas.
+Kui **kogu** perioodil viewers puudub, lae fail ja käivita pipeline:
 
-Pärast valikut klõpsa **Apply filters**. Ava dashboard ilma `?native_filters_key=...` URL-parameetrita, kui eelmine seis segab.
+`data/viewers/jupiter_d_YYYYMMDD-YYYYMMDD.csv` või `jupiter_w_*` → `ingest-viewers` + `transform`.
 
-### Esiletõstmine ja vaadatavus (sama päev)
+## Native filtrid käsitsi
 
-- Näitab **viimase** `staging.featured_daily.feature_date` ridu (`mart.v_featured_viewership`).
-- `prominence_score_total` on alati selle päeva skoor.
-- `views_total`: ainult sama päeva viewers-ist; kui fail puudub, jääb väärtus tühjaks.
-- Toru **ei arvuta** Pearsoni korrelatsioonikordajat — vaid visualiseerib read.
+Imporditud dashboard **ei sisalda** valmis filtreid. Loo need üks kord Supersetis.
 
-Täpne sama päev: lisa `data/viewers/jupiter_d_YYYYMMDD-YYYYMMDD.csv` (päevafail) ja käivita `run-all`.
+### Eeltingimus
+
+Andmestikel peavad olema veerud **`grain`** ja **`period_start_key`** (nt `v_superset_origin_pct`). Kontrolli: **Data** → **Datasets** → vali andmestik → veerud nähtaval.
+
+### Filter 1 — Vaade (päev/nädal)
+
+1. Ava **Jupiteri analüüs** → **Edit dashboard** → **Filters** → **+ Add filter**.
+2. **Filter type:** Value.
+3. **Filter name:** `Vaade (päev/nädal)`.
+4. **Dataset:** `v_superset_origin_pct`.
+5. **Column:** `grain`.
+6. Soovitus: lülita sisse **Filter value is required** ja **Select first filter value by default** (või default `daily`).
+7. Vahekaart **Scoping** — lülita **sisse** graafikud:
+   - Päritolumaad
+   - Sisutüübid
+   - Top esiletõstetud
+   - Esiletõstmine ja vaadatavus (valitud periood)
+8. **Välista:** Ühenduste kvaliteet (kui seda filtrit ei vaja).
+9. Salvesta filter.
+
+Ühte datasetti filtri definitsioonis piisab; teised graafikud kasutavad sama veerunime oma andmestikus.
+
+### Filter 2 — Periood
+
+1. **+ Add filter** → **Value**.
+2. **Filter name:** `Periood`.
+3. **Dataset:** `v_superset_origin_pct`.
+4. **Column:** `period_start_key`.
+5. Kui on **Parent filter / Cascade**, vali vanemaks **Vaade (päev/nädal)**. Kui Apply jääb halliks, jäta cascade välja.
+6. **Scoping** — **sama** graafikute valik nagu filter 1.
+7. Salvesta, seejärel **Save** dashboard.
+
+### Kasutamine
+
+1. Vali **Vaade** (`daily` / `weekly`) ja **Periood** (nt `2026-05-29`).
+2. Klõpsa **Apply filters**.
+3. Kontroll: graafiku menüü **View query** — SQL-is peab olema `WHERE grain IN (...)` ja `period_start_key IN (...)`.
+
+Ava dashboard ilma `?native_filters_key=...` URL-parameetrita, kui vana filteriseis segab.
+
+### Korrelatsioon eraldi
+
+Kui korrelatsioonitabel peaks näitama **kõiki** perioode (mitte ühte), jäta **Korrelatsioon** mõlema filtri **Scoping**-ist välja. Kui üks rida valitud perioodi kohta, lülita korrelatsioon sisse (nagu teised graafikud).
 
 ## Äriküsimus 1 — struktuuridiagrammid (meta CSV, päev/nädal)
 
@@ -154,14 +200,16 @@ postgresql+psycopg2://praktikum:praktikum@db:5432/praktikum
 | Dashboard puudub | `docker compose logs superset-import`; seejärel `docker compose up -d superset` |
 | Tühi struktuurgraafik | `run-all`; `SELECT COUNT(*) FROM mart.content_structure_period_pct`; meta CSV laetud? |
 | Tühi „Vaadatud” rida virnas | Lisa viewers CSV sama `feature_date` jaoks; kontrolli `mart.title_match_daily` |
-| TOPis `views_total` tühi | Valitud perioodis viewers puudub; tabelis kuvatakse `views_note = N/A` |
+| TOPis / esiletõstmise tabelis `views_total` tühi, `views_note = N/A` | **Selle pealkirja** jaoks viewers reas puudub (pealkirja mismatch), mitte tingimata puuduv fail; kontrolli `viewers_match_pct` graafikul **Ühenduste kvaliteet**; võrdle pealkirju `staging.featured_daily` vs `staging.viewers_raw` |
 | Tühi korrelatsioon | Kontrolli `pair_count`; kui väärtusi on liiga vähe, `corr` jääb `NULL` |
-| Filtrid ei muuda graafikuid | Vali periood ja klõpsa **Apply filters**; värskenda leht (Ctrl+F5). Kui ikka ei muutu, käivita `apply_virtual_dataset_sql.py` ja `apply_dashboard_filter_defaults.py` (vt import-käsk allpool) |
+| Filtrid puuduvad pärast importi | Loo käsitsi (vt **Native filtrid käsitsi**); import ei lisa filtreid |
+| Filtrid ei muuda graafikuid | Klõpsa **Apply filters**; kontrolli **View query** (`grain`, `period_start_key`); värskenda Ctrl+F5 |
 | Korrelatsioonis üks rida / `pair_count` = 0 | `staging.featured_daily` ja `staging.viewers_raw` päevad peavad kattuma; lisa `data/viewers/jupiter_d_YYYYMMDD-YYYYMMDD.csv` samadele päevadele mis esiletõstmine ja käivita `ingest-viewers` + `transform` |
-| Tühi esiletõstmise tabel | `SELECT COUNT(*) FROM mart.v_featured_viewership_period`; käivita `run-all` |
+| Tühi esiletõstmise tabel | `SELECT grain, period_start_key, COUNT(*) FROM mart.v_superset_featured_viewership GROUP BY 1,2`; käivita `transform`; lisa viewers CSV |
 | `superset-import` exit 1 | Logi; `10_superset_views.sql` pärast `08`; `v_featured_viewership` peab init-is olemas (stub OK) |
 | `Columns missing in dataset` | `docker compose run --rm --no-deps superset-import` (sh `sync_datasets.py`) või **Datasets** → **Sync columns from source** |
 | **Issue 1011** / scatter `KeyError: None` | Vana scatteri `query_context`; kustuta vana chart või dashboard; kasuta tabelit või loo uus bubble käsitsi |
+| `Item with key "bar" is not registered` | Superset 6 ei toeta legacy `bar`; YAML-is peab olema `echarts_timeseries_bar`; käivita `apply_chart_export.py` |
 
 Dashboardi uuesti importimiseks:
 
@@ -169,6 +217,14 @@ Dashboardi uuesti importimiseks:
 cd C:\Users\Kasutaja\andmeanalyys2026
 docker compose run --rm --no-deps superset-import
 docker compose up -d superset
+```
+
+Import käivitab ka `apply_chart_export.py`, mis kirjutab graafikute nimed ja andmestikud YAML-ist üle (import ei uuenda vanu charte).
+
+Ainult graafikud YAML-ist:
+
+```powershell
+docker compose exec superset python /app/jupiter_superset/apply_chart_export.py
 ```
 
 Kui import annab duplikaatvigu, kustuta vana dashboard Supersetis või lähtesta Superseti maht (ainult arenduses):
@@ -192,7 +248,7 @@ docker compose exec db psql -U praktikum -d praktikum -c "SELECT COUNT(*) FROM s
 docker compose exec db psql -U praktikum -d praktikum -c "SELECT grain, period_start, period_end, COUNT(*) FROM mart.content_structure_period_pct GROUP BY 1,2,3 ORDER BY 2 DESC,1 LIMIT 20;"
 docker compose exec db psql -U praktikum -d praktikum -c "SELECT grain, period_start, period_end, COUNT(*) FROM mart.v_superset_featured_top GROUP BY 1,2,3 ORDER BY 2 DESC,1 LIMIT 20;"
 docker compose exec db psql -U praktikum -d praktikum -c "SELECT grain, period_start, period_end, pair_count, corr_prominence_views FROM mart.v_superset_featured_correlation ORDER BY period_start DESC, grain LIMIT 20;"
-docker compose exec db psql -U praktikum -d praktikum -c "SELECT grain, period_start, period_end, COUNT(*) FILTER (WHERE views_note='N/A') AS na_rows FROM mart.v_superset_featured_top GROUP BY 1,2,3 ORDER BY period_start DESC, grain LIMIT 20;"
+docker compose exec db psql -U praktikum -d praktikum -c "SELECT grain, period_start_key, COUNT(*) FILTER (WHERE views_total IS NOT NULL) AS with_views, COUNT(*) FILTER (WHERE views_note='N/A') AS na_rows FROM mart.v_superset_featured_viewership GROUP BY 1,2 ORDER BY 2 DESC, 1 LIMIT 20;"
 ```
 
 Oodatav:
@@ -201,5 +257,5 @@ Oodatav:
 - `content_structure_period_pct` sisaldab nii `daily` kui `weekly` ridu.
 - `v_superset_featured_top` sisaldab sama perioodistruktuuri (`grain`, `period_start`, `period_end`).
 - `v_superset_featured_correlation` tagastab periooditi `pair_count` ja korrelatsiooni.
-- `views_note='N/A'` read näitavad perioode, kus viewers andmed puuduvad.
+- `views_note='N/A'` read = esiletõstmise pealkirjal **puudub** täpne vaste viewers CSV-s valitud perioodil (fail võib siiski olemas olla).
 

@@ -1,9 +1,10 @@
 slice_name: Päritolumaad
 description: 100% horisontaalne virn, eestikeelsed sildid (vt docs/images/päritolumaad.png paigutus).
-viz_type: bar
+viz_type: echarts_timeseries_bar
 params:
   datasource: c2222222-2222-4222-8222-000000000005__table
-  viz_type: bar
+  viz_type: echarts_timeseries_bar
+  x_axis_force_categorical: true
   x_axis: structure_label
   metrics:
   - expressionType: SIMPLE

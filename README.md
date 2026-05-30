@@ -120,7 +120,7 @@ docker compose exec pipeline python scripts/run_pipeline.py run-all
 | `relation "staging.catalog" does not exist` | Puudub `init/03_catalog_incremental.sql` | Käivita `02`–`08` ja `10` või `docker compose down -v` ja uus `up` |
 | `db` konteiner exit 3 esimesel `up` | Vana init järjekord (`06` enne `08`) | `docker compose down -v` ja uus `up` (vajab `10_superset_views.sql`) |
 | Superset „Columns missing in dataset” | Vale dashboardi `chartId` või vana Superseti maht | `docker compose run --rm --no-deps superset-import` |
-| Tühi „Esiletõstmine ja vaadatavus” | Erinev featured vs viewers päev | Lae viewers CSV sama päevaks; `transform`; või vaata tabelit (views võib olla NULL) |
+| Tühi „Esiletõstmine ja vaadatavus” | Filtrid puuduvad või erinev featured vs viewers päev | Loo dashboardi filtrid (`docs/superset.md`); lae viewers CSV; `transform` |
 
 4. Kontrolli tulemust:
 
@@ -133,7 +133,7 @@ docker compose exec db psql -U praktikum -d praktikum -c "SELECT title, prominen
 docker compose exec db psql -U praktikum -d praktikum -c "SELECT run_id, source_name, status, row_count FROM staging.pipeline_runs ORDER BY started_at DESC LIMIT 5;"
 docker compose exec db psql -U praktikum -d praktikum -c "SELECT activity_date, featured_count, catalog_match_pct, viewers_match_pct FROM mart.title_match_daily;"
 docker compose exec db psql -U praktikum -d praktikum -c "SELECT source, SUM(title_count) FROM mart.content_by_source GROUP BY source;"
-docker compose exec db psql -U praktikum -d praktikum -c "SELECT title, prominence_score_total, views_total FROM mart.v_featured_viewership ORDER BY views_total DESC LIMIT 10;"
+docker compose exec db psql -U praktikum -d praktikum -c "SELECT title, prominence_score_total, views_total FROM mart.v_superset_featured_viewership WHERE grain='daily' AND period_start_key='2026-05-29' ORDER BY prominence_score_total DESC LIMIT 10;"
 docker compose exec db psql -U praktikum -d praktikum -c "SELECT title, origin_country, meta_content_type FROM mart.dim_content WHERE in_metadata LIMIT 10;"
 docker compose exec db psql -U praktikum -d praktikum -c "SELECT structure_type, dimension, category_label, pct FROM mart.content_structure_pct WHERE dimension='origin_country' ORDER BY structure_type, pct DESC LIMIT 15;"
 docker compose exec db psql -U praktikum -d praktikum -c "SELECT * FROM quality.v_latest_rule_results;"

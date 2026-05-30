@@ -91,6 +91,7 @@ INNER JOIN totals AS t
 
 DROP VIEW IF EXISTS mart.v_superset_origin_pct;
 DROP VIEW IF EXISTS mart.v_superset_content_type_pct;
+DROP VIEW IF EXISTS mart.v_superset_featured_viewership;
 DROP VIEW IF EXISTS mart.v_superset_featured_top;
 DROP VIEW IF EXISTS mart.v_superset_featured_correlation;
 
@@ -189,6 +190,23 @@ INNER JOIN mart.v_content_latest_day AS f
 WHERE FALSE
 ORDER BY v.prominence_score_total DESC
 LIMIT 50;
+
+CREATE OR REPLACE VIEW mart.v_superset_featured_viewership AS
+SELECT
+    'daily'::TEXT AS grain,
+    activity_date AS period_start,
+    TO_CHAR(activity_date, 'YYYY-MM-DD') AS period_start_key,
+    activity_date AS period_end,
+    TO_CHAR(activity_date, 'YYYY-MM-DD') AS period_end_key,
+    activity_date,
+    title,
+    prominence_score_total,
+    views_total,
+    CASE WHEN views_total IS NULL THEN 'N/A' ELSE NULL END AS views_note,
+    false AS in_catalog,
+    primary_category_name
+FROM mart.v_content_latest_day
+WHERE FALSE;
 
 CREATE OR REPLACE VIEW mart.v_superset_featured_correlation AS
 SELECT

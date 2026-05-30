@@ -77,10 +77,14 @@ Supersetis: horisontaalne **100% stacked bar chart**, mõõt `SUM(pct)`, dimensi
 Võrdlus **pealkirjade kaupa**: esiletõstmise skoor (`prominence_score_total`) ja vaatamised (`views_total`).
 
 - **Andmestik:** `mart.v_featured_viewership_period` (päev ja nädal).
-- **Dashboard:** TOP tabel + eraldi korrelatsiooni vaade (`mart.v_superset_featured_correlation`).
+- **Dashboard:** TOP tabel + esiletõstmise/vaadatavuse tabel + korrelatsioon (`mart.v_superset_featured_correlation`).
 - Korrelatsioon arvutatakse PostgreSQL-is: `corr(prominence_score_total, views_total)` perioodi kaupa.
 - Arvutusse lähevad read, kus mõlemad väärtused on olemas; lisaks kuvatakse `pair_count`.
-- Kui valitud päeval viewers puudub, jääb `views_total` tühjaks (`N/A`), fallback’i ei kasutata.
+- **`views_total`** tuleb `LEFT JOIN`-ist `staging.viewers_raw`-ga: sama `grain`, periood ja **täpne** normaliseeritud pealkiri (`mart.normalize_title`). Fuzzy match’i ei ole; fallback teisele päevale ei kasutata.
+- **`views_note`** (Superseti tabelites): **`N/A`** = **selle rea** esiletõstmise pealkirjal puudub vastav viewers rida valitud perioodil; tühi = vaated leitud. See ei tähenda automaatselt, et viewers **fail** puudub — fail võib olla laetud, aga pealkirjad erinevad (nt featured `… Finaal (eesti viipekeeles)` vs viewers lühem variant).
+- Perioodi ülevaade: `mart.title_match_daily.viewers_match_pct` — mitu protsenti esiletõstmise ridu said vaated (nt ~66% 2026-05-28).
+
+Vaata ka [`docs/superset.md`](superset.md) (jaotis *Esiletõstmine ja vaadatavus*).
 
 ## Andmeallikad
 
@@ -93,7 +97,7 @@ Võrdlus **pealkirjade kaupa**: esiletõstmise skoor (`prominence_score_total`) 
 | Kataloogi snapshot arhiiv | CSV (`data/catalog_daily/`) | Iga cron-päev | `jupiter_c_YYYYMMDD-YYYYMMDD.csv` — sama loogika |
 | Sisu metaandmed | CSV (`data/metadata/jupiter_metadata.csv`) | ~nädalas | **Sisutüüp** ja **päritolumaa** pealkirja kohta (küsimus 1 diagrammid) |
 
-**Ühendusvõti** kõigi allikate vahel on **pealkiri** (`heading` kataloogis, `title` vaadatavuses ja esiletõstmises). Transform kasutab funktsiooni `mart.normalize_title()` (trim, üleliigsed tühikud).
+**Ühendusvõti** kõigi allikate vahel on **pealkiri** (`heading` kataloogis, `title` vaadatavuses ja esiletõstmises). Transform kasutab funktsiooni `mart.normalize_title()` (trim, üleliigsed tühikud). Esiletõstmise ja vaadatavuse ühendus on **täpne pealkirja vaste** — erinevate siltide korral jääb `views_total` tühjaks ja Supersetis `views_note = N/A` (vt mõõdik 2).
 
 ## Andmevoog
 
@@ -184,12 +188,13 @@ Iga ingest kirjutab käivituse logi tabelisse `staging.pipeline_runs` (`run_id`,
 | `mart.title_match_daily` | Päevane ühenduste kvaliteet (`catalog_match_pct`, `viewers_match_pct`, …) |
 | `mart.content_structure_period_pct` | Struktuuri % päeva ja nädala lõikes: `catalog` (COUNT) / `presented` (SUM skoor) / `viewed` (SUM vaated) × `origin_country` või `content_type` |
 | `mart.content_structure_pct` | Tagasiühilduv päevavaade (viimase päeva väljavõte `content_structure_period_pct` tabelist) |
-| `mart.v_featured_viewership_period` | Perioodipõhine pealkirjavaade TOP-i ja korrelatsiooni jaoks (`grain`, periood, skoor, vaated, `viewers_missing`) |
-| `mart.v_featured_viewership` | Viimase featured päeva read ilma viewers fallback’ita |
+| `mart.v_featured_viewership_period` | Perioodipõhine pealkirjavaade TOP-i ja korrelatsiooni jaoks (`grain`, periood, skoor, vaated; `viewers_missing` = TRUE, kui pealkirja jaoks viewers rida puudub) |
+| `mart.v_featured_viewership` | Viimase featured päeva read (legacy; scatter kasutab `v_superset_featured_viewership`) |
+| `mart.v_superset_featured_viewership` | Superset: esiletõstmine + vaated valitud perioodil (`grain`, `period_start_key`, `views_note`) |
 | `mart.v_superset_origin_pct` | Superset: päritolumaa 100% virn |
 | `mart.v_superset_content_type_pct` | Superset: sisutüüpide 100% virn |
 | `mart.v_superset_structure_pct` | Superset: struktuur ilma meta (fallback) |
-| `mart.v_superset_featured_top` | Superset: TOP esiletõstetud päeva/nädala lõikes (`views_note = N/A`, kui vaadatavus puudub) |
+| `mart.v_superset_featured_top` | Superset: TOP esiletõstetud päeva/nädala lõikes; `views_note = N/A` = **selle pealkirja** vaated puuduvad (pealkirja mismatch), mitte tingimata puuduv viewers fail |
 | `mart.v_superset_featured_correlation` | Superset: Pearsoni korrelatsioon (`corr_prominence_views`) + `pair_count` perioodi kaupa |
 | `mart.v_content_latest_day` | Abivaade: `fact_content_daily` viimase featured päeva kohta |
 
@@ -222,7 +227,7 @@ Enne cron'i peavad vajalikud vaadatavuse failid (`jupiter_d_*.csv` ja vajadusel 
 |------|------|---------|
 | Puuduv sisunimetus metaandmetes  | Pealkiri ei lähe `content_structure_period_pct` arvutusse (INNER JOIN meta). | Täita meta CSV; hinnata osakaalu; vajadusel käsitsi täiendus |
 | Liiga lühike analüüsiperiood  | Lühike periood võib moonutada tulemust - ühekordne suur "sündmus" | Vältida põhjuslike järelduste tegemist, analüüsi kordamine pikema perioodi jooksul tulevikus |
-| Unikaalse identifikaatori puudumine  | Andmete sidumine toimub pealkirjade järgi, mis võivad allikati erineda  | Lisada andmevoogu andmekvaliteedi kontrollid |
+| Unikaalse identifikaatori puudumine  | Andmete sidumine toimub pealkirjade järgi, mis võivad allikati erineda; osa esiletõstmise ridu jääb ilma `views_total`-ita (`views_note = N/A`) isegi kui viewers fail on olemas | Lisada andmevoogu andmekvaliteedi kontrollid; jälgida `viewers_match_pct`; vajadusel pealkirjade kaardistus tulevikus |
 
 ## Privaatsus ja turve
 

@@ -1,9 +1,10 @@
 slice_name: Struktuuri protsendid (vaheversioon)
 description: 100% virn kataloog / esiletõstmine / vaadatavus (meta CSV sisutüüpide järgi).
-viz_type: bar
+viz_type: echarts_timeseries_bar
 params:
   datasource: c2222222-2222-4222-8222-000000000001__table
-  viz_type: bar
+  viz_type: echarts_timeseries_bar
+  x_axis_force_categorical: true
   x_axis: structure_label
   metrics:
   - expressionType: SIMPLE

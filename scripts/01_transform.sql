@@ -920,6 +920,7 @@ WHERE NOT EXISTS (SELECT 1 FROM mart.content_structure_period_pct LIMIT 1);
 
 DROP VIEW IF EXISTS mart.v_superset_origin_pct;
 DROP VIEW IF EXISTS mart.v_superset_content_type_pct;
+DROP VIEW IF EXISTS mart.v_superset_featured_viewership;
 DROP VIEW IF EXISTS mart.v_superset_featured_top;
 DROP VIEW IF EXISTS mart.v_superset_featured_correlation;
 
@@ -1015,6 +1016,22 @@ SELECT
 FROM mart.v_featured_viewership_period AS v
 ORDER BY v.prominence_score_total DESC
 LIMIT 500;
+
+CREATE OR REPLACE VIEW mart.v_superset_featured_viewership AS
+SELECT
+    v.grain,
+    v.period_start,
+    TO_CHAR(v.period_start, 'YYYY-MM-DD') AS period_start_key,
+    v.period_end,
+    TO_CHAR(v.period_end, 'YYYY-MM-DD') AS period_end_key,
+    v.activity_date,
+    v.title,
+    v.prominence_score_total,
+    v.views_total,
+    CASE WHEN v.views_total IS NULL THEN 'N/A' ELSE NULL END AS views_note,
+    v.in_catalog,
+    v.primary_category_name
+FROM mart.v_featured_viewership_period AS v;
 
 CREATE OR REPLACE VIEW mart.v_superset_featured_correlation AS
 SELECT

@@ -115,7 +115,7 @@ position:
     meta:
       chartId: 5
       height: 50
-      sliceName: Esiletõstmine ja vaadatavus (sama päev)
+      sliceName: Esiletõstmine ja vaadatavus (valitud periood)
       uuid: f0e0d0c0-b0a9-4a8e-9f7c-3b2a190d0c03
       width: 6
     parents:
@@ -155,89 +155,6 @@ metadata:
   refresh_frequency: 60
   color_scheme: supersetColors
   cross_filters_enabled: false
-  native_filter_configuration:
-  - id: NATIVE_FILTER_GRAIN
-    controlValues:
-      enableEmptyFilter: false
-      defaultToFirstItem: true
-      multiSelect: false
-      searchAllOptions: false
-      inverseSelection: false
-    defaultDataMask:
-      extraFormData:
-        filters:
-        - col: grain
-          op: IN
-          val:
-          - daily
-      filterState:
-        label: daily
-        value:
-        - daily
-    description: Vali päeva- või nädalavaade. Pärast muutmist klõpsa Apply filters.
-    filterType: filter_select
-    name: Vaade (päev/nädal)
-    scope:
-      rootPath:
-      - ROOT_ID
-      excluded:
-      - CHART-MATCH
-      - CHART-SCATTER
-      - CHART-CORR
-    tabsInScope: []
-    targets:
-    - datasetUuid: c2222222-2222-4222-8222-000000000005
-      column:
-        name: grain
-    - datasetUuid: c2222222-2222-4222-8222-000000000006
-      column:
-        name: grain
-    - datasetUuid: c2222222-2222-4222-8222-000000000004
-      column:
-        name: grain
-    type: NATIVE_FILTER
-  - id: NATIVE_FILTER_PERIOD
-    controlValues:
-      enableEmptyFilter: false
-      defaultToFirstItem: true
-      multiSelect: false
-      searchAllOptions: true
-      inverseSelection: false
-      sortAscending: false
-    cascadeParentIds:
-    - NATIVE_FILTER_GRAIN
-    defaultDataMask:
-      extraFormData:
-        filters:
-        - col: period_start_key
-          op: IN
-          val:
-          - '2026-05-29'
-      filterState:
-        label: '2026-05-29'
-        value:
-        - '2026-05-29'
-    description: Vali perioodi algus (päeva või nädala kuupäev).
-    filterType: filter_select
-    name: Periood
-    scope:
-      rootPath:
-      - ROOT_ID
-      excluded:
-      - CHART-MATCH
-      - CHART-SCATTER
-      - CHART-CORR
-    tabsInScope: []
-    targets:
-    - datasetUuid: c2222222-2222-4222-8222-000000000005
-      column:
-        name: period_start_key
-    - datasetUuid: c2222222-2222-4222-8222-000000000006
-      column:
-        name: period_start_key
-    - datasetUuid: c2222222-2222-4222-8222-000000000004
-      column:
-        name: period_start_key
-    type: NATIVE_FILTER
+  native_filter_configuration: []
   default_filters: '{}'
 version: 1.0.0
