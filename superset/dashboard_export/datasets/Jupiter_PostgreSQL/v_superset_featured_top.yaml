@@ -70,13 +70,6 @@ columns:
     type: NUMERIC
     groupby: true
     filterable: true
-  - column_name: views_note
-    verbose_name: views_note
-    is_dttm: false
-    is_active: true
-    type: TEXT
-    groupby: true
-    filterable: true
   - column_name: in_catalog
     verbose_name: in_catalog
     is_dttm: false

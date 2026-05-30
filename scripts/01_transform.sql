@@ -1010,7 +1010,6 @@ SELECT
     v.title,
     v.prominence_score_total,
     v.views_total,
-    CASE WHEN v.views_total IS NULL THEN 'N/A' ELSE NULL END AS views_note,
     v.in_catalog,
     v.primary_category_name
 FROM mart.v_featured_viewership_period AS v

@@ -81,7 +81,7 @@ Võrdlus **pealkirjade kaupa**: esiletõstmise skoor (`prominence_score_total`) 
 - Korrelatsioon arvutatakse PostgreSQL-is: `corr(prominence_score_total, views_total)` perioodi kaupa.
 - Arvutusse lähevad read, kus mõlemad väärtused on olemas; lisaks kuvatakse `pair_count`.
 - **`views_total`** tuleb `LEFT JOIN`-ist `staging.viewers_raw`-ga: sama `grain`, periood ja **täpne** normaliseeritud pealkiri (`mart.normalize_title`). Fuzzy match’i ei ole; fallback teisele päevale ei kasutata.
-- **`views_note`** (Superseti tabelites): **`N/A`** = **selle rea** esiletõstmise pealkirjal puudub vastav viewers rida valitud perioodil; tühi = vaated leitud. See ei tähenda automaatselt, et viewers **fail** puudub — fail võib olla laetud, aga pealkirjad erinevad (nt featured `… Finaal (eesti viipekeeles)` vs viewers lühem variant).
+- **`views_note`** (ainult `mart.v_superset_featured_viewership`): **`N/A`** = **selle rea** esiletõstmise pealkirjal puudub vastav viewers rida; tühi = vaated leitud. TOP tabelis kasuta `views_total` (tühi = puudub).
 - Perioodi ülevaade: `mart.title_match_daily.viewers_match_pct` — mitu protsenti esiletõstmise ridu said vaated (nt ~66% 2026-05-28).
 
 Vaata ka [`docs/superset.md`](superset.md) (jaotis *Esiletõstmine ja vaadatavus*).
@@ -194,7 +194,7 @@ Iga ingest kirjutab käivituse logi tabelisse `staging.pipeline_runs` (`run_id`,
 | `mart.v_superset_origin_pct` | Superset: päritolumaa 100% virn |
 | `mart.v_superset_content_type_pct` | Superset: sisutüüpide 100% virn |
 | `mart.v_superset_structure_pct` | Superset: struktuur ilma meta (fallback) |
-| `mart.v_superset_featured_top` | Superset: TOP esiletõstetud päeva/nädala lõikes; `views_note = N/A` = **selle pealkirja** vaated puuduvad (pealkirja mismatch), mitte tingimata puuduv viewers fail |
+| `mart.v_superset_featured_top` | Superset: TOP esiletõstetud päeva/nädala lõikes; vaated veerus `views_total` (tühi = pealkirja mismatch) |
 | `mart.v_superset_featured_correlation` | Superset: Pearsoni korrelatsioon (`corr_prominence_views`) + `pair_count` perioodi kaupa |
 | `mart.v_content_latest_day` | Abivaade: `fact_content_daily` viimase featured päeva kohta |
 

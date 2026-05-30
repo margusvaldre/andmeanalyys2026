@@ -9,7 +9,6 @@ params:
   - title
   - prominence_score_total
   - views_total
-  - views_note
   - in_catalog
   - primary_category_name
   order_desc: true

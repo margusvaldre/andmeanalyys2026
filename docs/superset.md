@@ -53,7 +53,7 @@ Menüüst: **Dashboards** → **Jupiteri analüüs**
 | **Päritolumaad** | `mart.v_superset_origin_pct` | 1A — struktuur % (päritolumaa) |
 | **Sisutüübid** | `mart.v_superset_content_type_pct` | 1B — struktuur % (sisutüüp) |
 | Esiletõstmine ja vaadatavus (valitud periood) | `mart.v_superset_featured_viewership` | 2 — skoor ja vaated valitud perioodil |
-| Top esiletõstetud | `mart.v_superset_featured_top` | Päeva/nädala TOP (row_limit 20 chartis) |
+| Top esiletõstetud | `mart.v_superset_featured_top` | Päeva/nädala TOP (row_limit 20 chartis); vaated veerus `views_total` (tühi = puudub) |
 | Korrelatsioon (päev/nädal) | `mart.v_superset_featured_correlation` | 2 — Pearson + paaride arv |
 
 Vaated `v_superset_*` põhinevad `mart.content_structure_period_pct` või `mart.v_featured_viewership_period` (päev + nädal).
@@ -65,12 +65,18 @@ Vaated `v_superset_*` põhinevad `mart.content_structure_period_pct` või `mart.
 - Andmestik: `mart.v_superset_featured_viewership` (põhi: `mart.v_featured_viewership_period`).
 - **daily:** esiletõstmine ja vaated sama päeva kohta.
 - **weekly:** skooride summa nädala jooksul, vaated weekly failist.
-- **`views_note`** — staatus **selle rea** pealkirja kohta, mitte kogu perioodi kohta:
-  - tühi — `views_total` leiti viewers CSV-st (täpne pealkirja vaste valitud perioodil);
-  - **`N/A`** — esiletõstmise pealkirjal **puudub** vastav rida viewers andmes (`views_total` jääb tühjaks).
+- **`views_note`** — ainult graafikus **Esiletõstmine ja vaadatavus** (mitte TOP). Staatus **selle rea** pealkirja kohta:
+  - tühi andmebaasis — `views_total` leiti; Superset võib tühja lahtrit siiski kuvada kui „N/A“ (UI, mitte andmeviga);
+  - **`N/A`** andmebaasis — esiletõstmise pealkirjal **puudub** vastav rida viewers andmes (`views_total` jääb tühjaks).
 - Ühendus on **täpne pealkirja vaste** pärast `mart.normalize_title` (trim, üleliigsed tühikud). Fuzzy match’i ei ole. Näide: featured `Eurovisiooni lauluvõistlus 2026. Finaal (eesti viipekeeles)` ja viewers `Eurovisiooni lauluvõistlus 2026` on erinevad read — teine võib saada vaated, esimene jääb `N/A`-ks.
 - Viewers **fail** võib perioodil olemas olla, aga osa ridu on siiski `N/A` (erinev pealkiri esiletõstmises vs vaatajate ekspordis). Ülevaade: graafik **Ühenduste kvaliteet** → `viewers_match_pct` (nt ~66% 28.05.2026).
 - Vajab dashboardi filtreid `grain` + `period_start_key` (sama loogika mis TOP).
+
+### Top esiletõstetud
+
+- Andmestik: `mart.v_superset_featured_top` (sort `prominence_score_total` DESC, chartis `row_limit` 20).
+- Veerud: `title`, `prominence_score_total`, `views_total`, `in_catalog`, `primary_category_name`.
+- **`views_total` tühi** = selle pealkirja vaated puuduvad valitud perioodil (pealkirja mismatch viewers CSV-ga). **`views_note` veergu TOP tabelis ei kuvata** — vaated loe otse `views_total`-ist.
 
 Kui **kogu** perioodil viewers puudub, lae fail ja käivita pipeline:
 
@@ -200,7 +206,8 @@ postgresql+psycopg2://praktikum:praktikum@db:5432/praktikum
 | Dashboard puudub | `docker compose logs superset-import`; seejärel `docker compose up -d superset` |
 | Tühi struktuurgraafik | `run-all`; `SELECT COUNT(*) FROM mart.content_structure_period_pct`; meta CSV laetud? |
 | Tühi „Vaadatud” rida virnas | Lisa viewers CSV sama `feature_date` jaoks; kontrolli `mart.title_match_daily` |
-| TOPis / esiletõstmise tabelis `views_total` tühi, `views_note = N/A` | **Selle pealkirja** jaoks viewers reas puudub (pealkirja mismatch), mitte tingimata puuduv fail; kontrolli `viewers_match_pct` graafikul **Ühenduste kvaliteet**; võrdle pealkirju `staging.featured_daily` vs `staging.viewers_raw` |
+| TOPis `views_total` tühi | **Selle pealkirja** jaoks viewers reas puudub (pealkirja mismatch); kontrolli `viewers_match_pct` graafikul **Ühenduste kvaliteet** |
+| Esiletõstmise tabelis `views_total` tühi, `views_note = N/A` | Sama mis ülal; vaata graafikut **Esiletõstmine ja vaadatavus** |
 | Tühi korrelatsioon | Kontrolli `pair_count`; kui väärtusi on liiga vähe, `corr` jääb `NULL` |
 | Filtrid puuduvad pärast importi | Loo käsitsi (vt **Native filtrid käsitsi**); import ei lisa filtreid |
 | Filtrid ei muuda graafikuid | Klõpsa **Apply filters**; kontrolli **View query** (`grain`, `period_start_key`); värskenda Ctrl+F5 |

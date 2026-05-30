@@ -181,7 +181,6 @@ SELECT
     v.title,
     v.prominence_score_total,
     v.views_total,
-    NULL::TEXT AS views_note,
     f.in_catalog,
     v.primary_category_name
 FROM mart.v_featured_viewership AS v
