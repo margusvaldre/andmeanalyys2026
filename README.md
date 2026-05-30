@@ -83,6 +83,14 @@ Täielik toru (sissevõtt + transform + kvaliteet):
 docker compose exec pipeline python scripts/run_pipeline.py run-all
 ```
 
+Kontrolli, et andmevoog on terviklik (pärast `run-all`):
+
+```powershell
+docker compose exec pipeline python scripts/run_pipeline.py check
+```
+
+`check` on read-only: kontrollib faile, staging/mart ridu ja Superseti vaateid. Kui on ainult hoiatusi (nt erinev featured/viewers päev või weekly ilma arhiivita), exit 0; `--strict` loeb WARN-id veaks.
+
 ### Vana andmebaas — käsitsi skeemi täiendamine
 
 Kui andmebaas loodi **enne** uuemaid `init/*.sql` faile, PostgreSQL **ei käivita** neid uuesti automaatselt. Käivita üks kord (järjekord oluline):
@@ -167,6 +175,7 @@ docker compose exec db psql -U praktikum -d praktikum -c "SELECT * FROM quality.
 | `init/07_quality_objects.sql` | `quality` skeemi tabelid + `quality.run_checks()` |
 | `init/08_metadata_staging.sql` | `staging.content_metadata`, `staging.catalog_daily`, viitetabelid, `mart.content_structure_period_pct` |
 | `scripts/02_quality_checks.sql` | Käsitsi: `SELECT quality.run_checks(...)` (vt faili sisu) |
-| `scripts/run_pipeline.py` | `ingest-*`, `transform`, `quality`, `run-all` |
+| `scripts/pipeline_check.py` | Read-only toru kontroll (`run_pipeline.py check`) |
+| `scripts/run_pipeline.py` | `ingest-*`, `transform`, `quality`, `check`, `run-all` |
 | `docs/arhitektuur.md` | Äriküsimus ja andmevoog |
 
