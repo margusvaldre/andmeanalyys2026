@@ -8,7 +8,7 @@
 - [ ] Andmed liiguvad `staging` kihist `mart` kihti
 - [ ] Näidikulaud võimaldab võrrelda kataloogi struktuuri ja esiletõstetud sisu struktuure päritolumaade järgi 100% virnlintdiagrammide abil.
 - [ ] Näidikulaud võimaldab võrrelda kataloogi struktuuri ja esiletõstetud sisu struktuure sisutüübi järgi 100% virnlintdiagrammide abil.
-- [ ] Näidikulaual on Eesiletõstmine ja vaadatavus (sama päev).
+- [ ] Näidikulaual kuvab sisunimetuste vaadatavuse numbrid ja esiletõstetuse skoore (sama päev).
 - [ ] Scheduler käivitab töövoo vaikimisi igal hommikul kell 06:00, et uued päevaandmed sisse tõmmata ja transformeerida
 
 
