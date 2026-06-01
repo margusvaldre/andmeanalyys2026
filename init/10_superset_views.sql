@@ -27,6 +27,22 @@ SELECT
 FROM mart.v_content_latest_day
 WHERE FALSE;
 
+CREATE OR REPLACE VIEW mart.v_featured_viewership_period AS
+SELECT
+    'daily'::TEXT AS grain,
+    activity_date AS period_start,
+    activity_date AS period_end,
+    activity_date,
+    title_normalized,
+    title,
+    primary_category_name,
+    prominence_score_total,
+    views_total,
+    (views_total IS NULL) AS viewers_missing,
+    false AS in_catalog
+FROM mart.v_content_latest_day
+WHERE FALSE;
+
 -- Struktuur: vaheversioon enne esimest transformi (ainult content_by_source).
 CREATE OR REPLACE VIEW mart.v_superset_structure_pct AS
 WITH base AS (
@@ -59,6 +75,9 @@ totals AS (
     GROUP BY activity_date, structure_label
 )
 SELECT
+    'daily'::TEXT AS grain,
+    b.activity_date AS period_start,
+    b.activity_date AS period_end,
     b.activity_date,
     b.structure_label,
     b.source,
@@ -72,9 +91,17 @@ INNER JOIN totals AS t
 
 DROP VIEW IF EXISTS mart.v_superset_origin_pct;
 DROP VIEW IF EXISTS mart.v_superset_content_type_pct;
+DROP VIEW IF EXISTS mart.v_superset_featured_viewership;
+DROP VIEW IF EXISTS mart.v_superset_featured_top;
+DROP VIEW IF EXISTS mart.v_superset_featured_correlation;
 
 CREATE VIEW mart.v_superset_origin_pct AS
 SELECT
+    'daily'::TEXT AS grain,
+    activity_date AS period_start,
+    TO_CHAR(activity_date, 'YYYY-MM-DD') AS period_start_key,
+    activity_date AS period_end,
+    TO_CHAR(activity_date, 'YYYY-MM-DD') AS period_end_key,
     activity_date,
     CASE structure_type
         WHEN 'catalog' THEN 'Kataloogi struktuur'
@@ -105,6 +132,11 @@ WHERE dimension = 'origin_country';
 
 CREATE VIEW mart.v_superset_content_type_pct AS
 SELECT
+    'daily'::TEXT AS grain,
+    activity_date AS period_start,
+    TO_CHAR(activity_date, 'YYYY-MM-DD') AS period_start_key,
+    activity_date AS period_end,
+    TO_CHAR(activity_date, 'YYYY-MM-DD') AS period_end_key,
     activity_date,
     CASE structure_type
         WHEN 'catalog' THEN 'Kataloogi struktuur'
@@ -140,6 +172,12 @@ WHERE dimension = 'content_type';
 
 CREATE OR REPLACE VIEW mart.v_superset_featured_top AS
 SELECT
+    'daily'::TEXT AS grain,
+    v.activity_date AS period_start,
+    TO_CHAR(v.activity_date, 'YYYY-MM-DD') AS period_start_key,
+    v.activity_date AS period_end,
+    TO_CHAR(v.activity_date, 'YYYY-MM-DD') AS period_end_key,
+    v.activity_date,
     v.title,
     v.prominence_score_total,
     v.views_total,
@@ -148,6 +186,34 @@ SELECT
 FROM mart.v_featured_viewership AS v
 INNER JOIN mart.v_content_latest_day AS f
     ON v.title_normalized = f.title_normalized
-WHERE FALSE
-ORDER BY v.prominence_score_total DESC
-LIMIT 50;
+WHERE FALSE;
+
+CREATE OR REPLACE VIEW mart.v_superset_featured_viewership AS
+SELECT
+    'daily'::TEXT AS grain,
+    activity_date AS period_start,
+    TO_CHAR(activity_date, 'YYYY-MM-DD') AS period_start_key,
+    activity_date AS period_end,
+    TO_CHAR(activity_date, 'YYYY-MM-DD') AS period_end_key,
+    activity_date,
+    title,
+    prominence_score_total,
+    views_total,
+    CASE WHEN views_total IS NULL THEN 'N/A' ELSE NULL END AS views_note,
+    false AS in_catalog,
+    primary_category_name
+FROM mart.v_content_latest_day
+WHERE FALSE;
+
+CREATE OR REPLACE VIEW mart.v_superset_featured_correlation AS
+SELECT
+    'daily'::TEXT AS grain,
+    activity_date AS period_start,
+    TO_CHAR(activity_date, 'YYYY-MM-DD') AS period_start_key,
+    activity_date AS period_end,
+    TO_CHAR(activity_date, 'YYYY-MM-DD') AS period_end_key,
+    activity_date,
+    0::BIGINT AS pair_count,
+    NULL::DOUBLE PRECISION AS corr_prominence_views
+FROM mart.v_content_latest_day
+WHERE FALSE;

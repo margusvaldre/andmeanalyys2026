@@ -1,5 +1,5 @@
 slice_name: Top esiletõstetud
-description: Viimase esiletõstmise päeva TOP pealkirjad.
+description: Päeva või nädala TOP pealkirjad (vaikimisi prominence DESC).
 viz_type: table
 params:
   datasource: c2222222-2222-4222-8222-000000000004__table

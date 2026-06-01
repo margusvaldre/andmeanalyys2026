@@ -16,25 +16,38 @@ from db import get_connection
 
 DATA_ROOT = Path(__file__).resolve().parent.parent / "data"
 VIEWERS_DIR = DATA_ROOT / "viewers"
+FEATURED_DIR = DATA_ROOT / "featured"
+CATALOG_DAILY_DIR = DATA_ROOT / "catalog_daily"
 METADATA_FILE = DATA_ROOT / "metadata" / "jupiter_metadata.csv"
 
 REQUIRED_TABLES = (
     "staging.catalog",
+    "staging.catalog_daily",
     "staging.featured_daily",
     "staging.viewers_raw",
     "staging.content_metadata",
     "mart.dim_content",
     "mart.content_structure_pct",
+    "mart.content_structure_period_pct",
     "mart.fact_content_daily",
     "mart.title_match_daily",
 )
 
 REQUIRED_VIEWS = (
     "mart.v_featured_viewership",
+    "mart.v_featured_viewership_period",
     "mart.v_superset_origin_pct",
     "mart.v_superset_content_type_pct",
     "mart.v_superset_featured_top",
+    "mart.v_superset_featured_viewership",
+    "mart.v_superset_featured_correlation",
 )
+
+# Varasem versioon lõikas vaates globaalselt 500 rida; kontroll tuvastab taassissetuleku.
+SUPERSET_TOP_VIEW_ROW_LIMIT = 500
+# Hoiatus, kui perioodi 20. koha globaalne järk läheneb limiidile (TOP graafik võib katki minna).
+SUPERSET_TOP_WARN_GLOBAL_RANK = 450
+STRUCTURE_VIEWED_META_WARN_PCT = 80.0
 
 
 class Status(str, Enum):
@@ -146,6 +159,48 @@ def check_data_files() -> list[CheckResult]:
                 "nädala faile pole (valikuline)",
             )
         )
+
+    featured_archives = (
+        list(FEATURED_DIR.glob("jupiter_f_*.csv")) if FEATURED_DIR.is_dir() else []
+    )
+    if featured_archives:
+        results.append(
+            CheckResult(
+                "Failid featured arhiiv",
+                Status.OK,
+                f"{len(featured_archives)} faili kaustas data/featured/",
+            )
+        )
+    else:
+        results.append(
+            CheckResult(
+                "Failid featured arhiiv",
+                Status.WARN,
+                "puuduvad jupiter_f_*.csv — nädalavaates võib esiletõstmine puududa",
+            )
+        )
+
+    catalog_archives = (
+        list(CATALOG_DAILY_DIR.glob("jupiter_c_*.csv"))
+        if CATALOG_DAILY_DIR.is_dir()
+        else []
+    )
+    if catalog_archives:
+        results.append(
+            CheckResult(
+                "Failid catalog_daily arhiiv",
+                Status.OK,
+                f"{len(catalog_archives)} faili kaustas data/catalog_daily/",
+            )
+        )
+    else:
+        results.append(
+            CheckResult(
+                "Failid catalog_daily arhiiv",
+                Status.WARN,
+                "puuduvad jupiter_c_*.csv — nädalavaates võib kataloog puududa",
+            )
+        )
     return results
 
 
@@ -153,6 +208,7 @@ def check_staging(cur) -> list[CheckResult]:
     results: list[CheckResult] = []
     thresholds = (
         ("staging.catalog", "SELECT COUNT(*) FROM staging.catalog", 1),
+        ("staging.catalog_daily", "SELECT COUNT(*) FROM staging.catalog_daily", 1),
         ("staging.content_metadata", "SELECT COUNT(*) FROM staging.content_metadata", 1),
         ("staging.featured_daily", "SELECT COUNT(*) FROM staging.featured_daily", 1),
         (
@@ -208,7 +264,268 @@ def check_staging(cur) -> list[CheckResult]:
                     "views_total võib olla tühi viimasel featured päeval",
                 )
             )
+
+    weekly_without_featured = _query_count(
+        cur,
+        """
+        SELECT COUNT(*)
+        FROM (
+            SELECT DISTINCT period_start, period_end
+            FROM staging.viewers_raw
+            WHERE grain = 'weekly'
+        ) AS w
+        WHERE NOT EXISTS (
+            SELECT 1
+            FROM staging.featured_daily AS f
+            WHERE f.feature_date BETWEEN w.period_start AND w.period_end
+        )
+        """,
+    )
+    if weekly_without_featured:
+        results.append(
+            CheckResult(
+                "Nädalad ilma featured andmeteta",
+                Status.WARN,
+                f"{weekly_without_featured} weekly perioodi viewers fail on olemas, "
+                "aga featured arhiiv puudub — esiletõstmise graafikud jäävad tühjaks",
+            )
+        )
+    elif _query_count(cur, "SELECT COUNT(*) FROM staging.viewers_raw WHERE grain = 'weekly'") > 0:
+        results.append(
+            CheckResult(
+                "Nädalad ilma featured andmeteta",
+                Status.OK,
+                "weekly perioodidel on featured katvus",
+            )
+        )
     return results
+
+
+def check_structure_metadata_coverage(cur) -> list[CheckResult]:
+    """Hoiata, kui vaadatavuse pealkirjad on meta CSV-ga halvasti kaetud."""
+    cur.execute("SELECT to_regclass('staging.viewers_raw')")
+    if cur.fetchone()[0] is None:
+        return []
+
+    cur.execute(
+        """
+        WITH meta AS (
+            SELECT mart.normalize_title(title) AS title_normalized
+            FROM staging.content_metadata
+            WHERE mart.normalize_title(title) IS NOT NULL
+        ),
+        viewers AS (
+            SELECT DISTINCT mart.normalize_title(title) AS title_normalized
+            FROM staging.viewers_raw
+            WHERE mart.normalize_title(title) IS NOT NULL
+        ),
+        featured AS (
+            SELECT DISTINCT mart.normalize_title(title) AS title_normalized
+            FROM staging.featured_daily
+            WHERE mart.normalize_title(title) IS NOT NULL
+        )
+        SELECT
+            (SELECT COUNT(*) FROM viewers) AS viewers_titles,
+            (SELECT COUNT(*) FROM viewers v INNER JOIN meta m USING (title_normalized))
+                AS viewers_with_meta,
+            (SELECT COUNT(*) FROM featured) AS featured_titles,
+            (SELECT COUNT(*) FROM featured f INNER JOIN meta m USING (title_normalized))
+                AS featured_with_meta
+        """
+    )
+    row = cur.fetchone()
+    if not row or row[0] == 0:
+        return []
+
+    viewers_total, viewers_with_meta, featured_total, featured_with_meta = row
+    viewers_pct = 100.0 * viewers_with_meta / viewers_total
+    featured_pct = (
+        100.0 * featured_with_meta / featured_total if featured_total else 100.0
+    )
+
+    unknown_viewed = _query_count(
+        cur,
+        """
+        SELECT COUNT(*)
+        FROM mart.content_structure_period_pct
+        WHERE structure_type = 'viewed'
+          AND dimension = 'origin_country'
+          AND category_code = 'UNKNOWN'
+        """,
+    )
+
+    if viewers_pct < STRUCTURE_VIEWED_META_WARN_PCT:
+        return [
+            CheckResult(
+                "Struktuur: meta katvus (viewers)",
+                Status.WARN,
+                f"{viewers_with_meta}/{viewers_total} pealkirja ({viewers_pct:.1f}%) on meta CSV-s — "
+                f"vaadatud struktuuris on UNKNOWN/Määramata segment "
+                f"({unknown_viewed} rida perioodipõhises tabelis)",
+            )
+        ]
+
+    return [
+        CheckResult(
+            "Struktuur: meta katvus (viewers)",
+            Status.OK,
+            f"{viewers_with_meta}/{viewers_total} pealkirja ({viewers_pct:.1f}%) meta CSV-s; "
+            f"featured {featured_with_meta}/{featured_total} ({featured_pct:.1f}%)",
+        )
+    ]
+
+
+def check_superset_featured_top_pool(cur) -> list[CheckResult]:
+    """Hoiata, kui v_superset_featured_top globaalne LIMIT võib TOP 20 moonutada."""
+    cur.execute("SELECT to_regclass('mart.v_featured_viewership_period')")
+    if cur.fetchone()[0] is None:
+        return []
+
+    period_rows = _query_count(cur, "SELECT COUNT(*) FROM mart.v_featured_viewership_period")
+    if period_rows == 0:
+        return []
+
+    cur.execute(
+        """
+        WITH ranked AS (
+            SELECT
+                grain,
+                period_start,
+                period_end,
+                title,
+                ROW_NUMBER() OVER (
+                    ORDER BY prominence_score_total DESC NULLS LAST
+                ) AS global_rank,
+                ROW_NUMBER() OVER (
+                    PARTITION BY grain, period_start, period_end
+                    ORDER BY prominence_score_total DESC NULLS LAST
+                ) AS period_rank
+            FROM mart.v_featured_viewership_period
+        ),
+        day20 AS (
+            SELECT grain, period_start, period_end, title, global_rank
+            FROM ranked
+            WHERE period_rank = 20
+        ),
+        risky AS (
+            SELECT *
+            FROM day20
+            WHERE global_rank > %s
+        ),
+        broken AS (
+            SELECT *
+            FROM day20
+            WHERE global_rank > %s
+        )
+        SELECT
+            (SELECT COUNT(*) FROM day20) AS periods_with_top20,
+            (SELECT COALESCE(MAX(global_rank), 0) FROM day20) AS max_global_rank_of_period_20,
+            (SELECT COUNT(*) FROM risky) AS warn_period_count,
+            (SELECT COUNT(*) FROM broken) AS fail_period_count,
+            (
+                SELECT string_agg(
+                    grain || ' ' || period_start::text || ' #' || global_rank::text,
+                    '; '
+                    ORDER BY global_rank DESC
+                )
+                FROM (SELECT * FROM risky ORDER BY global_rank DESC LIMIT 5) AS r
+            ) AS warn_sample
+        """,
+        (SUPERSET_TOP_WARN_GLOBAL_RANK, SUPERSET_TOP_VIEW_ROW_LIMIT),
+    )
+    summary = cur.fetchone()
+    if not summary or summary[0] == 0:
+        return [
+            CheckResult(
+                "TOP vaate globaalne limiit",
+                Status.WARN,
+                "ühelgi perioodil pole 20 esiletõstetud rida — TOP graafik võib olla tühi",
+            )
+        ]
+
+    periods_with_top20, max_rank, warn_count, fail_count, warn_sample = summary
+
+    mismatch_count = 0
+    cur.execute("SELECT to_regclass('mart.v_superset_featured_top')")
+    if cur.fetchone()[0] is not None:
+        mismatch_count = _query_count(
+            cur,
+            """
+            WITH true_top20 AS (
+                SELECT
+                    grain,
+                    period_start,
+                    period_end,
+                    title,
+                    ROW_NUMBER() OVER (
+                        PARTITION BY grain, period_start, period_end
+                        ORDER BY prominence_score_total DESC NULLS LAST
+                    ) AS period_rank
+                FROM mart.v_featured_viewership_period
+            ),
+            via_view AS (
+                SELECT
+                    grain,
+                    period_start,
+                    period_end,
+                    title,
+                    ROW_NUMBER() OVER (
+                        PARTITION BY grain, period_start, period_end
+                        ORDER BY prominence_score_total DESC NULLS LAST
+                    ) AS period_rank
+                FROM mart.v_superset_featured_top
+            )
+            SELECT COUNT(*)
+            FROM true_top20 AS t
+            LEFT JOIN via_view AS v
+                ON t.grain = v.grain
+               AND t.period_start = v.period_start
+               AND t.period_end = v.period_end
+               AND t.period_rank = v.period_rank
+            WHERE t.period_rank <= 20
+              AND (v.title IS NULL OR t.title <> v.title)
+            """,
+        )
+
+    if fail_count > 0 or mismatch_count > 0:
+        parts = []
+        if fail_count:
+            parts.append(
+                f"{fail_count} perioodi 20. koht on globaalses TOP {SUPERSET_TOP_VIEW_ROW_LIMIT}st väljas"
+            )
+        if mismatch_count:
+            parts.append(
+                f"{mismatch_count} rea TOP 20 ei klapi v_superset_featured_top vaatega"
+            )
+        return [
+            CheckResult(
+                "TOP vaate globaalne limiit",
+                Status.FAIL,
+                "; ".join(parts)
+                + " — eemalda vaatest globaalne LIMIT (Superset row_limit piisab)",
+            )
+        ]
+
+    if warn_count > 0:
+        sample = f" ({warn_sample})" if warn_sample else ""
+        return [
+            CheckResult(
+                "TOP vaate globaalne limiit",
+                Status.WARN,
+                f"{warn_count}/{periods_with_top20} perioodi 20. koht on globaalses "
+                f"järjekorras > {SUPERSET_TOP_WARN_GLOBAL_RANK} "
+                f"(max {max_rank}, limiit {SUPERSET_TOP_VIEW_ROW_LIMIT}){sample}",
+            )
+        ]
+
+    return [
+        CheckResult(
+            "TOP vaate globaalne limiit",
+            Status.OK,
+            f"{periods_with_top20} perioodi; 20. koha max globaalne järk {max_rank} "
+            f"(< {SUPERSET_TOP_WARN_GLOBAL_RANK})",
+        )
+    ]
 
 
 def check_mart(cur) -> list[CheckResult]:
@@ -220,25 +537,52 @@ def check_mart(cur) -> list[CheckResult]:
             "SELECT COUNT(*) FROM mart.dim_content WHERE in_metadata",
         ),
         ("mart.content_structure_pct", "SELECT COUNT(*) FROM mart.content_structure_pct"),
+        (
+            "mart.content_structure_period_pct",
+            "SELECT COUNT(*) FROM mart.content_structure_period_pct",
+        ),
+        (
+            "mart.content_structure_period_pct (daily)",
+            "SELECT COUNT(*) FROM mart.content_structure_period_pct WHERE grain = 'daily'",
+        ),
         ("mart.fact_content_daily", "SELECT COUNT(*) FROM mart.fact_content_daily"),
         ("mart.v_featured_viewership", "SELECT COUNT(*) FROM mart.v_featured_viewership"),
+        (
+            "mart.v_featured_viewership_period (daily)",
+            "SELECT COUNT(*) FROM mart.v_featured_viewership_period WHERE grain = 'daily'",
+        ),
         ("mart.v_superset_origin_pct", "SELECT COUNT(*) FROM mart.v_superset_origin_pct"),
         (
             "mart.v_superset_content_type_pct",
             "SELECT COUNT(*) FROM mart.v_superset_content_type_pct",
         ),
         ("mart.v_superset_featured_top", "SELECT COUNT(*) FROM mart.v_superset_featured_top"),
+        (
+            "mart.v_superset_featured_viewership (daily)",
+            "SELECT COUNT(*) FROM mart.v_superset_featured_viewership WHERE grain = 'daily'",
+        ),
+        (
+            "mart.v_superset_featured_correlation (daily)",
+            "SELECT COUNT(*) FROM mart.v_superset_featured_correlation WHERE grain = 'daily'",
+        ),
     )
+    warn_if_empty = {
+        "mart.v_featured_viewership",
+        "mart.v_featured_viewership_period (daily)",
+        "mart.v_superset_featured_top",
+        "mart.v_superset_featured_viewership (daily)",
+        "mart.v_superset_featured_correlation (daily)",
+    }
     for name, sql in mart_checks:
         count = _query_count(cur, sql)
         if count > 0:
             results.append(CheckResult(name, Status.OK, f"{count} rida"))
-        elif name in {"mart.v_featured_viewership", "mart.v_superset_featured_top"}:
+        elif name in warn_if_empty:
             results.append(
                 CheckResult(
                     name,
                     Status.WARN,
-                    "0 rida — kontrolli featured/viewers päevade kattumist",
+                    "0 rida — kontrolli featured/viewers päevade kattumist või vali daily filter",
                 )
             )
         else:
@@ -254,14 +598,14 @@ def check_mart(cur) -> list[CheckResult]:
         cur,
         """
         SELECT COUNT(*)
-        FROM mart.content_structure_pct
-        WHERE structure_type = 'viewed'
+        FROM mart.content_structure_period_pct
+        WHERE structure_type = 'viewed' AND grain = 'daily'
         """,
     )
     if viewed_rows == 0:
         results.append(
             CheckResult(
-                "Struktuur: vaadatud rida",
+                "Struktuur: vaadatud rida (daily)",
                 Status.WARN,
                 "viewed struktuuri read puuduvad — viewers CSV võib puududa featured päeval",
             )
@@ -269,11 +613,37 @@ def check_mart(cur) -> list[CheckResult]:
     else:
         results.append(
             CheckResult(
-                "Struktuur: vaadatud rida",
+                "Struktuur: vaadatud rida (daily)",
                 Status.OK,
                 f"{viewed_rows} segmenti",
             )
         )
+
+    weekly_only_viewed = _query_count(
+        cur,
+        """
+        SELECT COUNT(*)
+        FROM (
+            SELECT period_start
+            FROM mart.content_structure_period_pct
+            WHERE grain = 'weekly'
+            GROUP BY period_start, period_end
+            HAVING COUNT(DISTINCT structure_type) = 1
+               AND MAX(structure_type) = 'viewed'
+        ) AS w
+        """,
+    )
+    if weekly_only_viewed:
+        results.append(
+            CheckResult(
+                "Struktuur: weekly ainult viewed",
+                Status.WARN,
+                f"{weekly_only_viewed} nädalat ilma kataloogi/esitatud ridadeta — "
+                "lisa featured ja catalog_daily arhiiv selle nädala päevadele",
+            )
+        )
+    results.extend(check_structure_metadata_coverage(cur))
+    results.extend(check_superset_featured_top_pool(cur))
     return results
 
 

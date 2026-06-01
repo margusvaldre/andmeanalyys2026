@@ -1,19 +1,24 @@
-slice_name: Esiletõstmine ja vaadatavus (sama päev)
-description: Viimase esiletõstmise päev. views_total eelistatult sama päeva CSV-st; muidu viimane olemasolev viewers päev sama pealkirja kohta.
+slice_name: Esiletõstmine ja vaadatavus (valitud periood)
+description: Esiletõstmise skoor ja vaated valitud päeva või nädala lõikes (dashboardi filtrid grain + period_start_key).
 viz_type: table
 params:
-  datasource: c2222222-2222-4222-8222-000000000003__table
+  datasource: c2222222-2222-4222-8222-000000000008__table
   viz_type: table
   query_mode: raw
   all_columns:
-  - activity_date
+  - period_start
+  - period_end
   - title
   - prominence_score_total
   - views_total
+  - views_note
+  - in_catalog
   - primary_category_name
+  order_by_cols:
+  - '["prominence_score_total", false]'
   order_desc: false
   row_limit: 500
-cache_timeout: 30
+cache_timeout: 0
 uuid: f0e0d0c0-b0a9-4a8e-9f7c-3b2a190d0c03
 version: 1.0.0
-dataset_uuid: c2222222-2222-4222-8222-000000000003
+dataset_uuid: c2222222-2222-4222-8222-000000000008

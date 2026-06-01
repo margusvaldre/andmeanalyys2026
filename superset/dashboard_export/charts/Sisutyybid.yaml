@@ -1,9 +1,10 @@
 slice_name: Sisutüübid
 description: 100% horisontaalne virn, eestikeelsed sildid (vt docs/images/sisutüübid.png paigutus).
-viz_type: bar
+viz_type: echarts_timeseries_bar
 params:
   datasource: c2222222-2222-4222-8222-000000000006__table
-  viz_type: bar
+  viz_type: echarts_timeseries_bar
+  x_axis_force_categorical: true
   x_axis: structure_label
   metrics:
   - expressionType: SIMPLE
@@ -30,7 +31,7 @@ params:
   - 100
   truncate_metric: true
   y_axis_format: SMART_NUMBER
-cache_timeout: 30
+cache_timeout: 0
 uuid: caaaaaaa-aaaa-4aaa-8aaa-000000000006
 version: 1.0.0
 dataset_uuid: c2222222-2222-4222-8222-000000000006

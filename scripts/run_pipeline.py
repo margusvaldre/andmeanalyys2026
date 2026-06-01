@@ -3,14 +3,16 @@
 See fail ei tee ise andmetöötlust. Ta käivitab teisi skripte õiges järjekorras.
 
 Praegused käsud:
+- ingest-archives — varukoopia CSV-st (uus DB; ei ole run-all osa)
 - ingest-catalog  — ERR API -> staging.catalog
 - ingest-viewers  — CSV failid -> staging.viewers_raw
 - ingest-featured — ERR API -> staging.featured_daily
 - ingest-metadata — meta CSV -> staging.content_metadata
-- ingest-all      — kõik neli järjest
+- ingest-all      — API + viewers + meta (ilma arhiivideta)
 - transform       — SQL: staging -> mart
 - quality         — SQL: kirjutab quality.* tulemused (vt init/07_quality_objects.sql)
 - check           — read-only kontroll: allikas -> staging -> mart -> Superseti vaated
+- run-all         — ingest-all + transform + quality + check (WARN ei peata)
 
 Näide:
     docker compose exec pipeline python scripts/run_pipeline.py ingest-all
@@ -139,13 +141,19 @@ def run_quality() -> int:
         conn.close()
 
 
-def run_script(script_name: str) -> int:
+def run_script(script_name: str, *extra_args: str) -> int:
     """Käivita üks Pythoni skript ja tagasta selle väljumiskood."""
     result = subprocess.run(
-        [sys.executable, str(SCRIPTS_DIR / script_name)],
+        [sys.executable, str(SCRIPTS_DIR / script_name), *extra_args],
         check=False,
     )
     return result.returncode
+
+
+def run_archive_ingest(*, missing_only: bool = False) -> int:
+    """Käivita arhiivide import (eraldi samm, mitte run-all osa)."""
+    flag = "--missing-only" if missing_only else "--all"
+    return run_script("ingest_daily_archives.py", flag)
 
 
 def main() -> int:
@@ -154,6 +162,21 @@ def main() -> int:
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
+    archives_parser = subparsers.add_parser(
+        "ingest-archives",
+        help="Taasta varukoopia CSV-st (uus DB). run-all seda ei käivita.",
+    )
+    archives_mode = archives_parser.add_mutually_exclusive_group()
+    archives_mode.add_argument(
+        "--all",
+        action="store_true",
+        help="Lae kõik arhiivfailid (vaikimisi, kui lippu pole).",
+    )
+    archives_mode.add_argument(
+        "--missing-only",
+        action="store_true",
+        help="Ainult päevad, mida stagingus veel pole.",
+    )
     subparsers.add_parser(
         "ingest-catalog",
         help="Lae videokataloog API-st tabelisse staging.catalog.",
@@ -172,7 +195,7 @@ def main() -> int:
     )
     subparsers.add_parser(
         "ingest-all",
-        help="Lae kataloog, vaadatavus, esiletõstmine ja meta CSV järjest.",
+        help="Lae API + viewers + meta (ilma arhiivideta).",
     )
     subparsers.add_parser(
         "transform",
@@ -198,7 +221,7 @@ def main() -> int:
     )
     subparsers.add_parser(
         "run-all",
-        help="Lae kõik allikad, käivita transformatsioon ja andmekvaliteedi kontrollid.",
+        help="API/viewers/meta ingest, transform, quality, check (ilma arhiivideta).",
     )
 
     args = parser.parse_args()
@@ -214,6 +237,12 @@ def main() -> int:
 
     if args.command == "ingest-metadata":
         return run_script("ingest_metadata_csv.py")
+
+    if args.command == "ingest-archives":
+        missing_only = getattr(args, "missing_only", False)
+        if not getattr(args, "all", False) and not missing_only:
+            return run_archive_ingest(missing_only=False)
+        return run_archive_ingest(missing_only=missing_only)
 
     if args.command == "ingest-all":
         for step in INGEST_STEPS:
@@ -244,7 +273,11 @@ def main() -> int:
         code = run_transform()
         if code != 0:
             return code
-        return run_quality()
+        code = run_quality()
+        if code != 0:
+            return code
+        print()
+        return run_pipeline_check(strict=False)
 
     return 1
 

@@ -15,7 +15,7 @@ copy .env.example .env
 docker compose up -d --build
 ```
 
-Scheduler käivitab iga päev kell **06:00** (Europe/Tallinn) käsu `run-all` (kataloog, vaadatavus, esiletõstmine, **meta CSV**, transform, andmekvaliteedi kontrollid). Vaadatavuse CSV peab enne olema kaustas `data/viewers/`.
+Scheduler käivitab iga päev kell **06:00** (Europe/Tallinn) käsu `run-all` (API, vaadatavus, esiletõstmine, **meta CSV**, transform, quality, **check** — **ilma arhiivide taastamiseta**). WARN logitakse, kuid toru jätkub; FAIL peatab. Vaadatavuse CSV peab enne olema kaustas `data/viewers/`. Iga edukas kataloogi ja esiletõstmise ingest **kirjutab** päeva varukoopia CSV kaustadesse `data/catalog_daily/` ja `data/featured/`; uus andmebaas laeb need üks kord käsuga `ingest-archives`.
 
 Logid:
 
@@ -46,10 +46,11 @@ copy .env.example .env
 docker compose down -v
 docker compose up -d --build
 docker compose ps
+docker compose exec pipeline python scripts/run_pipeline.py ingest-archives
 docker compose exec pipeline python scripts/run_pipeline.py run-all
 ```
 
-Oodatav `run-all` lõpp: `mart.dim_content` tuhandeid ridu, `v_featured_viewership` sadu ridu, kvaliteedikontrollid läbisid. Seejärel Superset: http://localhost:8089 → dashboard **Jupiteri analüüs**.
+Oodatav `run-all` lõpp: `mart.dim_content` tuhandeid ridu, `v_featured_viewership` sadu ridu, quality ja check (võib olla WARN, nt päevade kattumine). Seejärel Superset: http://localhost:8089 → dashboard **Jupiteri analüüs**.
 
 **Olemasolev andmebaas** (nt kloonitud repo enne meta CSV-d) — käivita käsitsi kõik täiendavad skriptid (vt allpool jaotist „Vana andmebaas”).
 
@@ -89,7 +90,7 @@ Kontrolli, et andmevoog on terviklik (pärast `run-all`):
 docker compose exec pipeline python scripts/run_pipeline.py check
 ```
 
-`check` on read-only: kontrollib faile, staging/mart ridu ja Superseti vaateid. Kui on ainult hoiatusi (nt erinev featured/viewers päev), exit 0; `--strict` loeb WARN-id veaks.
+`check` on read-only: kontrollib faile, staging/mart ridu ja Superseti vaateid (sh **TOP vaate globaalne limiit** — kas `v_superset_featured_top` LIMIT 500 võib moonutada perioodi TOP 20). Kui on ainult hoiatusi (nt erinev featured/viewers päev või weekly ilma arhiivita), exit 0; `--strict` loeb WARN-id veaks.
 
 ### Vana andmebaas — käsitsi skeemi täiendamine
 
@@ -128,7 +129,7 @@ docker compose exec pipeline python scripts/run_pipeline.py run-all
 | `relation "staging.catalog" does not exist` | Puudub `init/03_catalog_incremental.sql` | Käivita `02`–`08` ja `10` või `docker compose down -v` ja uus `up` |
 | `db` konteiner exit 3 esimesel `up` | Vana init järjekord (`06` enne `08`) | `docker compose down -v` ja uus `up` (vajab `10_superset_views.sql`) |
 | Superset „Columns missing in dataset” | Vale dashboardi `chartId` või vana Superseti maht | `docker compose run --rm --no-deps superset-import` |
-| Tühi „Esiletõstmine ja vaadatavus” | Erinev featured vs viewers päev | Lae viewers CSV sama päevaks; `transform`; või vaata tabelit (views võib olla NULL) |
+| Tühi „Esiletõstmine ja vaadatavus” | Filtrid puuduvad või erinev featured vs viewers päev | Loo dashboardi filtrid (`docs/superset.md`); lae viewers CSV; `transform` |
 
 4. Kontrolli tulemust:
 
@@ -141,7 +142,7 @@ docker compose exec db psql -U praktikum -d praktikum -c "SELECT title, prominen
 docker compose exec db psql -U praktikum -d praktikum -c "SELECT run_id, source_name, status, row_count FROM staging.pipeline_runs ORDER BY started_at DESC LIMIT 5;"
 docker compose exec db psql -U praktikum -d praktikum -c "SELECT activity_date, featured_count, catalog_match_pct, viewers_match_pct FROM mart.title_match_daily;"
 docker compose exec db psql -U praktikum -d praktikum -c "SELECT source, SUM(title_count) FROM mart.content_by_source GROUP BY source;"
-docker compose exec db psql -U praktikum -d praktikum -c "SELECT title, prominence_score_total, views_total FROM mart.v_featured_viewership ORDER BY views_total DESC LIMIT 10;"
+docker compose exec db psql -U praktikum -d praktikum -c "SELECT title, prominence_score_total, views_total FROM mart.v_superset_featured_viewership WHERE grain='daily' AND period_start_key='2026-05-29' ORDER BY prominence_score_total DESC LIMIT 10;"
 docker compose exec db psql -U praktikum -d praktikum -c "SELECT title, origin_country, meta_content_type FROM mart.dim_content WHERE in_metadata LIMIT 10;"
 docker compose exec db psql -U praktikum -d praktikum -c "SELECT structure_type, dimension, category_label, pct FROM mart.content_structure_pct WHERE dimension='origin_country' ORDER BY structure_type, pct DESC LIMIT 15;"
 docker compose exec db psql -U praktikum -d praktikum -c "SELECT * FROM quality.v_latest_rule_results;"
@@ -161,18 +162,21 @@ docker compose exec db psql -U praktikum -d praktikum -c "SELECT * FROM quality.
 | `init/01_create_objects.sql` | skeemid ja põhitabelid |
 | `init/03_catalog_incremental.sql` | `staging.catalog` + pealkirja muutuste logi |
 | `scripts/catalog_api.py` | API lugemine (kasutab ingest_catalog_api) |
-| `scripts/ingest_catalog_api.py` | API → `staging.catalog` (ainult uued + muutuste tuvastus) |
+| `scripts/ingest_catalog_api.py` | API → `staging.catalog` + `staging.catalog_daily` + CSV arhiiv |
+| `scripts/ingest_daily_archives.py` | Varukoopia CSV → staging (`ingest-archives`; ükshaaval, mitte run-all) |
+| `scripts/daily_archive.py` | Arhiivi eksport/import loogika |
 | `scripts/ingest_viewers_csv.py` | CSV → `staging.viewers_raw` |
 | `scripts/prominence_api.py` | Esiletõstmise skooride arvutus API-st |
-| `scripts/ingest_featured_api.py` | API → `staging.featured_daily` |
+| `scripts/ingest_featured_api.py` | API → `staging.featured_daily` + CSV arhiiv |
 | `scripts/ingest_metadata_csv.py` | Meta CSV → `staging.content_metadata` |
 | `data/metadata/jupiter_metadata.csv` | Pealkiri → päritolumaa ja sisutüüp |
 | `data/prominence/*.csv` | Positsioonimaatriks ja lehe koefitsiendid |
 | `init/05_mart_objects.sql` | Mart tabelid ja `normalize_title` funktsioon |
 | `scripts/01_transform.sql` | Staging → mart transformatsioon |
 | `init/07_quality_objects.sql` | `quality` skeemi tabelid + `quality.run_checks()` |
-| `init/08_metadata_staging.sql` | `staging.content_metadata`, viitetabelid, `mart.content_structure_pct` |
+| `init/08_metadata_staging.sql` | `staging.content_metadata`, `staging.catalog_daily`, viitetabelid, `mart.content_structure_period_pct` |
 | `scripts/02_quality_checks.sql` | Käsitsi: `SELECT quality.run_checks(...)` (vt faili sisu) |
-| `scripts/run_pipeline.py` | `ingest-*`, `transform`, `quality`, `check`, `run-all` |
+| `scripts/pipeline_check.py` | Read-only toru kontroll (`run_pipeline.py check`) |
+| `scripts/run_pipeline.py` | `ingest-*`, `transform`, `quality`, `check`, `run-all` (lõpus check) |
 | `docs/arhitektuur.md` | Äriküsimus ja andmevoog |
 

@@ -3,6 +3,6 @@ SHELL=/bin/bash
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 CRON_TZ=Europe/Tallinn
 
-# Iga päev kell 06:00: API sissevõtt + vaadatavuse CSV + transformatsioon + andmekvaliteedi kontrollid (run-all).
+# Iga päev kell 06:00: run-all (ingest + transform + quality + check; WARN ei peata).
 # Vaadatavuse CSV peab olema kaustas data/viewers/ (käsitsi või automaatne kopeerimine).
 0 6 * * * cd /app && /usr/local/bin/python /app/scripts/run_pipeline.py run-all >> /var/log/praktikum/pipeline.log 2>&1

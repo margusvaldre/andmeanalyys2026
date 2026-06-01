@@ -118,7 +118,7 @@ services:
     command:
       - /bin/sh
       - -c
-      - "python /app/jupiter_superset/zip_dashboard.py /app/jupiter_superset/dashboard_export /tmp/jupiter_dashboard.zip && superset import-dashboards --path /tmp/jupiter_dashboard.zip --username $${SUPERSET_ADMIN_USER} && python /app/jupiter_superset/sync_datasets.py"
+      - "python /app/jupiter_superset/zip_dashboard.py /app/jupiter_superset/dashboard_export /tmp/jupiter_dashboard.zip && superset import-dashboards --path /tmp/jupiter_dashboard.zip --username $${SUPERSET_ADMIN_USER} && python /app/jupiter_superset/apply_virtual_dataset_sql.py && python /app/jupiter_superset/apply_chart_export.py && python /app/jupiter_superset/sync_datasets.py"
     restart: "no"
 
   superset:
@@ -131,6 +131,7 @@ services:
       - "${SUPERSET_PORT_HOST:-8089}:8088"
     volumes:
       - ./superset/superset_config.py:/app/superset_config.py
+      - ./superset:/app/jupiter_superset
       - andmeanalyys2026_superset_home:/app/superset_home
     environment:
       SUPERSET_CONFIG_PATH: /app/superset_config.py

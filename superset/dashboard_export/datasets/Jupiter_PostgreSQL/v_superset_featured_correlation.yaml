@@ -1,8 +1,9 @@
-table_name: v_superset_featured_top
-description: Päeva ja nädala TOP pealkirjad (vaikimisi prominence DESC, row_limit 20 chartis).
+table_name: v_superset_featured_correlation
+main_dttm_col: activity_date
+description: Esitlusskoori ja vaadatavuse Pearsoni korrelatsioon päeva ja nädala lõikes.
 schema: mart
 catalog: __POSTGRES_DB__
-uuid: c2222222-2222-4222-8222-000000000004
+uuid: c2222222-2222-4222-8222-000000000007
 version: 1.0.0
 database_uuid: c1111111-1111-4111-8111-000000000001
 metrics: []
@@ -49,38 +50,17 @@ columns:
     type: DATE
     groupby: true
     filterable: true
-  - column_name: title
-    verbose_name: title
+  - column_name: pair_count
+    verbose_name: pair_count
     is_dttm: false
     is_active: true
-    type: TEXT
+    type: BIGINT
     groupby: true
     filterable: true
-  - column_name: prominence_score_total
-    verbose_name: prominence_score_total
+  - column_name: corr_prominence_views
+    verbose_name: corr_prominence_views
     is_dttm: false
     is_active: true
-    type: NUMERIC
-    groupby: true
-    filterable: true
-  - column_name: views_total
-    verbose_name: views_total
-    is_dttm: false
-    is_active: true
-    type: NUMERIC
-    groupby: true
-    filterable: true
-  - column_name: in_catalog
-    verbose_name: in_catalog
-    is_dttm: false
-    is_active: true
-    type: BOOLEAN
-    groupby: true
-    filterable: true
-  - column_name: primary_category_name
-    verbose_name: primary_category_name
-    is_dttm: false
-    is_active: true
-    type: TEXT
+    type: DOUBLE PRECISION
     groupby: true
     filterable: true
