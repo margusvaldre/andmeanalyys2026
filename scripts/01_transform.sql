@@ -367,6 +367,20 @@ WHERE in_featured
 GROUP BY activity_date;
 
 -- Struktuuri protsendid meta CSV põhjal (päev + nädal).
+CREATE OR REPLACE FUNCTION mart.normalize_content_type_code(raw_code TEXT)
+RETURNS TEXT
+LANGUAGE sql
+IMMUTABLE
+AS $$
+    SELECT CASE upper(trim(COALESCE(raw_code, '')))
+        WHEN 'CULTRURE' THEN 'CULTURE'
+        WHEN 'S' THEN 'SERIES'
+        WHEN 'Y' THEN 'FILM'
+        WHEN '' THEN NULL
+        ELSE upper(trim(raw_code))
+    END;
+$$;
+
 INSERT INTO mart.ref_origin_labels (origin_code, origin_label) VALUES
     ('UNKNOWN', 'Määramata (meta puudub)')
 ON CONFLICT (origin_code) DO NOTHING;

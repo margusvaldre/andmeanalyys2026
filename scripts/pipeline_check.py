@@ -301,6 +301,51 @@ def check_staging(cur) -> list[CheckResult]:
     return results
 
 
+def check_structure_viewers_type_labels(cur) -> list[CheckResult]:
+    """FAIL, kui viewers toorkoodid S/Y jõuavad struktuuri diagrammi siltidena."""
+    raw = _query_count(
+        cur,
+        """
+        SELECT COUNT(*)
+        FROM mart.content_structure_period_pct
+        WHERE dimension = 'content_type'
+          AND category_code IN ('S', 'Y')
+        """,
+    )
+    if raw:
+        return [
+            CheckResult(
+                "Struktuur: viewers type S/Y",
+                Status.FAIL,
+                f"{raw} rida kasutab toorkoodi S või Y — "
+                "uuenda mart.normalize_content_type_code ja käivita transform",
+            )
+        ]
+    short_segments = _query_count(
+        cur,
+        """
+        SELECT COUNT(*)
+        FROM mart.v_superset_content_type_pct
+        WHERE segment IN ('S', 'Y')
+        """,
+    )
+    if short_segments:
+        return [
+            CheckResult(
+                "Struktuur: viewers type S/Y",
+                Status.FAIL,
+                f"Superseti vaates on segmente S/Y ({short_segments} rida)",
+            )
+        ]
+    return [
+        CheckResult(
+            "Struktuur: viewers type S/Y",
+            Status.OK,
+            "viewers type S/Y on tõlgitud meta koodideks",
+        )
+    ]
+
+
 def check_structure_metadata_coverage(cur) -> list[CheckResult]:
     """Hoiata, kui vaadatavuse pealkirjad on meta CSV-ga halvasti kaetud."""
     cur.execute("SELECT to_regclass('staging.viewers_raw')")
@@ -643,6 +688,7 @@ def check_mart(cur) -> list[CheckResult]:
             )
         )
     results.extend(check_structure_metadata_coverage(cur))
+    results.extend(check_structure_viewers_type_labels(cur))
     results.extend(check_superset_featured_top_pool(cur))
     return results
 
