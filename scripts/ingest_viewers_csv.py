@@ -19,6 +19,7 @@ Käivitus:
 from __future__ import annotations
 
 import csv
+import io
 import re
 import sys
 from datetime import date, datetime
@@ -77,19 +78,19 @@ def discover_viewer_files() -> list[tuple[Path, str, date, date]]:
 
 
 def open_viewer_csv(path: Path):
-    """Ava CSV, proovides eesti Windowsi ja UTF-8 kodeeringut.
+    """Ava CSV tekstina, proovides UTF-8, cp1257 ja teisi kodeeringuid.
 
-    ERR ekspordid võivad olla cp1257 kodeeringus; seetõttu proovime mitut varianti.
+    ERR failid võivad olla segatud (nt UTF-8 päised, cp1257 keha); 4 KB proov
+    ei piisa — dekodeerime kogu faili enne csv.DictReader-it.
     """
+    raw = path.read_bytes()
     for encoding in ("utf-8-sig", "cp1257", "windows-1252"):
         try:
-            handle = path.open(encoding=encoding, newline="")
-            handle.read(4096)
-            handle.seek(0)
-            return handle, encoding
+            text = raw.decode(encoding)
+            return io.StringIO(text), encoding
         except UnicodeDecodeError:
             continue
-    return path.open(encoding="latin-1", newline=""), "latin-1"
+    return io.StringIO(raw.decode("latin-1")), "latin-1"
 
 
 def read_viewer_rows(
