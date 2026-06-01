@@ -48,6 +48,14 @@ SUPERSET_TOP_VIEW_ROW_LIMIT = 500
 # Hoiatus, kui perioodi 20. koha globaalne järk läheneb limiidile (TOP graafik võib katki minna).
 SUPERSET_TOP_WARN_GLOBAL_RANK = 450
 STRUCTURE_VIEWED_META_WARN_PCT = 80.0
+VIEWERS_MATCH_WARN_PCT = 70.0
+VIEWERS_MATCH_FAIL_PCT = 50.0
+CORR_PAIR_COUNT_WARN = 50
+CORR_PAIR_COUNT_FAIL = 20
+STRUCTURE_PCT_SUM_WARN_LO = 99.5
+STRUCTURE_PCT_SUM_WARN_HI = 100.5
+STRUCTURE_PCT_SUM_FAIL_LO = 99.0
+STRUCTURE_PCT_SUM_FAIL_HI = 101.0
 
 
 class Status(str, Enum):
@@ -299,6 +307,232 @@ def check_staging(cur) -> list[CheckResult]:
             )
         )
     return results
+
+
+def check_title_match_viewers_pct(cur) -> list[CheckResult]:
+    """Viimase päeva featured → viewers kattuvus (mart.title_match_daily)."""
+    cur.execute("SELECT to_regclass('mart.title_match_daily')")
+    if cur.fetchone()[0] is None:
+        return []
+
+    row = _query_one(
+        cur,
+        """
+        SELECT activity_date, viewers_match_pct, featured_count
+        FROM mart.title_match_daily
+        WHERE viewers_match_count > 0
+        ORDER BY activity_date DESC
+        LIMIT 1
+        """,
+    )
+    if not row:
+        row = _query_one(
+            cur,
+            """
+            SELECT activity_date, viewers_match_pct, featured_count
+            FROM mart.title_match_daily
+            ORDER BY activity_date DESC
+            LIMIT 1
+            """,
+        )
+    if not row:
+        return [
+            CheckResult(
+                "Ühendus: viewers_match_pct (viimane päev)",
+                Status.WARN,
+                "title_match_daily on tühi — käivita transform",
+            )
+        ]
+
+    activity_date, viewers_match_pct, featured_count = row
+    if viewers_match_pct is None:
+        return [
+            CheckResult(
+                "Ühendus: viewers_match_pct (viimane päev)",
+                Status.WARN,
+                f"{activity_date}: featured_count={featured_count}, viewers_match_pct puudub",
+            )
+        ]
+
+    pct = float(viewers_match_pct)
+    if pct < VIEWERS_MATCH_FAIL_PCT:
+        return [
+            CheckResult(
+                "Ühendus: viewers_match_pct (viimane päev)",
+                Status.FAIL,
+                f"{activity_date}: {pct:.1f}% (< {VIEWERS_MATCH_FAIL_PCT:.0f}%) — "
+                f"{featured_count} esiletõstetud pealkirja",
+            )
+        ]
+    if pct < VIEWERS_MATCH_WARN_PCT:
+        return [
+            CheckResult(
+                "Ühendus: viewers_match_pct (viimane päev)",
+                Status.WARN,
+                f"{activity_date}: {pct:.1f}% (< {VIEWERS_MATCH_WARN_PCT:.0f}%) — "
+                f"paljud read jäävad ilma views_total",
+            )
+        ]
+    return [
+        CheckResult(
+            "Ühendus: viewers_match_pct (viimane päev)",
+            Status.OK,
+            f"{activity_date}: {pct:.1f}% ({featured_count} pealkirja)",
+        )
+    ]
+
+
+def check_correlation_pair_count(cur) -> list[CheckResult]:
+    """Viimase daily perioodi pair_count (korrelatsioonigraafik)."""
+    cur.execute("SELECT to_regclass('mart.v_superset_featured_correlation')")
+    if cur.fetchone()[0] is None:
+        return []
+
+    row = _query_one(
+        cur,
+        """
+        SELECT period_start, pair_count
+        FROM mart.v_superset_featured_correlation
+        WHERE grain = 'daily'
+          AND pair_count > 0
+        ORDER BY period_start DESC
+        LIMIT 1
+        """,
+    )
+    if not row:
+        row = _query_one(
+            cur,
+            """
+            SELECT period_start, pair_count
+            FROM mart.v_superset_featured_correlation
+            WHERE grain = 'daily'
+            ORDER BY period_start DESC
+            LIMIT 1
+            """,
+        )
+    if not row:
+        return [
+            CheckResult(
+                "Korrelatsioon: pair_count (viimane päev)",
+                Status.WARN,
+                "daily korrelatsiooni ridu pole",
+            )
+        ]
+
+    period_start, pair_count = row
+    count = int(pair_count or 0)
+    if count < CORR_PAIR_COUNT_FAIL:
+        return [
+            CheckResult(
+                "Korrelatsioon: pair_count (viimane päev)",
+                Status.FAIL,
+                f"{period_start}: pair_count={count} (< {CORR_PAIR_COUNT_FAIL}) — "
+                "korrelatsioon ei ole usaldusväärne",
+            )
+        ]
+    if count < CORR_PAIR_COUNT_WARN:
+        return [
+            CheckResult(
+                "Korrelatsioon: pair_count (viimane päev)",
+                Status.WARN,
+                f"{period_start}: pair_count={count} (< {CORR_PAIR_COUNT_WARN})",
+            )
+        ]
+    return [
+        CheckResult(
+            "Korrelatsioon: pair_count (viimane päev)",
+            Status.OK,
+            f"{period_start}: pair_count={count}",
+        )
+    ]
+
+
+def check_structure_pct_sums(cur) -> list[CheckResult]:
+    """Struktuuri virn: SUM(pct) ≈ 100% iga (periood, struktuur, dimensioon) kohta."""
+    cur.execute("SELECT to_regclass('mart.content_structure_period_pct')")
+    if cur.fetchone()[0] is None:
+        return []
+
+    fail_count = _query_count(
+        cur,
+        f"""
+        SELECT COUNT(*)
+        FROM (
+            SELECT 1
+            FROM mart.content_structure_period_pct
+            GROUP BY grain, period_start, period_end, structure_type, dimension
+            HAVING ROUND(SUM(pct)::numeric, 2) < {STRUCTURE_PCT_SUM_FAIL_LO}
+                OR ROUND(SUM(pct)::numeric, 2) > {STRUCTURE_PCT_SUM_FAIL_HI}
+        ) AS bad
+        """,
+    )
+    warn_count = _query_count(
+        cur,
+        f"""
+        SELECT COUNT(*)
+        FROM (
+            SELECT 1
+            FROM mart.content_structure_period_pct
+            GROUP BY grain, period_start, period_end, structure_type, dimension
+            HAVING ROUND(SUM(pct)::numeric, 2) < {STRUCTURE_PCT_SUM_WARN_LO}
+                OR ROUND(SUM(pct)::numeric, 2) > {STRUCTURE_PCT_SUM_WARN_HI}
+        ) AS bad
+        """,
+    )
+    if fail_count == 0 and warn_count == 0:
+        return [
+            CheckResult(
+                "Struktuur: SUM(pct) ≈ 100%",
+                Status.OK,
+                "kõik virnad jäävad vahemikku 99.5–100.5",
+            )
+        ]
+
+    sample = _query_one(
+        cur,
+        """
+        SELECT
+            grain,
+            period_start,
+            period_end,
+            structure_type,
+            dimension,
+            ROUND(SUM(pct)::numeric, 2) AS pct_sum
+        FROM mart.content_structure_period_pct
+        GROUP BY grain, period_start, period_end, structure_type, dimension
+        HAVING ROUND(SUM(pct)::numeric, 2) < %s
+            OR ROUND(SUM(pct)::numeric, 2) > %s
+        ORDER BY ABS(ROUND(SUM(pct)::numeric, 2) - 100) DESC
+        LIMIT 1
+        """,
+        (STRUCTURE_PCT_SUM_WARN_LO, STRUCTURE_PCT_SUM_WARN_HI),
+    )
+    sample_msg = ""
+    if sample:
+        sample_msg = (
+            f" Näide: {sample[0]} {sample[1]}..{sample[2]} {sample[3]}/{sample[4]} "
+            f"sum={sample[5]}"
+        )
+
+    if fail_count:
+        return [
+            CheckResult(
+                "Struktuur: SUM(pct) ≈ 100%",
+                Status.FAIL,
+                f"{fail_count} virna väljaspool {STRUCTURE_PCT_SUM_FAIL_LO}–"
+                f"{STRUCTURE_PCT_SUM_FAIL_HI}%; "
+                f"{warn_count} väljaspool {STRUCTURE_PCT_SUM_WARN_LO}–"
+                f"{STRUCTURE_PCT_SUM_WARN_HI}.{sample_msg}",
+            )
+        ]
+    return [
+        CheckResult(
+            "Struktuur: SUM(pct) ≈ 100%",
+            Status.WARN,
+            f"{warn_count} virna väljaspool {STRUCTURE_PCT_SUM_WARN_LO}–"
+            f"{STRUCTURE_PCT_SUM_WARN_HI}.{sample_msg}",
+        )
+    ]
 
 
 def check_structure_viewers_type_labels(cur) -> list[CheckResult]:
@@ -689,6 +923,9 @@ def check_mart(cur) -> list[CheckResult]:
         )
     results.extend(check_structure_metadata_coverage(cur))
     results.extend(check_structure_viewers_type_labels(cur))
+    results.extend(check_structure_pct_sums(cur))
+    results.extend(check_title_match_viewers_pct(cur))
+    results.extend(check_correlation_pair_count(cur))
     results.extend(check_superset_featured_top_pool(cur))
     return results
 

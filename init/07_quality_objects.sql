@@ -57,6 +57,11 @@ DECLARE
     s TEXT;
     sources BIGINT;
     dim_n BIGINT;
+    v_match_pct NUMERIC;
+    v_match_day DATE;
+    v_pair_count BIGINT;
+    v_pct_fail BIGINT;
+    v_pct_warn BIGINT;
 BEGIN
     INSERT INTO quality.check_runs (check_run_id, started_at, trigger_source, status)
     VALUES (v_run, now(), p_trigger, 'running');
@@ -414,6 +419,176 @@ BEGIN
         END,
         'Meta CSV: vähem kui 50% kataloogi pealkirjadest leidub meta failis (hoiatus).',
         CASE WHEN s IS NOT NULL AND s::NUMERIC < 50 THEN 1 ELSE 0 END,
+        s
+    );
+
+    -- Esiletõstmine ↔ vaadatavus: viimase päeva viewers_match_pct (äriküsimus 2).
+    SELECT m.activity_date, m.viewers_match_pct, m.featured_count
+    INTO v_match_day, v_match_pct, n
+    FROM mart.title_match_daily AS m
+    WHERE m.viewers_match_count > 0
+       OR m.viewers_match_pct > 0
+    ORDER BY m.activity_date DESC
+    LIMIT 1;
+
+    IF v_match_day IS NULL THEN
+        SELECT m.activity_date, m.viewers_match_pct, m.featured_count
+        INTO v_match_day, v_match_pct, n
+        FROM mart.title_match_daily AS m
+        ORDER BY m.activity_date DESC
+        LIMIT 1;
+    END IF;
+
+    INSERT INTO quality.rule_results (
+        check_run_id, rule_name, severity, message, failing_count, sample_detail
+    )
+    VALUES (
+        v_run,
+        'title_match_viewers_match_pct_latest',
+        CASE
+            WHEN v_match_day IS NULL THEN 'pass'
+            WHEN v_match_pct < 50 THEN 'fail'
+            WHEN v_match_pct < 70 THEN 'warn'
+            ELSE 'pass'
+        END,
+        'Viimase päeva (viewers andmetega) viewers_match_pct: WARN < 70%, FAIL < 50%.',
+        CASE
+            WHEN v_match_day IS NULL THEN 0
+            WHEN v_match_pct < 70 THEN 1
+            ELSE 0
+        END,
+        CASE
+            WHEN v_match_day IS NULL THEN NULL
+            ELSE format(
+                '%s viewers_match_pct=%s featured_count=%s',
+                v_match_day,
+                v_match_pct,
+                n
+            )
+        END
+    );
+
+    -- Korrelatsioon: viimase daily perioodi pair_count.
+    SELECT c.period_start::TEXT, c.pair_count::BIGINT
+    INTO s, v_pair_count
+    FROM mart.v_superset_featured_correlation AS c
+    WHERE c.grain = 'daily'
+      AND c.pair_count > 0
+    ORDER BY c.period_start DESC
+    LIMIT 1;
+
+    IF s IS NULL THEN
+        SELECT c.period_start::TEXT, c.pair_count::BIGINT
+        INTO s, v_pair_count
+        FROM mart.v_superset_featured_correlation AS c
+        WHERE c.grain = 'daily'
+        ORDER BY c.period_start DESC
+        LIMIT 1;
+    END IF;
+
+    INSERT INTO quality.rule_results (
+        check_run_id, rule_name, severity, message, failing_count, sample_detail
+    )
+    VALUES (
+        v_run,
+        'correlation_pair_count_latest_daily',
+        CASE
+            WHEN s IS NULL THEN 'pass'
+            WHEN v_pair_count < 20 THEN 'fail'
+            WHEN v_pair_count < 50 THEN 'warn'
+            ELSE 'pass'
+        END,
+        'Viimase päeva korrelatsioon: WARN kui pair_count < 50, FAIL kui < 20.',
+        CASE
+            WHEN s IS NULL THEN 0
+            WHEN v_pair_count < 50 THEN 1
+            ELSE 0
+        END,
+        CASE
+            WHEN s IS NULL THEN NULL
+            ELSE format('period_start=%s pair_count=%s', s, v_pair_count)
+        END
+    );
+
+    -- Struktuuri virn: SUM(pct) peab olema ~100% iga rea kohta.
+    SELECT COUNT(*) INTO v_pct_fail
+    FROM (
+        SELECT 1
+        FROM mart.content_structure_period_pct AS p
+        GROUP BY
+            p.grain,
+            p.period_start,
+            p.period_end,
+            p.structure_type,
+            p.dimension
+        HAVING ROUND(SUM(p.pct)::NUMERIC, 2) < 99
+            OR ROUND(SUM(p.pct)::NUMERIC, 2) > 101
+    ) AS bad_fail;
+
+    SELECT COUNT(*) INTO v_pct_warn
+    FROM (
+        SELECT 1
+        FROM mart.content_structure_period_pct AS p
+        GROUP BY
+            p.grain,
+            p.period_start,
+            p.period_end,
+            p.structure_type,
+            p.dimension
+        HAVING ROUND(SUM(p.pct)::NUMERIC, 2) < 99.5
+            OR ROUND(SUM(p.pct)::NUMERIC, 2) > 100.5
+    ) AS bad_warn;
+
+    SELECT
+        format(
+            'grain=%s %s..%s %s/%s pct_sum=%s',
+            x.grain,
+            x.period_start,
+            x.period_end,
+            x.structure_type,
+            x.dimension,
+            x.pct_sum
+        )
+    INTO s
+    FROM (
+        SELECT
+            p.grain,
+            p.period_start,
+            p.period_end,
+            p.structure_type,
+            p.dimension,
+            ROUND(SUM(p.pct)::NUMERIC, 2) AS pct_sum
+        FROM mart.content_structure_period_pct AS p
+        GROUP BY
+            p.grain,
+            p.period_start,
+            p.period_end,
+            p.structure_type,
+            p.dimension
+        HAVING ROUND(SUM(p.pct)::NUMERIC, 2) < 99.5
+            OR ROUND(SUM(p.pct)::NUMERIC, 2) > 100.5
+        ORDER BY ABS(ROUND(SUM(p.pct)::NUMERIC, 2) - 100) DESC
+        LIMIT 1
+    ) AS x;
+
+    INSERT INTO quality.rule_results (
+        check_run_id, rule_name, severity, message, failing_count, sample_detail
+    )
+    VALUES (
+        v_run,
+        'structure_pct_sum_near_100',
+        CASE
+            WHEN (SELECT COUNT(*) FROM mart.content_structure_period_pct) = 0 THEN 'pass'
+            WHEN v_pct_fail > 0 THEN 'fail'
+            WHEN v_pct_warn > 0 THEN 'warn'
+            ELSE 'pass'
+        END,
+        'Struktuuri virn: SUM(pct) WARN väljaspool 99.5–100.5, FAIL väljaspool 99–101.',
+        CASE
+            WHEN v_pct_fail > 0 THEN v_pct_fail
+            WHEN v_pct_warn > 0 THEN v_pct_warn
+            ELSE 0
+        END,
         s
     );
 

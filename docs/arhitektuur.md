@@ -240,7 +240,7 @@ Kui päevad ei kattu, annab `check` sellest hoiatuse (nt featured päev on uuem 
 |------|------|---------|
 | Puuduv sisunimetus metaandmetes  | Pealkiri ei lähe `content_structure_period_pct` arvutusse (INNER JOIN meta). | Täita meta CSV; hinnata osakaalu; vajadusel käsitsi täiendus |
 | Liiga lühike analüüsiperiood  | Lühike periood võib moonutada tulemust - ühekordne suur "sündmus" | Vältida põhjuslike järelduste tegemist, analüüsi kordamine pikema perioodi jooksul tulevikus |
-| Unikaalse identifikaatori puudumine  | Andmete sidumine toimub pealkirjade järgi, mis võivad allikati erineda; osa esiletõstmise ridu jääb ilma `views_total`-ita (`views_note = N/A`) isegi kui viewers fail on olemas | Lisada andmevoogu andmekvaliteedi kontrollid; jälgida `viewers_match_pct`; vajadusel pealkirjade kaardistus tulevikus |
+| Unikaalse identifikaatori puudumine  | Andmete sidumine toimub pealkirjade järgi, mis võivad allikati erineda; osa esiletõstmise ridu jääb ilma `views_total`-ita (`views_note = N/A`) isegi kui viewers fail on olemas | `quality` + `check`: viimase päeva `viewers_match_pct` kus viewers andmed on (WARN &lt; 70%, FAIL &lt; 50%), `pair_count` (WARN &lt; 50, FAIL &lt; 20); vajadusel pealkirjade kaardistus tulevikus |
 
 ## Privaatsus ja turve
 

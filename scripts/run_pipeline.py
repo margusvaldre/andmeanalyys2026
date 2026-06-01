@@ -29,7 +29,9 @@ from db import get_connection
 from pipeline_check import run_pipeline_check
 
 SCRIPTS_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = SCRIPTS_DIR.parent
 TRANSFORM_SQL = SCRIPTS_DIR / "01_transform.sql"
+QUALITY_INIT_SQL = PROJECT_ROOT / "init" / "07_quality_objects.sql"
 
 INGEST_STEPS = (
     "ingest_catalog_api.py",
@@ -86,6 +88,8 @@ def run_quality() -> int:
     try:
         with conn:
             with conn.cursor() as cur:
+                if QUALITY_INIT_SQL.is_file():
+                    cur.execute(QUALITY_INIT_SQL.read_text(encoding="utf-8"))
                 cur.execute("SELECT quality.run_checks(%s)", ("run_pipeline.py",))
                 run_id = cur.fetchone()[0]
                 cur.execute(
