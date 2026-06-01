@@ -11,7 +11,9 @@ params:
   - views_total
   - in_catalog
   - primary_category_name
-  order_desc: true
+  order_by_cols:
+  - '["prominence_score_total", false]'
+  order_desc: false
   row_limit: 20
 cache_timeout: 30
 uuid: caaaaaaa-aaaa-4aaa-8aaa-000000000004
