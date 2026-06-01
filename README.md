@@ -15,7 +15,7 @@ copy .env.example .env
 docker compose up -d --build
 ```
 
-Scheduler käivitab iga päev kell **06:00** (Europe/Tallinn) käsu `run-all` (arhiivid, kataloog, vaadatavus, esiletõstmine, **meta CSV**, transform, andmekvaliteedi kontrollid). Vaadatavuse CSV peab enne olema kaustas `data/viewers/`. Iga edukas kataloogi ja esiletõstmise ingest salvestab päeva arhiivi kaustadesse `data/catalog_daily/` ja `data/featured/` — uus keskkond laeb need `run-all` alguses samamoodi nagu viewers CSV-sid.
+Scheduler käivitab iga päev kell **06:00** (Europe/Tallinn) käsu `run-all` (API, vaadatavus, esiletõstmine, **meta CSV**, transform, quality, **check** — **ilma arhiivide taastamiseta**). WARN logitakse, kuid toru jätkub; FAIL peatab. Vaadatavuse CSV peab enne olema kaustas `data/viewers/`. Iga edukas kataloogi ja esiletõstmise ingest **kirjutab** päeva varukoopia CSV kaustadesse `data/catalog_daily/` ja `data/featured/`; uus andmebaas laeb need üks kord käsuga `ingest-archives`.
 
 Logid:
 
@@ -46,10 +46,11 @@ copy .env.example .env
 docker compose down -v
 docker compose up -d --build
 docker compose ps
+docker compose exec pipeline python scripts/run_pipeline.py ingest-archives
 docker compose exec pipeline python scripts/run_pipeline.py run-all
 ```
 
-Oodatav `run-all` lõpp: `mart.dim_content` tuhandeid ridu, `v_featured_viewership` sadu ridu, kvaliteedikontrollid läbisid. Seejärel Superset: http://localhost:8089 → dashboard **Jupiteri analüüs**.
+Oodatav `run-all` lõpp: `mart.dim_content` tuhandeid ridu, `v_featured_viewership` sadu ridu, quality ja check (võib olla WARN, nt päevade kattumine). Seejärel Superset: http://localhost:8089 → dashboard **Jupiteri analüüs**.
 
 **Olemasolev andmebaas** (nt kloonitud repo enne meta CSV-d) — käivita käsitsi kõik täiendavad skriptid (vt allpool jaotist „Vana andmebaas”).
 
@@ -89,7 +90,7 @@ Kontrolli, et andmevoog on terviklik (pärast `run-all`):
 docker compose exec pipeline python scripts/run_pipeline.py check
 ```
 
-`check` on read-only: kontrollib faile, staging/mart ridu ja Superseti vaateid. Kui on ainult hoiatusi (nt erinev featured/viewers päev või weekly ilma arhiivita), exit 0; `--strict` loeb WARN-id veaks.
+`check` on read-only: kontrollib faile, staging/mart ridu ja Superseti vaateid (sh **TOP vaate globaalne limiit** — kas `v_superset_featured_top` LIMIT 500 võib moonutada perioodi TOP 20). Kui on ainult hoiatusi (nt erinev featured/viewers päev või weekly ilma arhiivita), exit 0; `--strict` loeb WARN-id veaks.
 
 ### Vana andmebaas — käsitsi skeemi täiendamine
 
@@ -162,7 +163,7 @@ docker compose exec db psql -U praktikum -d praktikum -c "SELECT * FROM quality.
 | `init/03_catalog_incremental.sql` | `staging.catalog` + pealkirja muutuste logi |
 | `scripts/catalog_api.py` | API lugemine (kasutab ingest_catalog_api) |
 | `scripts/ingest_catalog_api.py` | API → `staging.catalog` + `staging.catalog_daily` + CSV arhiiv |
-| `scripts/ingest_daily_archives.py` | `data/featured/` + `data/catalog_daily/` → staging |
+| `scripts/ingest_daily_archives.py` | Varukoopia CSV → staging (`ingest-archives`; ükshaaval, mitte run-all) |
 | `scripts/daily_archive.py` | Arhiivi eksport/import loogika |
 | `scripts/ingest_viewers_csv.py` | CSV → `staging.viewers_raw` |
 | `scripts/prominence_api.py` | Esiletõstmise skooride arvutus API-st |
@@ -176,6 +177,6 @@ docker compose exec db psql -U praktikum -d praktikum -c "SELECT * FROM quality.
 | `init/08_metadata_staging.sql` | `staging.content_metadata`, `staging.catalog_daily`, viitetabelid, `mart.content_structure_period_pct` |
 | `scripts/02_quality_checks.sql` | Käsitsi: `SELECT quality.run_checks(...)` (vt faili sisu) |
 | `scripts/pipeline_check.py` | Read-only toru kontroll (`run_pipeline.py check`) |
-| `scripts/run_pipeline.py` | `ingest-*`, `transform`, `quality`, `check`, `run-all` |
+| `scripts/run_pipeline.py` | `ingest-*`, `transform`, `quality`, `check`, `run-all` (lõpus check) |
 | `docs/arhitektuur.md` | Äriküsimus ja andmevoog |
 

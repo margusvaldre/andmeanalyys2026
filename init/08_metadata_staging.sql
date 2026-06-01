@@ -30,7 +30,8 @@ INSERT INTO mart.ref_origin_labels (origin_code, origin_label) VALUES
     ('USACAN', 'USA ja Kanada'),
     ('NORDICS', 'Põhjamaad'),
     ('COPRO', 'Kaastootmine'),
-    ('REST', 'Ülejäänud maailm')
+    ('REST', 'Ülejäänud maailm'),
+    ('UNKNOWN', 'Määramata (meta puudub)')
 ON CONFLICT (origin_code) DO NOTHING;
 
 CREATE TABLE IF NOT EXISTS mart.ref_content_type_labels (
@@ -50,7 +51,8 @@ INSERT INTO mart.ref_content_type_labels (content_type_code, content_type_label)
     ('INFOTAINMENT', 'Infotainment'),
     ('NEWS', 'Uudised'),
     ('ANIMA', 'Anima'),
-    ('EDU', 'Haridus')
+    ('EDU', 'Haridus'),
+    ('UNKNOWN', 'Määramata (meta puudub)')
 ON CONFLICT (content_type_code) DO NOTHING;
 
 -- Normaliseeri tüübikood (CSV sisaldab mõnikord kirjavea CULTRURE).

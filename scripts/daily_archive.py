@@ -4,8 +4,9 @@ Failid (nagu data/viewers/):
 - data/featured/jupiter_f_YYYYMMDD-YYYYMMDD.csv
 - data/catalog_daily/jupiter_c_YYYYMMDD-YYYYMMDD.csv
 
-Eksport käib pärast edukat API ingestit. Import käib run-all alguses,
-et uus keskkond saaks kogu seni kogunenud ajaloo kaasa.
+Eksport: pärast edukat API ingestit (üks päev korraga).
+Import: käsitsi `ingest-archives` — varukoopia taastamiseks (nt uus andmebaas).
+  Failid laetakse ükshaaval; cron/run-all arhiive ei loe.
 """
 
 from __future__ import annotations
@@ -13,8 +14,9 @@ from __future__ import annotations
 import csv
 import re
 import sys
+from dataclasses import dataclass
 from datetime import date, datetime
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Any
 
@@ -71,6 +73,14 @@ def catalog_archive_path(day: date) -> Path:
 
 def parse_yyyymmdd(value: str) -> date:
     return datetime.strptime(value, "%Y%m%d").date()
+
+
+def archive_day_from_path(path: Path, pattern: re.Pattern[str]) -> date | None:
+    """Päeva kuupäev failinimest (ühepäevase faili puhul start=end)."""
+    match = pattern.match(path.name)
+    if not match:
+        return None
+    return parse_yyyymmdd(match.group("start"))
 
 
 def open_csv_for_read(path: Path):
@@ -180,8 +190,68 @@ def export_catalog_daily_day(snapshot_date: date) -> int:
         conn.close()
 
 
-def _read_featured_file(path: Path) -> list[dict[str, Any]]:
+@dataclass
+class FileParseResult:
+    rows: list[dict[str, Any]]
+    skipped: int
+
+
+def _parse_featured_row(raw: dict[str, str], *, path_name: str, line_no: int) -> dict[str, Any] | None:
+    title = (raw.get("title") or "").strip()
+    if not title:
+        return None
+    try:
+        feature_date = date.fromisoformat((raw.get("feature_date") or "").strip())
+        score_raw = (raw.get("prominence_score_total") or "").strip().replace(" ", "")
+        if not score_raw:
+            raise ValueError("prominence_score_total on tühi")
+        return {
+            "feature_date": feature_date,
+            "title": title,
+            "prominence_score_total": Decimal(score_raw),
+            "poster_url": (raw.get("poster_url") or "").strip() or None,
+            "source_file": path_name,
+        }
+    except (ValueError, InvalidOperation) as exc:
+        print(
+            f"  {path_name} rida {line_no}: vahele jäetud ({exc})",
+            file=sys.stderr,
+        )
+        return None
+
+
+def _parse_catalog_row(raw: dict[str, str], *, path_name: str, line_no: int) -> dict[str, Any] | None:
+    catalog_id = (raw.get("catalog_id") or "").strip()
+    heading = (raw.get("heading") or "").strip()
+    if not catalog_id or not heading:
+        return None
+    try:
+        snapshot_date = date.fromisoformat((raw.get("snapshot_date") or "").strip())
+        source_url = (raw.get("source_url") or "").strip()
+        if not source_url:
+            raise ValueError("source_url on tühi")
+        return {
+            "snapshot_date": snapshot_date,
+            "catalog_id": catalog_id,
+            "schedule_start": (raw.get("schedule_start") or "").strip() or None,
+            "heading": heading,
+            "primary_category_name": (raw.get("primary_category_name") or "").strip() or None,
+            "primary_category_path": (raw.get("primary_category_path") or "").strip() or None,
+            "vertical_photo_url": (raw.get("vertical_photo_url") or "").strip() or None,
+            "source_url": source_url,
+            "source_file": path_name,
+        }
+    except ValueError as exc:
+        print(
+            f"  {path_name} rida {line_no}: vahele jäetud ({exc})",
+            file=sys.stderr,
+        )
+        return None
+
+
+def _read_featured_file(path: Path) -> FileParseResult:
     rows: list[dict[str, Any]] = []
+    skipped = 0
     with open_csv_for_read(path) as handle:
         reader = csv.DictReader(handle, delimiter=";")
         if not reader.fieldnames or not set(FEATURED_COLUMNS).issubset(
@@ -190,65 +260,133 @@ def _read_featured_file(path: Path) -> list[dict[str, Any]]:
             raise ValueError(
                 f"Failis {path.name} puuduvad veerud. Oodatud: {list(FEATURED_COLUMNS)}"
             )
-        for raw in reader:
-            title = (raw.get("title") or "").strip()
-            if not title:
-                continue
-            feature_date = date.fromisoformat((raw.get("feature_date") or "").strip())
-            score_raw = (raw.get("prominence_score_total") or "").strip().replace(" ", "")
-            rows.append(
-                {
-                    "feature_date": feature_date,
-                    "title": title,
-                    "prominence_score_total": Decimal(score_raw),
-                    "poster_url": (raw.get("poster_url") or "").strip() or None,
-                    "source_file": path.name,
-                }
-            )
-    return rows
+        for line_no, raw in enumerate(reader, start=2):
+            parsed = _parse_featured_row(raw, path_name=path.name, line_no=line_no)
+            if parsed is None:
+                skipped += 1
+            else:
+                rows.append(parsed)
+    return FileParseResult(rows=rows, skipped=skipped)
 
 
-def _read_catalog_file(path: Path) -> list[dict[str, Any]]:
+def _read_catalog_file(path: Path) -> FileParseResult:
     rows: list[dict[str, Any]] = []
+    skipped = 0
     with open_csv_for_read(path) as handle:
         reader = csv.DictReader(handle, delimiter=";")
         if not reader.fieldnames or not set(CATALOG_COLUMNS).issubset(set(reader.fieldnames)):
             raise ValueError(
                 f"Failis {path.name} puuduvad veerud. Oodatud: {list(CATALOG_COLUMNS)}"
             )
-        for raw in reader:
-            catalog_id = (raw.get("catalog_id") or "").strip()
-            heading = (raw.get("heading") or "").strip()
-            if not catalog_id or not heading:
-                continue
-            snapshot_date = date.fromisoformat((raw.get("snapshot_date") or "").strip())
-            rows.append(
-                {
-                    "snapshot_date": snapshot_date,
-                    "catalog_id": catalog_id,
-                    "schedule_start": (raw.get("schedule_start") or "").strip() or None,
-                    "heading": heading,
-                    "primary_category_name": (
-                        raw.get("primary_category_name") or ""
-                    ).strip()
-                    or None,
-                    "primary_category_path": (
-                        raw.get("primary_category_path") or ""
-                    ).strip()
-                    or None,
-                    "vertical_photo_url": (
-                        raw.get("vertical_photo_url") or ""
-                    ).strip()
-                    or None,
-                    "source_url": (raw.get("source_url") or "").strip() or "",
-                    "source_file": path.name,
-                }
-            )
-    return rows
+        for line_no, raw in enumerate(reader, start=2):
+            parsed = _parse_catalog_row(raw, path_name=path.name, line_no=line_no)
+            if parsed is None:
+                skipped += 1
+            else:
+                rows.append(parsed)
+    return FileParseResult(rows=rows, skipped=skipped)
 
 
-def ingest_featured_archive() -> int:
-    """Lae kõik data/featured/ CSV-d staging.featured_daily tabelisse."""
+def _load_existing_featured_dates(cur) -> set[date]:
+    cur.execute("SELECT DISTINCT feature_date FROM staging.featured_daily")
+    return {row[0] for row in cur.fetchall()}
+
+
+def _load_existing_catalog_dates(cur) -> set[date]:
+    cur.execute("SELECT DISTINCT snapshot_date FROM staging.catalog_daily")
+    return {row[0] for row in cur.fetchall()}
+
+
+def _insert_featured_rows(cur, rows: list[dict[str, Any]], *, run_id, loaded_at) -> int:
+    if not rows:
+        return 0
+    db_tuples = [
+        (
+            row["feature_date"],
+            row["title"],
+            row["prominence_score_total"],
+            row["poster_url"],
+            str(run_id),
+            loaded_at,
+        )
+        for row in rows
+    ]
+    execute_batch(
+        cur,
+        """
+        INSERT INTO staging.featured_daily (
+            feature_date,
+            title,
+            prominence_score_total,
+            poster_url,
+            run_id,
+            loaded_at
+        )
+        VALUES (%s, %s, %s, %s, %s, %s)
+        ON CONFLICT (feature_date, title) DO UPDATE SET
+            prominence_score_total = EXCLUDED.prominence_score_total,
+            poster_url = EXCLUDED.poster_url,
+            run_id = EXCLUDED.run_id,
+            loaded_at = EXCLUDED.loaded_at
+        """,
+        db_tuples,
+        page_size=500,
+    )
+    return len(db_tuples)
+
+
+def _insert_catalog_rows(cur, rows: list[dict[str, Any]], *, run_id, loaded_at) -> int:
+    if not rows:
+        return 0
+    db_tuples = [
+        (
+            row["snapshot_date"],
+            str(run_id),
+            row["catalog_id"],
+            row["schedule_start"],
+            row["heading"],
+            row["primary_category_name"],
+            row["primary_category_path"],
+            row["vertical_photo_url"],
+            row["source_url"],
+            loaded_at,
+        )
+        for row in rows
+    ]
+    execute_batch(
+        cur,
+        """
+        INSERT INTO staging.catalog_daily (
+            snapshot_date,
+            run_id,
+            catalog_id,
+            schedule_start,
+            heading,
+            primary_category_name,
+            primary_category_path,
+            vertical_photo_url,
+            source_url,
+            loaded_at
+        )
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        ON CONFLICT (snapshot_date, catalog_id) DO UPDATE SET
+            run_id = EXCLUDED.run_id,
+            schedule_start = EXCLUDED.schedule_start,
+            heading = EXCLUDED.heading,
+            primary_category_name = EXCLUDED.primary_category_name,
+            primary_category_path = EXCLUDED.primary_category_path,
+            vertical_photo_url = EXCLUDED.vertical_photo_url,
+            source_url = EXCLUDED.source_url,
+            loaded_at = EXCLUDED.loaded_at
+        """,
+        db_tuples,
+        page_size=500,
+    )
+    return len(db_tuples)
+
+
+def ingest_featured_archive(*, missing_only: bool = False) -> int:
+    """Lae featured arhiivid ükshaaval staging.featured_daily tabelisse."""
     if not FEATURED_DIR.exists():
         FEATURED_DIR.mkdir(parents=True, exist_ok=True)
         print(f"Featured arhiiv: kaust {FEATURED_DIR} puudus — loodud, faile pole.")
@@ -263,68 +401,76 @@ def ingest_featured_archive() -> int:
         print(f"Featured arhiiv: faile ei leitud kaustast {FEATURED_DIR}")
         return 0
 
-    merged: dict[tuple[date, str], dict[str, Any]] = {}
-    for path in files:
-        parsed = _read_featured_file(path)
-        print(f"{path.name}: {len(parsed)} rida")
-        for row in parsed:
-            merged[(row["feature_date"], row["title"])] = row
-
-    rows = list(merged.values())
-    print(f"Featured arhiiv: unikaalseid ridu kokku {len(rows)}")
-
     conn = get_connection()
     run_id = None
-    now = utc_now()
+    loaded_at = utc_now()
+    total_rows = 0
+    total_skipped = 0
+    files_loaded = 0
     try:
         with conn:
             with conn.cursor() as cur:
+                existing = _load_existing_featured_dates(cur) if missing_only else set()
                 run_id = start_run(
                     cur,
                     source_name="jupiter_featured_archive_csv",
-                    row_count=len(rows),
+                    row_count=None,
                 )
-                db_tuples = [
-                    (
-                        row["feature_date"],
-                        row["title"],
-                        row["prominence_score_total"],
-                        row["poster_url"],
-                        str(run_id),
-                        now,
-                    )
-                    for row in rows
-                ]
-                if db_tuples:
-                    execute_batch(
-                        cur,
-                        """
-                        INSERT INTO staging.featured_daily (
-                            feature_date,
-                            title,
-                            prominence_score_total,
-                            poster_url,
-                            run_id,
-                            loaded_at
+                for path in files:
+                    archive_day = archive_day_from_path(path, FEATURED_FILENAME)
+                    if archive_day is None:
+                        continue
+                    if missing_only and archive_day in existing:
+                        print(f"{path.name}: juba laetud ({archive_day}), vahele")
+                        continue
+                    try:
+                        result = _read_featured_file(path)
+                    except ValueError as exc:
+                        print(f"Featured arhiiv: {exc}", file=sys.stderr)
+                        return 1
+                    if not result.rows:
+                        print(
+                            f"{path.name}: kehtivaid ridu pole",
+                            file=sys.stderr,
                         )
-                        VALUES (%s, %s, %s, %s, %s, %s)
-                        ON CONFLICT (feature_date, title) DO UPDATE SET
-                            prominence_score_total = EXCLUDED.prominence_score_total,
-                            poster_url = EXCLUDED.poster_url,
-                            run_id = EXCLUDED.run_id,
-                            loaded_at = EXCLUDED.loaded_at
-                        """,
-                        db_tuples,
-                        page_size=500,
+                        return 1
+                    total_skipped += result.skipped
+                    suffix = f" ({result.skipped} vahele jäetud)" if result.skipped else ""
+                    inserted = _insert_featured_rows(
+                        cur, result.rows, run_id=run_id, loaded_at=loaded_at
                     )
+                    total_rows += inserted
+                    files_loaded += 1
+                    print(f"{path.name}: {inserted} rida laaditud{suffix}")
+
+                if missing_only and not files_loaded:
+                    print("Featured arhiiv: uusi faile polnud (kõik päevad juba laetud).")
+                    finish_run(
+                        cur,
+                        run_id=run_id,
+                        status="success",
+                        row_count=0,
+                        message="Featured arhiiv: uusi päevi polnud.",
+                    )
+                    return 0
+
+                if files and files_loaded == 0:
+                    print(
+                        "Featured arhiiv: ühtegi faili ei laaditud.",
+                        file=sys.stderr,
+                    )
+                    return 1
+
                 finish_run(
                     cur,
                     run_id=run_id,
                     status="success",
-                    row_count=len(db_tuples),
-                    message="Featured arhiiv CSV-d laaditud.",
+                    row_count=total_rows,
+                    message=f"Featured arhiiv: {files_loaded} faili, {total_rows} rida.",
                 )
-        print(f"Featured arhiiv ingest valmis. run_id={run_id}")
+        if total_skipped:
+            print(f"Featured arhiiv: kokku {total_skipped} rida vahele jäetud.")
+        print(f"Featured arhiiv ingest valmis. run_id={run_id}, {total_rows} rida.")
         return 0
     except Exception as exc:
         if run_id is not None:
@@ -343,8 +489,8 @@ def ingest_featured_archive() -> int:
         conn.close()
 
 
-def ingest_catalog_daily_archive() -> int:
-    """Lae kõik data/catalog_daily/ CSV-d staging.catalog_daily tabelisse."""
+def ingest_catalog_daily_archive(*, missing_only: bool = False) -> int:
+    """Lae catalog_daily arhiivid ükshaaval staging.catalog_daily tabelisse."""
     if not CATALOG_DAILY_DIR.exists():
         CATALOG_DAILY_DIR.mkdir(parents=True, exist_ok=True)
         print(f"Catalog arhiiv: kaust {CATALOG_DAILY_DIR} puudus — loodud, faile pole.")
@@ -359,80 +505,76 @@ def ingest_catalog_daily_archive() -> int:
         print(f"Catalog arhiiv: faile ei leitud kaustast {CATALOG_DAILY_DIR}")
         return 0
 
-    merged: dict[tuple[date, str], dict[str, Any]] = {}
-    for path in files:
-        parsed = _read_catalog_file(path)
-        print(f"{path.name}: {len(parsed)} rida")
-        for row in parsed:
-            merged[(row["snapshot_date"], row["catalog_id"])] = row
-
-    rows = list(merged.values())
-    print(f"Catalog arhiiv: unikaalseid ridu kokku {len(rows)}")
-
     conn = get_connection()
     run_id = None
-    now = utc_now()
+    loaded_at = utc_now()
+    total_rows = 0
+    total_skipped = 0
+    files_loaded = 0
     try:
         with conn:
             with conn.cursor() as cur:
+                existing = _load_existing_catalog_dates(cur) if missing_only else set()
                 run_id = start_run(
                     cur,
                     source_name="jupiter_catalog_daily_archive_csv",
-                    row_count=len(rows),
+                    row_count=None,
                 )
-                db_tuples = [
-                    (
-                        row["snapshot_date"],
-                        str(run_id),
-                        row["catalog_id"],
-                        row["schedule_start"],
-                        row["heading"],
-                        row["primary_category_name"],
-                        row["primary_category_path"],
-                        row["vertical_photo_url"],
-                        row["source_url"],
-                        now,
-                    )
-                    for row in rows
-                ]
-                if db_tuples:
-                    execute_batch(
-                        cur,
-                        """
-                        INSERT INTO staging.catalog_daily (
-                            snapshot_date,
-                            run_id,
-                            catalog_id,
-                            schedule_start,
-                            heading,
-                            primary_category_name,
-                            primary_category_path,
-                            vertical_photo_url,
-                            source_url,
-                            loaded_at
+                for path in files:
+                    archive_day = archive_day_from_path(path, CATALOG_FILENAME)
+                    if archive_day is None:
+                        continue
+                    if missing_only and archive_day in existing:
+                        print(f"{path.name}: juba laetud ({archive_day}), vahele")
+                        continue
+                    try:
+                        result = _read_catalog_file(path)
+                    except ValueError as exc:
+                        print(f"Catalog arhiiv: {exc}", file=sys.stderr)
+                        return 1
+                    if not result.rows:
+                        print(
+                            f"{path.name}: kehtivaid ridu pole",
+                            file=sys.stderr,
                         )
-                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                        ON CONFLICT (snapshot_date, catalog_id) DO UPDATE SET
-                            run_id = EXCLUDED.run_id,
-                            schedule_start = EXCLUDED.schedule_start,
-                            heading = EXCLUDED.heading,
-                            primary_category_name = EXCLUDED.primary_category_name,
-                            primary_category_path = EXCLUDED.primary_category_path,
-                            vertical_photo_url = EXCLUDED.vertical_photo_url,
-                            source_url = EXCLUDED.source_url,
-                            loaded_at = EXCLUDED.loaded_at
-                        """,
-                        db_tuples,
-                        page_size=500,
+                        return 1
+                    total_skipped += result.skipped
+                    suffix = f" ({result.skipped} vahele jäetud)" if result.skipped else ""
+                    inserted = _insert_catalog_rows(
+                        cur, result.rows, run_id=run_id, loaded_at=loaded_at
                     )
+                    total_rows += inserted
+                    files_loaded += 1
+                    print(f"{path.name}: {inserted} rida laaditud{suffix}")
+
+                if missing_only and not files_loaded:
+                    print("Catalog arhiiv: uusi faile polnud (kõik päevad juba laetud).")
+                    finish_run(
+                        cur,
+                        run_id=run_id,
+                        status="success",
+                        row_count=0,
+                        message="Catalog arhiiv: uusi päevi polnud.",
+                    )
+                    return 0
+
+                if files and files_loaded == 0:
+                    print(
+                        "Catalog arhiiv: ühtegi faili ei laaditud.",
+                        file=sys.stderr,
+                    )
+                    return 1
+
                 finish_run(
                     cur,
                     run_id=run_id,
                     status="success",
-                    row_count=len(db_tuples),
-                    message="Catalog daily arhiiv CSV-d laaditud.",
+                    row_count=total_rows,
+                    message=f"Catalog arhiiv: {files_loaded} faili, {total_rows} rida.",
                 )
-        print(f"Catalog arhiiv ingest valmis. run_id={run_id}")
+        if total_skipped:
+            print(f"Catalog arhiiv: kokku {total_skipped} rida vahele jäetud.")
+        print(f"Catalog arhiiv ingest valmis. run_id={run_id}, {total_rows} rida.")
         return 0
     except Exception as exc:
         if run_id is not None:
@@ -451,10 +593,12 @@ def ingest_catalog_daily_archive() -> int:
         conn.close()
 
 
-def ingest_all_archives() -> int:
-    """Lae featured ja catalog_daily arhiivid."""
+def ingest_all_archives(*, missing_only: bool = False) -> int:
+    """Lae featured ja catalog_daily arhiivid (ükshaaval)."""
+    mode = "ainult puuduvad päevad" if missing_only else "kõik failid"
+    print(f"Arhiivide import ({mode}).")
     for fn in (ingest_featured_archive, ingest_catalog_daily_archive):
-        code = fn()
+        code = fn(missing_only=missing_only)
         if code != 0:
             return code
     return 0

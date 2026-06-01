@@ -93,7 +93,7 @@ Vaata ka [`docs/superset.md`](superset.md) (jaotis *Esiletõstmine ja vaadatavus
 | ERR videokataloog | HTTP API | Jah, iga päev | Kataloogi koosseis (`catalog_id`, pealkiri, kategooria) |
 | Jupiteri kategoorialehed (esiletõstmine) | HTTP API + konfig CSV | Jah, iga päev | Esiletõstmise skoor (`data/prominence/*.csv`) |
 | Vaadatavus | CSV (`data/viewers/`) | Jah, iga päev | Päevafail `jupiter_d_*.csv` ja nädalafail `jupiter_w_*.csv` laetakse stagingusse ning transform kasutab mõlemat (`daily` + `weekly`) |
-| Esiletõstmise arhiiv | CSV (`data/featured/`) | Iga cron-päev | `jupiter_f_YYYYMMDD-YYYYMMDD.csv` — eksport pärast API ingestit; `run-all` laeb enne API-d |
+| Esiletõstmise arhiiv | CSV (`data/featured/`) | Iga cron-päev | `jupiter_f_YYYYMMDD-YYYYMMDD.csv` — eksport pärast API ingestit; taastamine käsuga `ingest-archives` (uus DB) |
 | Kataloogi snapshot arhiiv | CSV (`data/catalog_daily/`) | Iga cron-päev | `jupiter_c_YYYYMMDD-YYYYMMDD.csv` — sama loogika |
 | Sisu metaandmed | CSV (`data/metadata/jupiter_metadata.csv`) | ~nädalas | **Sisutüüp** ja **päritolumaa** pealkirja kohta (küsimus 1 diagrammid) |
 
@@ -109,8 +109,8 @@ flowchart LR
     csvMeta[Meta CSV] --> ingestMeta[ingest_metadata_csv]
     configProminence[data/prominence/*.csv] --> ingestFeatured
 
-    csvFeatured[data/featured CSV] --> ingestArchives[ingest_daily_archives]
-    csvCatalog[data/catalog_daily CSV] --> ingestArchives
+    csvFeatured[data/featured CSV] -.->|ingest-archives käsitsi| ingestArchives[ingest_daily_archives]
+    csvCatalog[data/catalog_daily CSV] -.-> ingestArchives
     ingestArchives --> stagingFeatured[(staging.featured_daily)]
     ingestArchives --> stagingCatalogDaily[(staging.catalog_daily)]
 
@@ -144,7 +144,6 @@ flowchart LR
     matchDaily --> superset
 
     scheduler[Scheduler cron 06:00] --> runAll[run_pipeline.py run-all]
-    runAll --> ingestArchives
     runAll --> ingestCatalog
     runAll --> ingestViewers
     runAll --> ingestFeatured
@@ -210,7 +209,7 @@ Transform kustutab mart tabelid ja täidab need uuesti (`scripts/01_transform.sq
 | `scheduler/crontab` | Iga päev kell **06:00** → `python scripts/run_pipeline.py run-all` (sh transform ja `quality.run_checks`) |
 | `logs/pipeline.log` | Scheduleri standardväljund |
 
-Enne cron'i peavad vajalikud vaadatavuse failid (`jupiter_d_*.csv` ja vajadusel `jupiter_w_*.csv`) olema kaustas `data/viewers/`. Pärast iga edukat kataloogi ja featured ingestit tekivad vastavad arhiivfailid; tiimikaaslane saab need gitist kaasa ja `run-all` täidab ajaloo enne tänase API uuendust.
+Enne cron'i peavad vajalikud vaadatavuse failid (`jupiter_d_*.csv` ja vajadusel `jupiter_w_*.csv`) olema kaustas `data/viewers/`. Pärast iga edukat kataloogi ja featured ingestit tekivad vastavad arhiivfailid (varukoopia gitis). **Uus andmebaas:** `ingest-archives --all`, seejärel `run-all`. Olemasolev DB: vajadusel `ingest-archives --missing-only` (ainult puuduvad päevad).
 
 ## Tööjaotus
 

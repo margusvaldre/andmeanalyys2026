@@ -367,6 +367,14 @@ WHERE in_featured
 GROUP BY activity_date;
 
 -- Struktuuri protsendid meta CSV põhjal (päev + nädal).
+INSERT INTO mart.ref_origin_labels (origin_code, origin_label) VALUES
+    ('UNKNOWN', 'Määramata (meta puudub)')
+ON CONFLICT (origin_code) DO NOTHING;
+
+INSERT INTO mart.ref_content_type_labels (content_type_code, content_type_label) VALUES
+    ('UNKNOWN', 'Määramata (meta puudub)')
+ON CONFLICT (content_type_code) DO NOTHING;
+
 WITH meta AS (
     SELECT
         mart.normalize_title(title) AS title_normalized,
@@ -388,6 +396,7 @@ viewers_daily_latest AS (
         view_date,
         title,
         mart.normalize_title(title) AS title_normalized,
+        content_type,
         total
     FROM staging.viewers_raw
     WHERE grain = 'daily'
@@ -399,6 +408,7 @@ viewers_weekly_latest AS (
         period_end,
         title,
         mart.normalize_title(title) AS title_normalized,
+        content_type,
         total
     FROM staging.viewers_raw
     WHERE grain = 'weekly'
@@ -426,7 +436,7 @@ periods AS (
     FROM (SELECT DISTINCT period_start, period_end FROM viewers_weekly_latest) AS w
 ),
 structure_counts AS (
-    -- Kataloog: pealkirjade arv
+    -- Kataloog: pealkirjade arv (meta puudub -> UNKNOWN).
     SELECT
         p.grain,
         p.period_start,
@@ -434,8 +444,8 @@ structure_counts AS (
         p.activity_date,
         'catalog'::TEXT AS structure_type,
         'origin_country'::TEXT AS dimension,
-        m.origin_code AS category_code,
-        COALESCE(ol.origin_label, m.origin_code) AS category_label,
+        COALESCE(m.origin_code, 'UNKNOWN') AS category_code,
+        COALESCE(ol.origin_label, 'Määramata (meta puudub)') AS category_label,
         COUNT(*)::NUMERIC AS measure_value
     FROM periods AS p
     INNER JOIN catalog_daily_norm AS c
@@ -443,11 +453,17 @@ structure_counts AS (
             (p.grain = 'daily' AND c.snapshot_date = p.period_start)
             OR (p.grain = 'weekly' AND c.snapshot_date BETWEEN p.period_start AND p.period_end)
         )
-    INNER JOIN meta AS m
+    LEFT JOIN meta AS m
         ON c.title_normalized = m.title_normalized
     LEFT JOIN mart.ref_origin_labels AS ol
-        ON m.origin_code = ol.origin_code
-    GROUP BY p.grain, p.period_start, p.period_end, p.activity_date, m.origin_code, ol.origin_label
+        ON COALESCE(m.origin_code, 'UNKNOWN') = ol.origin_code
+    GROUP BY
+        p.grain,
+        p.period_start,
+        p.period_end,
+        p.activity_date,
+        COALESCE(m.origin_code, 'UNKNOWN'),
+        COALESCE(ol.origin_label, 'Määramata (meta puudub)')
 
     UNION ALL
 
@@ -458,8 +474,8 @@ structure_counts AS (
         p.activity_date,
         'catalog',
         'content_type',
-        m.content_type_code,
-        COALESCE(tl.content_type_label, m.content_type_code),
+        COALESCE(m.content_type_code, 'UNKNOWN'),
+        COALESCE(tl.content_type_label, 'Määramata (meta puudub)'),
         COUNT(*)::NUMERIC
     FROM periods AS p
     INNER JOIN catalog_daily_norm AS c
@@ -467,15 +483,21 @@ structure_counts AS (
             (p.grain = 'daily' AND c.snapshot_date = p.period_start)
             OR (p.grain = 'weekly' AND c.snapshot_date BETWEEN p.period_start AND p.period_end)
         )
-    INNER JOIN meta AS m
+    LEFT JOIN meta AS m
         ON c.title_normalized = m.title_normalized
     LEFT JOIN mart.ref_content_type_labels AS tl
-        ON m.content_type_code = tl.content_type_code
-    GROUP BY p.grain, p.period_start, p.period_end, p.activity_date, m.content_type_code, tl.content_type_label
+        ON COALESCE(m.content_type_code, 'UNKNOWN') = tl.content_type_code
+    GROUP BY
+        p.grain,
+        p.period_start,
+        p.period_end,
+        p.activity_date,
+        COALESCE(m.content_type_code, 'UNKNOWN'),
+        COALESCE(tl.content_type_label, 'Määramata (meta puudub)')
 
     UNION ALL
 
-    -- Esitatud: päev/ nädal summa.
+    -- Esitatud: päev / nädal summa (meta puudub -> UNKNOWN).
     SELECT
         p.grain,
         p.period_start,
@@ -483,8 +505,8 @@ structure_counts AS (
         p.activity_date,
         'presented',
         'origin_country',
-        m.origin_code,
-        COALESCE(ol.origin_label, m.origin_code),
+        COALESCE(m.origin_code, 'UNKNOWN'),
+        COALESCE(ol.origin_label, 'Määramata (meta puudub)'),
         SUM(f.prominence_score_total)::NUMERIC
     FROM periods AS p
     INNER JOIN staging.featured_daily AS f
@@ -492,12 +514,18 @@ structure_counts AS (
             (p.grain = 'daily' AND f.feature_date = p.period_start)
             OR (p.grain = 'weekly' AND f.feature_date BETWEEN p.period_start AND p.period_end)
         )
-    INNER JOIN meta AS m
+    LEFT JOIN meta AS m
         ON mart.normalize_title(f.title) = m.title_normalized
     LEFT JOIN mart.ref_origin_labels AS ol
-        ON m.origin_code = ol.origin_code
+        ON COALESCE(m.origin_code, 'UNKNOWN') = ol.origin_code
     WHERE f.prominence_score_total IS NOT NULL
-    GROUP BY p.grain, p.period_start, p.period_end, p.activity_date, m.origin_code, ol.origin_label
+    GROUP BY
+        p.grain,
+        p.period_start,
+        p.period_end,
+        p.activity_date,
+        COALESCE(m.origin_code, 'UNKNOWN'),
+        COALESCE(ol.origin_label, 'Määramata (meta puudub)')
 
     UNION ALL
 
@@ -508,8 +536,8 @@ structure_counts AS (
         p.activity_date,
         'presented',
         'content_type',
-        m.content_type_code,
-        COALESCE(tl.content_type_label, m.content_type_code),
+        COALESCE(m.content_type_code, 'UNKNOWN'),
+        COALESCE(tl.content_type_label, 'Määramata (meta puudub)'),
         SUM(f.prominence_score_total)::NUMERIC
     FROM periods AS p
     INNER JOIN staging.featured_daily AS f
@@ -517,16 +545,22 @@ structure_counts AS (
             (p.grain = 'daily' AND f.feature_date = p.period_start)
             OR (p.grain = 'weekly' AND f.feature_date BETWEEN p.period_start AND p.period_end)
         )
-    INNER JOIN meta AS m
+    LEFT JOIN meta AS m
         ON mart.normalize_title(f.title) = m.title_normalized
     LEFT JOIN mart.ref_content_type_labels AS tl
-        ON m.content_type_code = tl.content_type_code
+        ON COALESCE(m.content_type_code, 'UNKNOWN') = tl.content_type_code
     WHERE f.prominence_score_total IS NOT NULL
-    GROUP BY p.grain, p.period_start, p.period_end, p.activity_date, m.content_type_code, tl.content_type_label
+    GROUP BY
+        p.grain,
+        p.period_start,
+        p.period_end,
+        p.activity_date,
+        COALESCE(m.content_type_code, 'UNKNOWN'),
+        COALESCE(tl.content_type_label, 'Määramata (meta puudub)')
 
     UNION ALL
 
-    -- Vaadatud: päeval daily CSV, nädalal weekly CSV.
+    -- Vaadatud: päeval daily CSV, nädalal weekly CSV (meta puudub -> UNKNOWN).
     SELECT
         p.grain,
         p.period_start,
@@ -534,8 +568,8 @@ structure_counts AS (
         p.activity_date,
         'viewed',
         'origin_country',
-        m.origin_code,
-        COALESCE(ol.origin_label, m.origin_code),
+        COALESCE(m.origin_code, 'UNKNOWN'),
+        COALESCE(ol.origin_label, 'Määramata (meta puudub)'),
         SUM(v.total)::NUMERIC
     FROM periods AS p
     INNER JOIN (
@@ -544,6 +578,7 @@ structure_counts AS (
             view_date AS period_start,
             view_date AS period_end,
             title_normalized,
+            content_type,
             total
         FROM viewers_daily_latest
         UNION ALL
@@ -552,17 +587,24 @@ structure_counts AS (
             period_start,
             period_end,
             title_normalized,
+            content_type,
             total
         FROM viewers_weekly_latest
     ) AS v
         ON p.grain = v.grain
        AND p.period_start = v.period_start
        AND p.period_end = v.period_end
-    INNER JOIN meta AS m
+    LEFT JOIN meta AS m
         ON v.title_normalized = m.title_normalized
     LEFT JOIN mart.ref_origin_labels AS ol
-        ON m.origin_code = ol.origin_code
-    GROUP BY p.grain, p.period_start, p.period_end, p.activity_date, m.origin_code, ol.origin_label
+        ON COALESCE(m.origin_code, 'UNKNOWN') = ol.origin_code
+    GROUP BY
+        p.grain,
+        p.period_start,
+        p.period_end,
+        p.activity_date,
+        COALESCE(m.origin_code, 'UNKNOWN'),
+        COALESCE(ol.origin_label, 'Määramata (meta puudub)')
 
     UNION ALL
 
@@ -573,8 +615,19 @@ structure_counts AS (
         p.activity_date,
         'viewed',
         'content_type',
-        m.content_type_code,
-        COALESCE(tl.content_type_label, m.content_type_code),
+        COALESCE(
+            m.content_type_code,
+            NULLIF(mart.normalize_content_type_code(v.content_type), ''),
+            'UNKNOWN'
+        ),
+        COALESCE(
+            tl.content_type_label,
+            COALESCE(
+                m.content_type_code,
+                NULLIF(mart.normalize_content_type_code(v.content_type), ''),
+                'Määramata (meta puudub)'
+            )
+        ),
         SUM(v.total)::NUMERIC
     FROM periods AS p
     INNER JOIN (
@@ -583,6 +636,7 @@ structure_counts AS (
             view_date AS period_start,
             view_date AS period_end,
             title_normalized,
+            content_type,
             total
         FROM viewers_daily_latest
         UNION ALL
@@ -591,17 +645,39 @@ structure_counts AS (
             period_start,
             period_end,
             title_normalized,
+            content_type,
             total
         FROM viewers_weekly_latest
     ) AS v
         ON p.grain = v.grain
        AND p.period_start = v.period_start
        AND p.period_end = v.period_end
-    INNER JOIN meta AS m
+    LEFT JOIN meta AS m
         ON v.title_normalized = m.title_normalized
     LEFT JOIN mart.ref_content_type_labels AS tl
-        ON m.content_type_code = tl.content_type_code
-    GROUP BY p.grain, p.period_start, p.period_end, p.activity_date, m.content_type_code, tl.content_type_label
+        ON COALESCE(
+            m.content_type_code,
+            NULLIF(mart.normalize_content_type_code(v.content_type), ''),
+            'UNKNOWN'
+        ) = tl.content_type_code
+    GROUP BY
+        p.grain,
+        p.period_start,
+        p.period_end,
+        p.activity_date,
+        COALESCE(
+            m.content_type_code,
+            NULLIF(mart.normalize_content_type_code(v.content_type), ''),
+            'UNKNOWN'
+        ),
+        COALESCE(
+            tl.content_type_label,
+            COALESCE(
+                m.content_type_code,
+                NULLIF(mart.normalize_content_type_code(v.content_type), ''),
+                'Määramata (meta puudub)'
+            )
+        )
 ),
 structure_totals AS (
     SELECT
@@ -952,6 +1028,7 @@ SELECT
         WHEN 'NORDICS' THEN 5
         WHEN 'COPRO' THEN 6
         WHEN 'USACAN' THEN 7
+        WHEN 'UNKNOWN' THEN 98
         ELSE 99
     END AS segment_sort,
     measure_value,
@@ -992,6 +1069,7 @@ SELECT
         WHEN 'NEWS' THEN 10
         WHEN 'ANIMA' THEN 11
         WHEN 'EDU' THEN 12
+        WHEN 'UNKNOWN' THEN 98
         ELSE 99
     END AS segment_sort,
     measure_value,
@@ -1012,9 +1090,7 @@ SELECT
     v.views_total,
     v.in_catalog,
     v.primary_category_name
-FROM mart.v_featured_viewership_period AS v
-ORDER BY v.prominence_score_total DESC
-LIMIT 500;
+FROM mart.v_featured_viewership_period AS v;
 
 CREATE OR REPLACE VIEW mart.v_superset_featured_viewership AS
 SELECT

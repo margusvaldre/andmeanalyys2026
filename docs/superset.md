@@ -33,7 +33,7 @@ Veendu, et mart andmed on olemas:
 docker compose exec pipeline python scripts/run_pipeline.py run-all
 ```
 
-`run-all` käivitab: päevased arhiivid (`data/featured/`, `data/catalog_daily/`), seejärel kataloog, viewers, featured API, meta CSV, transform ja `quality.run_checks`.
+`run-all` käivitab: kataloog, viewers, featured API, meta CSV, transform, `quality.run_checks` ja `check` (arhiive ei lae). Uus andmebaas: enne seda `ingest-archives` (vt README).
 
 **Uus andmebaas** (esimene `docker compose up`): skeem tuleb `init/01` … `init/10`; `10_superset_views.sql` käib automaatselt. Kui DB loodi enne uuemaid init-faile:
 
@@ -56,7 +56,7 @@ Menüüst: **Dashboards** → **Jupiteri analüüs**
 | Top esiletõstetud | `mart.v_superset_featured_top` | Päeva/nädala TOP (row_limit 20 chartis); vaated veerus `views_total` (tühi = puudub) |
 | Korrelatsioon (päev/nädal) | `mart.v_superset_featured_correlation` | 2 — Pearson + paaride arv |
 
-Vaated `v_superset_*` põhinevad `mart.content_structure_period_pct` või `mart.v_featured_viewership_period` (päev + nädal).
+Vaated `v_superset_*` põhinevad `mart.content_structure_period_pct` või `mart.v_featured_viewership_period` (päev + nädal). Struktuuri % loendab ka pealkirju **ilma meta CSV-ta** — segment `Määramata (meta puudub)` (`UNKNOWN`); vaadatud sisutüübil kasutatakse meta puudumisel viewers CSV `content_type` (nt `S`, `Y`).
 
 **Native filtrid** ei impordita automaatselt — loo need käsitsi (vt allpool). Pärast importi on dashboard ilma filtriteta kuni seadistad need UI-s.
 
@@ -206,6 +206,7 @@ postgresql+psycopg2://praktikum:praktikum@db:5432/praktikum
 | Dashboard puudub | `docker compose logs superset-import`; seejärel `docker compose up -d superset` |
 | Tühi struktuurgraafik | `run-all`; `SELECT COUNT(*) FROM mart.content_structure_period_pct`; meta CSV laetud? |
 | Tühi „Vaadatud” rida virnas | Lisa viewers CSV sama `feature_date` jaoks; kontrolli `mart.title_match_daily` |
+| TOP näitab vale järjekorda või &lt; 20 rida | Chart `row_limit` + dashboardi perioodifiltrid; `run_pipeline.py check` → **TOP vaate globaalne limiit** (kui vaates on taas globaalne LIMIT) |
 | TOPis `views_total` tühi | **Selle pealkirja** jaoks viewers reas puudub (pealkirja mismatch); kontrolli `viewers_match_pct` graafikul **Ühenduste kvaliteet** |
 | Esiletõstmise tabelis `views_total` tühi, `views_note = N/A` | Sama mis ülal; vaata graafikut **Esiletõstmine ja vaadatavus** |
 | Tühi korrelatsioon | Kontrolli `pair_count`; kui väärtusi on liiga vähe, `corr` jääb `NULL` |
