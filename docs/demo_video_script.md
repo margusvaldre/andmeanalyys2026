@@ -1,5 +1,7 @@
 # Demo video skript (alla 10 min)
 
+**Hääleta salvestus** (20 s/slaid; slaid 8 jah; Superset live välja): [`demo_video_recording.md`](demo_video_recording.md), [`demo_video_captions.srt`](demo_video_captions.srt), `.\scripts\demo_live_flow.ps1 -RunCommands -AutoContinue`.
+
 See fail koondab ühte kohta:
 
 1. slaidide outline'i,

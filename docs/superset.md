@@ -56,7 +56,7 @@ Menüüst: **Dashboards** → **Jupiteri analüüs**
 | Top esiletõstetud | `mart.v_superset_featured_top` | Päeva/nädala TOP (row_limit 20 chartis); vaated veerus `views_total` (tühi = puudub) |
 | Korrelatsioon (päev/nädal) | `mart.v_superset_featured_correlation` | 2 — Pearson + paaride arv |
 
-Vaated `v_superset_*` põhinevad `mart.content_structure_period_pct` või `mart.v_featured_viewership_period` (päev + nädal). Struktuuri % loendab ka pealkirju **ilma meta CSV-ta** — segment `Määramata (meta puudub)` (`UNKNOWN`); vaadatud sisutüübil kasutatakse meta puudumisel viewers CSV `type` (`S`→Sarjad, `Y`→Filmid ja näidendid).
+Vaated `v_superset_*` põhinevad `mart.content_structure_period_pct` või `mart.v_featured_viewership_period` (päev + nädal). Struktuuri % (päritolu ja sisutüüp) põhineb **meta CSV-l**; pealkirjad ilma meta vasteta lähevad segmenti `Määramata (meta puudub)` (`UNKNOWN`). Viewers CSV `type` (S/Y) ei kasutata.
 
 **Native filtrid** ei impordita automaatselt — loo need käsitsi (vt allpool). Pärast importi on dashboard ilma filtriteta kuni seadistad need UI-s.
 

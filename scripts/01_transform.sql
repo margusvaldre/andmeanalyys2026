@@ -31,7 +31,6 @@ WITH viewers_daily AS (
         period_start,
         period_end,
         view_date,
-        content_type,
         title,
         total,
         live,
@@ -82,7 +81,6 @@ viewers_norm AS (
         view_date,
         title,
         mart.normalize_title(title) AS title_normalized,
-        content_type,
         total,
         live,
         od,
@@ -173,7 +171,6 @@ WHERE d.rn = 1;
 WITH viewers_daily AS (
     SELECT DISTINCT ON (period_start, period_end, title)
         view_date,
-        content_type,
         title,
         total,
         live,
@@ -200,7 +197,6 @@ viewers_norm AS (
         view_date,
         title,
         mart.normalize_title(title) AS title_normalized,
-        content_type,
         total,
         live,
         od,
@@ -256,7 +252,7 @@ SELECT
     c.catalog_id,
     c.primary_category_name,
     c.primary_category_path,
-    v.content_type,
+    d.meta_content_type AS content_type,
     f.prominence_score_total,
     v.total AS views_total,
     v.live AS views_live,
@@ -316,19 +312,18 @@ SELECT
     view_date AS activity_date,
     'viewed' AS source,
     '' AS primary_category_name,
-    COALESCE(content_type, '') AS content_type,
+    '' AS content_type,
     COUNT(*)::INTEGER AS title_count,
     now() AS transformed_at
 FROM (
     SELECT DISTINCT ON (period_start, period_end, title)
         view_date,
-        content_type,
         title
     FROM staging.viewers_raw
     WHERE grain = 'daily'
     ORDER BY period_start, period_end, title, loaded_at DESC
 ) AS latest_viewers
-GROUP BY view_date, COALESCE(content_type, '');
+GROUP BY view_date;
 
 -- Match rate päeva kohta (esiletõstmise read).
 INSERT INTO mart.title_match_daily (
@@ -374,8 +369,6 @@ IMMUTABLE
 AS $$
     SELECT CASE upper(trim(COALESCE(raw_code, '')))
         WHEN 'CULTRURE' THEN 'CULTURE'
-        WHEN 'S' THEN 'SERIES'
-        WHEN 'Y' THEN 'FILM'
         WHEN '' THEN NULL
         ELSE upper(trim(raw_code))
     END;
@@ -410,7 +403,6 @@ viewers_daily_latest AS (
         view_date,
         title,
         mart.normalize_title(title) AS title_normalized,
-        content_type,
         total
     FROM staging.viewers_raw
     WHERE grain = 'daily'
@@ -422,7 +414,6 @@ viewers_weekly_latest AS (
         period_end,
         title,
         mart.normalize_title(title) AS title_normalized,
-        content_type,
         total
     FROM staging.viewers_raw
     WHERE grain = 'weekly'
@@ -592,7 +583,6 @@ structure_counts AS (
             view_date AS period_start,
             view_date AS period_end,
             title_normalized,
-            content_type,
             total
         FROM viewers_daily_latest
         UNION ALL
@@ -601,7 +591,6 @@ structure_counts AS (
             period_start,
             period_end,
             title_normalized,
-            content_type,
             total
         FROM viewers_weekly_latest
     ) AS v
@@ -629,19 +618,8 @@ structure_counts AS (
         p.activity_date,
         'viewed',
         'content_type',
-        COALESCE(
-            m.content_type_code,
-            NULLIF(mart.normalize_content_type_code(v.content_type), ''),
-            'UNKNOWN'
-        ),
-        COALESCE(
-            tl.content_type_label,
-            COALESCE(
-                m.content_type_code,
-                NULLIF(mart.normalize_content_type_code(v.content_type), ''),
-                'Määramata (meta puudub)'
-            )
-        ),
+        COALESCE(m.content_type_code, 'UNKNOWN'),
+        COALESCE(tl.content_type_label, 'Määramata (meta puudub)'),
         SUM(v.total)::NUMERIC
     FROM periods AS p
     INNER JOIN (
@@ -650,7 +628,6 @@ structure_counts AS (
             view_date AS period_start,
             view_date AS period_end,
             title_normalized,
-            content_type,
             total
         FROM viewers_daily_latest
         UNION ALL
@@ -659,7 +636,6 @@ structure_counts AS (
             period_start,
             period_end,
             title_normalized,
-            content_type,
             total
         FROM viewers_weekly_latest
     ) AS v
@@ -669,29 +645,14 @@ structure_counts AS (
     LEFT JOIN meta AS m
         ON v.title_normalized = m.title_normalized
     LEFT JOIN mart.ref_content_type_labels AS tl
-        ON COALESCE(
-            m.content_type_code,
-            NULLIF(mart.normalize_content_type_code(v.content_type), ''),
-            'UNKNOWN'
-        ) = tl.content_type_code
+        ON COALESCE(m.content_type_code, 'UNKNOWN') = tl.content_type_code
     GROUP BY
         p.grain,
         p.period_start,
         p.period_end,
         p.activity_date,
-        COALESCE(
-            m.content_type_code,
-            NULLIF(mart.normalize_content_type_code(v.content_type), ''),
-            'UNKNOWN'
-        ),
-        COALESCE(
-            tl.content_type_label,
-            COALESCE(
-                m.content_type_code,
-                NULLIF(mart.normalize_content_type_code(v.content_type), ''),
-                'Määramata (meta puudub)'
-            )
-        )
+        COALESCE(m.content_type_code, 'UNKNOWN'),
+        COALESCE(tl.content_type_label, 'Määramata (meta puudub)')
 ),
 structure_totals AS (
     SELECT

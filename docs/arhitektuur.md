@@ -15,7 +15,7 @@ Küsimuse 1 vastus on kaks **100% virnlintdiagrammi** (horisontaalne virn, telg 
 | **Esitatud sisu struktuur** | sama (`presented`) | `staging.featured_daily` + meta |
 | **Vaadatud sisu struktuur** | sama (`viewed`) | `staging.viewers_raw` (`daily` või `weekly`) + meta |
 
-Küsimuse 1 täisdiagrammid eeldavad metaandmete CSV-d (`data/metadata/jupiter_metadata.csv` → `staging.content_metadata`). **Ilma meta laadimiseta** jääb alles vaheversioon (nt kataloogi API kategooria või vaadatavuse toor-`content_type`), mis ei vasta allikdiagrammidele.
+Küsimuse 1 täisdiagrammid eeldavad metaandmete CSV-d (`data/metadata/jupiter_metadata.csv` → `staging.content_metadata`). **Ilma meta laadimiseta** jääb struktuuris segment `Määramata (meta puudub)`; viewers CSV veergu `type` (S/Y) ei kasutata.
 
 Esitatud sisu struktuuri hindamiseks on eelnevalt vaja arvutada sisunimetuste päevased esiletõstetuse skoorid, mida saab kasutada ka eraldiseisva mõõdikuna. 
 Iga sisunimetuse paigutus Jupiteri platvormil annab sisule teatud arvu punkte sõltuvalt sisu asukohast lehel (rida+positsioon reas) ning konkreetse lehe (esileht, sarjad, filmid, saated) nähtavuse kaalust. Lõplik skoor saadakse kõigi nende kaalutud punktide summana. Mida nähtavamatel lehtedel ja asukohtadel sisu paikneb, seda kõrgem on selle päevane esiletõstetuse skoor.
@@ -92,10 +92,10 @@ Vaata ka [`docs/superset.md`](superset.md) (jaotis *Esiletõstmine ja vaadatavus
 |---------|------|--------------|------|
 | ERR videokataloog | HTTP API | Jah, iga päev | Kataloogi koosseis (`catalog_id`, pealkiri, kategooria) |
 | Jupiteri kategoorialehed (esiletõstmine) | HTTP API + konfig CSV | Jah, iga päev | Esiletõstmise skoor (`data/prominence/*.csv`) |
-| Vaadatavus | CSV (`data/viewers/`) | Jah, iga päev | Päevafail `jupiter_d_*.csv` ja nädalafail `jupiter_w_*.csv` laetakse stagingusse ning transform kasutab mõlemat (`daily` + `weekly`) |
+| Vaadatavus | CSV (`data/viewers/`) | Jah, iga päev | Päevafail `jupiter_d_*.csv` ja nädalafail `jupiter_w_*.csv` — **video** vaated; CSV veerg `type` (S/Y) ei lähe torusse. Eemalda audiosisu failidest käsitsi, kui allikas seda sisaldab |
 | Esiletõstmise arhiiv | CSV (`data/featured/`) | Iga cron-päev | `jupiter_f_YYYYMMDD-YYYYMMDD.csv` — eksport pärast API ingestit; taastamine käsuga `ingest-archives` (uus DB) |
 | Kataloogi snapshot arhiiv | CSV (`data/catalog_daily/`) | Iga cron-päev | `jupiter_c_YYYYMMDD-YYYYMMDD.csv` — sama loogika |
-| Sisu metaandmed | CSV (`data/metadata/jupiter_metadata.csv`) | ~nädalas | **Sisutüüp** ja **päritolumaa** pealkirja kohta (küsimus 1 diagrammid) |
+| Sisu metaandmed | CSV (`data/metadata/jupiter_metadata.csv`) | ~nädalas | **Videokataloogi** sisutüüp ja päritolumaa pealkirja kohta (küsimus 1 diagrammid); audiosisu meta failis ei ole |
 
 **Ühendusvõti** kõigi allikate vahel on **pealkiri** (`heading` kataloogis, `title` vaadatavuses ja esiletõstmises). Transform kasutab funktsiooni `mart.normalize_title()` (trim, üleliigsed tühikud). Esiletõstmise ja vaadatavuse ühendus on **täpne pealkirja vaste** — erinevate siltide korral jääb `views_total` tühjaks ja Supersetis `views_note = N/A` (vt mõõdik 2).
 

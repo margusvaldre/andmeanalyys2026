@@ -10,7 +10,9 @@ Tähtis:
 Nädala fail EI ole päevafailide summa. Need on eraldi allikad.
 
 Ühendusvõti teiste allikatega on `title` (pealkiri).
-Metaandmed laetakse skriptiga `ingest_metadata_csv.py` tabelisse `staging.content_metadata`.
+Sisutüüp ja päritolu tulevad meta CSV-st (`ingest_metadata_csv.py`), mitte viewers CSV veerust `type`.
+
+CSV veerg `type` võib failis olla (tagasiühilduvus), kuid ingest ei kasuta seda — `content_type` jääb tühjaks.
 
 Käivitus:
     docker compose exec pipeline python scripts/ingest_viewers_csv.py
@@ -105,7 +107,7 @@ def read_viewer_rows(
     handle, _encoding = open_viewer_csv(path)
     with handle:
         reader = csv.DictReader(handle, delimiter=";")
-        required = {"date", "type", "title", "total", "live", "od", "web", "app"}
+        required = {"date", "title", "total", "live", "od", "web", "app"}
         if not reader.fieldnames or not required.issubset(set(reader.fieldnames)):
             raise ValueError(
                 f"Failis {path.name} puuduvad oodatud veerud. "
@@ -123,7 +125,7 @@ def read_viewer_rows(
                     "period_start": period_start,
                     "period_end": period_end,
                     "view_date": parse_view_date(raw["date"]),
-                    "content_type": (raw.get("type") or "").strip(),
+                    "content_type": "",
                     "title": title,
                     "total": parse_int(raw["total"]),
                     "live": parse_int(raw["live"]),

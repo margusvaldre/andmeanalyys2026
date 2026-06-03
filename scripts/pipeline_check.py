@@ -536,7 +536,7 @@ def check_structure_pct_sums(cur) -> list[CheckResult]:
 
 
 def check_structure_viewers_type_labels(cur) -> list[CheckResult]:
-    """FAIL, kui viewers toorkoodid S/Y jõuavad struktuuri diagrammi siltidena."""
+    """FAIL, kui viewers CSV toorkoodid S/Y jõuavad struktuuri diagrammi (ei tohiks pärast meta-only reeglit)."""
     raw = _query_count(
         cur,
         """
@@ -552,7 +552,7 @@ def check_structure_viewers_type_labels(cur) -> list[CheckResult]:
                 "Struktuur: viewers type S/Y",
                 Status.FAIL,
                 f"{raw} rida kasutab toorkoodi S või Y — "
-                "uuenda mart.normalize_content_type_code ja käivita transform",
+                "käivita transform uuesti (viewers type ei tohiks struktuuris kasutada)",
             )
         ]
     short_segments = _query_count(
@@ -575,7 +575,7 @@ def check_structure_viewers_type_labels(cur) -> list[CheckResult]:
         CheckResult(
             "Struktuur: viewers type S/Y",
             Status.OK,
-            "viewers type S/Y on tõlgitud meta koodideks",
+            "struktuuris ei ole viewers CSV S/Y toorkoode",
         )
     ]
 

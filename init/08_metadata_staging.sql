@@ -55,7 +55,7 @@ INSERT INTO mart.ref_content_type_labels (content_type_code, content_type_label)
     ('UNKNOWN', 'Määramata (meta puudub)')
 ON CONFLICT (content_type_code) DO NOTHING;
 
--- Normaliseeri tüübikood (meta CSV + viewers CSV type: S=sarjad, Y=film/üksikvideo).
+-- Normaliseeri tüübikood (meta CSV).
 CREATE OR REPLACE FUNCTION mart.normalize_content_type_code(raw_code TEXT)
 RETURNS TEXT
 LANGUAGE sql
@@ -63,8 +63,6 @@ IMMUTABLE
 AS $$
     SELECT CASE upper(trim(COALESCE(raw_code, '')))
         WHEN 'CULTRURE' THEN 'CULTURE'
-        WHEN 'S' THEN 'SERIES'
-        WHEN 'Y' THEN 'FILM'
         WHEN '' THEN NULL
         ELSE upper(trim(raw_code))
     END;
