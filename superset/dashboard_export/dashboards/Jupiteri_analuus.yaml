@@ -1,6 +1,9 @@
-dashboard_title: Jupiteri analüüs
-description: ERR Jupiteri sisu kataloog, esiletõstmine ja vaadatavus.
+dashboard_title: "Jupiteri anal\xFC\xFCs"
+description: "ERR Jupiteri sisu kataloog, esilet\xF5stmine ja vaadatavus."
+css: null
 slug: jupiteri-analuus
+certified_by: null
+certification_details: null
 published: true
 uuid: c9999999-9999-4999-8999-000000000001
 position:
@@ -23,7 +26,7 @@ position:
   HEADER_ID:
     id: HEADER_ID
     meta:
-      text: Jupiteri analüüs
+      text: "Jupiteri anal\xFC\xFCs"
     type: HEADER
   ROW-1:
     children:
@@ -71,9 +74,9 @@ position:
     children: []
     id: CHART-MATCH
     meta:
-      chartId: 2
+      chartId: 3
       height: 32
-      sliceName: Ühenduste kvaliteet
+      sliceName: "\xDChenduste kvaliteet"
       uuid: caaaaaaa-aaaa-4aaa-8aaa-000000000002
       width: 12
     parents:
@@ -85,9 +88,9 @@ position:
     children: []
     id: CHART-ORIGIN
     meta:
-      chartId: 3
+      chartId: 4
       height: 56
-      sliceName: Päritolumaad
+      sliceName: "P\xE4ritolumaad"
       uuid: caaaaaaa-aaaa-4aaa-8aaa-000000000005
       width: 6
     parents:
@@ -99,9 +102,9 @@ position:
     children: []
     id: CHART-TYPE
     meta:
-      chartId: 4
+      chartId: 5
       height: 56
-      sliceName: Sisutüübid
+      sliceName: "Sisut\xFC\xFCbid"
       uuid: caaaaaaa-aaaa-4aaa-8aaa-000000000006
       width: 6
     parents:
@@ -113,9 +116,9 @@ position:
     children: []
     id: CHART-SCATTER
     meta:
-      chartId: 5
+      chartId: 1
       height: 50
-      sliceName: Esiletõstmine ja vaadatavus (valitud periood)
+      sliceName: "Esilet\xF5stmine ja vaadatavus (valitud periood)"
       uuid: f0e0d0c0-b0a9-4a8e-9f7c-3b2a190d0c03
       width: 6
     parents:
@@ -127,9 +130,9 @@ position:
     children: []
     id: CHART-TOP
     meta:
-      chartId: 6
+      chartId: 7
       height: 50
-      sliceName: Top esiletõstetud
+      sliceName: "Top esilet\xF5stetud"
       uuid: caaaaaaa-aaaa-4aaa-8aaa-000000000004
       width: 6
     parents:
@@ -141,9 +144,9 @@ position:
     children: []
     id: CHART-CORR
     meta:
-      chartId: 7
+      chartId: 2
       height: 36
-      sliceName: Korrelatsioon (päev/nädal)
+      sliceName: "Korrelatsioon (p\xE4ev/n\xE4dal)"
       uuid: caaaaaaa-aaaa-4aaa-8aaa-000000000007
       width: 12
     parents:
@@ -156,5 +159,30 @@ metadata:
   color_scheme: supersetColors
   cross_filters_enabled: false
   native_filter_configuration: []
-  default_filters: '{}'
+  color_scheme_domain:
+  - '#1FA8C9'
+  - '#454E7C'
+  - '#5AC189'
+  - '#FF7F44'
+  - '#666666'
+  - '#E04355'
+  - '#FCC700'
+  - '#A868B7'
+  - '#3CCCCB'
+  - '#A38F79'
+  - '#8FD3E4'
+  - '#A1A6BD'
+  - '#ACE1C4'
+  - '#FEC0A1'
+  - '#B2B2B2'
+  - '#EFA1AA'
+  - '#FDE380'
+  - '#D3B3DA'
+  - '#9EE5E5'
+  - '#D1C6BC'
+  shared_label_colors:
+  - "M\xE4\xE4ramata (meta puudub)"
+  map_label_colors: {}
+  label_colors: {}
+theme_uuid: null
 version: 1.0.0

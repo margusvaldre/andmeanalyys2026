@@ -1,8 +1,10 @@
-slice_name: Korrelatsioon (päev/nädal)
-description: Pearsoni korrelatsioon valitud päeva või nädala lõikes.
+slice_name: "Korrelatsioon (p\xE4ev/n\xE4dal)"
+description: "Pearsoni korrelatsioon valitud p\xE4eva v\xF5i n\xE4dala l\xF5ikes."
+certified_by: null
+certification_details: null
 viz_type: table
 params:
-  datasource: c2222222-2222-4222-8222-000000000007__table
+  datasource: 4__table
   viz_type: table
   query_mode: raw
   all_columns:
@@ -14,6 +16,7 @@ params:
   - '["period_start", true]'
   order_desc: false
   row_limit: 200
+query_context: null
 cache_timeout: 0
 uuid: caaaaaaa-aaaa-4aaa-8aaa-000000000007
 version: 1.0.0

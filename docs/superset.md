@@ -16,7 +16,7 @@ Esimene kord võtab Superseti ehitamine mitu minutit. Kontrolli importi:
 docker compose logs superset-import
 ```
 
-Oodatav: zip loomine, dashboard import, `apply_chart_export.py` (graffikute YAML → Superset), `sync_datasets.py` ridade logi. `superset-import` peab lõppema edukalt — muidu `superset` ei käivitu.
+Oodatav: `prepare_dashboard_export.py` → zip → import → `apply_chart_export.py` → `sync_datasets.py`. `superset-import` peab lõppema edukalt — muidu `superset` ei käivitu.
 
 Ava brauseris: **http://localhost:8089** (või `.env` → `SUPERSET_PORT_HOST`)
 
@@ -58,7 +58,29 @@ Menüüst: **Dashboards** → **Jupiteri analüüs**
 
 Vaated `v_superset_*` põhinevad `mart.content_structure_period_pct` või `mart.v_featured_viewership_period` (päev + nädal). Struktuuri % (päritolu ja sisutüüp) põhineb **meta CSV-l**; pealkirjad ilma meta vasteta lähevad segmenti `Määramata (meta puudub)` (`UNKNOWN`). Viewers CSV `type` (S/Y) ei kasutata.
 
-**Native filtrid** ei impordita automaatselt — loo need käsitsi (vt allpool). Pärast importi on dashboard ilma filtriteta kuni seadistad need UI-s.
+**Native filtrid** ei impordita automaatselt — loo need **üks kord käsitsi** (vt allpool). Import uuendab graafikuid ja paigutust, mitte filtreid.
+
+### Install ja YAML-allikas
+
+`superset-import` (käivitub `docker compose up` korral):
+
+1. `prepare_dashboard_export.py` — `superset/dashboard_export_source.zip` → kaust `dashboard_export/` (UI filtrid YAML-ist välja).
+2. `zip_dashboard.py` → `superset import-dashboards` → `apply_chart_export.py` → `sync_datasets.py`.
+
+| Repo fail | Roll |
+|-----------|------|
+| `superset/dashboard_export_source.zip` | Installi allikas (Superset UI export) |
+| `superset/dashboard_export/` | Genereeritud YAML; iga import kirjutab ZIP-ist üle |
+| `superset/dashboard_export_backup_20260519/` | Varasem käsitsi starter (tagasipöördumine, vt README seal) |
+
+Uue UI-ekspordi uuendus: asenda `dashboard_export_source.zip`, seejärel `docker compose run --rm --no-deps superset-import`.
+
+### Muudatused vs varasem starter
+
+- **Paigutus:** neli rida (ühendus, struktuur, scatter+TOP, korrelatsioon) — sama põhjaviis kui varem; Päritolumaad ja Sisutüübid kõrvuti.
+- **Päritolumaad / Sisutüübid:** kolm virnjoont (*Kataloogi / Esitatud / Vaadatud*) olid juba vanas YAML-is; uus export lisab peenhäälestust (readade järjekord, `contributionMode: row`).
+- **Eemaldatud:** eraldi graafik **Struktuuri protsendid**.
+- **Ümbernimetatud:** `Match_rate_tabel` → **Ühenduste kvaliteet**; scatteri pealkiri täpsem.
 
 ### Esiletõstmine ja vaadatavus (valitud periood)
 
@@ -75,7 +97,7 @@ Vaated `v_superset_*` põhinevad `mart.content_structure_period_pct` või `mart.
 ### Top esiletõstetud
 
 - Andmestik: `mart.v_superset_featured_top` (sort `prominence_score_total` DESC, chartis `row_limit` 20).
-- Veerud: `title`, `prominence_score_total`, `views_total`, `in_catalog`, `primary_category_name`.
+- Veerud: `title`, `prominence_score_total`, `views_total`, `in_catalog`, `primary_category_name` (meta CSV `type` → `dim_content.meta_content_type`; kui meta puudub, API kategooria; mõlemad tühjad → „Määramata (meta puudub)“).
 - **`views_total` tühi** = selle pealkirja vaated puuduvad valitud perioodil (pealkirja mismatch viewers CSV-ga). **`views_note` veergu TOP tabelis ei kuvata** — vaated loe otse `views_total`-ist.
 
 Kui **kogu** perioodil viewers puudub, lae fail ja käivita pipeline:
@@ -84,7 +106,13 @@ Kui **kogu** perioodil viewers puudub, lae fail ja käivita pipeline:
 
 ## Native filtrid käsitsi
 
-Imporditud dashboard **ei sisalda** valmis filtreid. Loo need üks kord Supersetis.
+Pärast esimest `superset-import` on dashboard **ilma filtriteta**. Loo kaks filtrit allpool kirjeldatud sammudega; **salvesta dashboard** — järgmistel importidel jäävad sinu filtrid Superseti andmebaasi alles.
+
+### Kiirnõuanded
+
+- **Apply filters** on aktiivne, kui mõlemad filtrid on valitud (või lülita sisse **Select first filter value by default**).
+- Filtreid kasuta dashboardi **ülaosas** (vaaterežiim), mitte ainult seadete alt.
+- Kui filteriseis segab, ava dashboard uuel vahelehel ilma `?native_filters_key=...` URL-is.
 
 ### Eeltingimus
 
@@ -114,17 +142,15 @@ Andmestikel peavad olema veerud **`grain`** ja **`period_start_key`** (nt `v_sup
 2. **Filter name:** `Periood`.
 3. **Dataset:** `v_superset_origin_pct`.
 4. **Column:** `period_start_key`.
-5. Kui on **Parent filter / Cascade**, vali vanemaks **Vaade (päev/nädal)**. Kui Apply jääb halliks, jäta cascade välja.
-6. **Scoping** — **sama** graafikute valik nagu filter 1.
-7. Salvesta, seejärel **Save** dashboard.
+5. **Ära** lisa cascade esimesel korral. Kui Apply jääb halliks, on tavaliselt periood valimata — lülita **Select first filter value by default** või vali käsitsi üks kuupäev.
+6. **Scoping** — **sama** graafikute valik nagu filter 1 (välista **Ühenduste kvaliteet** ja soovi korral **Korrelatsioon**).
+7. **Save** dashboard, sulge **Edit** režiim. Filtreid kasuta **dashboardi ülaosas** (mitte ainult Settings alt).
 
 ### Kasutamine
 
 1. Vali **Vaade** (`daily` / `weekly`) ja **Periood** (nt `2026-05-29`).
 2. Klõpsa **Apply filters**.
 3. Kontroll: graafiku menüü **View query** — SQL-is peab olema `WHERE grain IN (...)` ja `period_start_key IN (...)`.
-
-Ava dashboard ilma `?native_filters_key=...` URL-parameetrita, kui vana filteriseis segab.
 
 ### Korrelatsioon eraldi
 
@@ -210,38 +236,16 @@ postgresql+psycopg2://praktikum:praktikum@db:5432/praktikum
 | TOPis `views_total` tühi | **Selle pealkirja** jaoks viewers reas puudub (pealkirja mismatch); kontrolli `viewers_match_pct` graafikul **Ühenduste kvaliteet** |
 | Esiletõstmise tabelis `views_total` tühi, `views_note = N/A` | Sama mis ülal; vaata graafikut **Esiletõstmine ja vaadatavus** |
 | Tühi korrelatsioon | Kontrolli `pair_count`; kui väärtusi on liiga vähe, `corr` jääb `NULL` |
-| Filtrid puuduvad pärast importi | Loo käsitsi (vt **Native filtrid käsitsi**); import ei lisa filtreid |
-| Filtrid ei muuda graafikuid | Klõpsa **Apply filters**; kontrolli **View query** (`grain`, `period_start_key`); värskenda Ctrl+F5 |
+| Filtrid puuduvad pärast importi | Oodatav — loo käsitsi (**Native filtrid käsitsi**) |
+| Apply hall / filtrid ei mõjuta graafikuid | Vali `daily` + periood; **Apply filters**; kontrolli **View query** (`grain`, `period_start_key`); Ctrl+F5 |
 | Korrelatsioonis üks rida / `pair_count` = 0 | `staging.featured_daily` ja `staging.viewers_raw` päevad peavad kattuma; lisa `data/viewers/jupiter_d_YYYYMMDD-YYYYMMDD.csv` samadele päevadele mis esiletõstmine ja käivita `ingest-viewers` + `transform` |
 | Tühi esiletõstmise tabel | `SELECT grain, period_start_key, COUNT(*) FROM mart.v_superset_featured_viewership GROUP BY 1,2`; käivita `transform`; lisa viewers CSV |
 | `superset-import` exit 1 | Logi; `10_superset_views.sql` pärast `08`; `v_featured_viewership` peab init-is olemas (stub OK) |
 | `Columns missing in dataset` | `docker compose run --rm --no-deps superset-import` (sh `sync_datasets.py`) või **Datasets** → **Sync columns from source** |
 | **Issue 1011** / scatter `KeyError: None` | Vana scatteri `query_context`; kustuta vana chart või dashboard; kasuta tabelit või loo uus bubble käsitsi |
 | `Item with key "bar" is not registered` | Superset 6 ei toeta legacy `bar`; YAML-is peab olema `echarts_timeseries_bar`; käivita `apply_chart_export.py` |
-
-Dashboardi uuesti importimiseks:
-
-```powershell
-cd C:\Users\Kasutaja\andmeanalyys2026
-docker compose run --rm --no-deps superset-import
-docker compose up -d superset
-```
-
-Import käivitab ka `apply_chart_export.py`, mis kirjutab graafikute nimed ja andmestikud YAML-ist üle (import ei uuenda vanu charte).
-
-Ainult graafikud YAML-ist:
-
-```powershell
-docker compose exec superset python /app/jupiter_superset/apply_chart_export.py
-```
-
-Kui import annab duplikaatvigu, kustuta vana dashboard Supersetis või lähtesta Superseti maht (ainult arenduses):
-
-```powershell
-docker compose down
-docker volume rm andmeanalyys2026_superset_home
-docker compose up -d --build
-```
+| Graafikud/paigutus ei uuene | `docker compose run --rm --no-deps superset-import` või `docker compose exec superset python /app/jupiter_superset/apply_chart_export.py` |
+| Superseti täielik lähtestus (arendus) | `docker compose down` + `docker volume rm andmeanalyys2026_superset_home` + `docker compose up -d --build` |
 
 ## Seos arhitektuuriga
 

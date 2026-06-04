@@ -155,7 +155,10 @@ docker compose exec db psql -U praktikum -d praktikum -c "SELECT * FROM quality.
 | `compose.yml` | PostgreSQL + pipeline + scheduler + Superset |
 | `docs/superset.md` | Näidikulaua käivitus ja graafikud |
 | `Dockerfile.superset` | Superset konteiner |
-| `superset/dashboard_export/` | Imporditav starter-dashboard |
+| `superset/dashboard_export_source.zip` | **Install:** Superset UI export → `prepare_dashboard_export.py` |
+| `superset/dashboard_export/` | Genereeritud YAML (import; üle kirjutatakse iga `superset-import` korral ZIP-ist) |
+| `superset/dashboard_export_backup_20260519/` | **Varasem** käsitsi YAML starter (tagasipöördumine; import ilma `prepare`) |
+| `superset/dashboard_export_20260603T213354.zip` | Sama install ZIP kuupäevaga nimega (valikuline arhiiv) |
 | `scheduler/crontab` | Päevane cron (06:00) |
 | `Dockerfile.scheduler` | Cron konteiner |
 | `logs/pipeline.log` | Scheduleri väljund (gitignore) |

@@ -849,7 +849,11 @@ SELECT
     f.activity_date,
     f.title_normalized,
     f.title,
-    d.primary_category_name,
+    COALESCE(
+        NULLIF(TRIM(d.meta_content_type), ''),
+        NULLIF(TRIM(d.primary_category_name), ''),
+        'Määramata (meta puudub)'
+    ) AS primary_category_name,
     f.prominence_score_total,
     v.views_total,
     (v.views_total IS NULL) AS viewers_missing,

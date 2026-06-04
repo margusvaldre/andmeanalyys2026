@@ -163,7 +163,7 @@ flowchart LR
     manualCheck -.-> vFeatured
 ```
 
-Esmasel käivitusel loob PostgreSQL skeemi `init/01` … `init/10` (Superseti vaated failis `10`, pärast `08`). Dashboard imporditakse konteineriga `superset-import` (vt `compose.yml`, `docs/superset.md`).
+Esmasel käivitusel loob PostgreSQL skeemi `init/01` … `init/10` (Superseti vaated failis `10`, pärast `08`). Superset dashboard: **`superset-import`** lahti pakib `dashboard_export_source.zip` → `dashboard_export/`, pakib zip-iks ja impordib (vt `compose.yml`, `docs/superset.md`). Varasem käsitsi YAML starter on alles kaustas `superset/dashboard_export_backup_20260519/` (tagasipöördumine ilma ZIP-prepare sammuta).
 
 Iga ingest kirjutab käivituse logi tabelisse `staging.pipeline_runs` (`run_id`, `source_name`, `status`).
 

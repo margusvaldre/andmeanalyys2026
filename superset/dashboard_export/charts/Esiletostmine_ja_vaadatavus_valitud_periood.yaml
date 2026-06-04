@@ -1,8 +1,11 @@
-slice_name: Esiletõstmine ja vaadatavus (valitud periood)
-description: Esiletõstmise skoor ja vaated valitud päeva või nädala lõikes (dashboardi filtrid grain + period_start_key).
+slice_name: "Esilet\xF5stmine ja vaadatavus (valitud periood)"
+description: "Esilet\xF5stmise skoor ja vaated valitud p\xE4eva v\xF5i n\xE4dala l\xF5\
+  ikes (dashboardi filtrid grain + period_start_key)."
+certified_by: null
+certification_details: null
 viz_type: table
 params:
-  datasource: c2222222-2222-4222-8222-000000000008__table
+  datasource: 6__table
   viz_type: table
   query_mode: raw
   all_columns:
@@ -18,6 +21,7 @@ params:
   - '["prominence_score_total", false]'
   order_desc: false
   row_limit: 500
+query_context: null
 cache_timeout: 0
 uuid: f0e0d0c0-b0a9-4a8e-9f7c-3b2a190d0c03
 version: 1.0.0

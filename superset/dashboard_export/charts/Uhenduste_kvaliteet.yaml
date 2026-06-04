@@ -1,8 +1,10 @@
-slice_name: Ühenduste kvaliteet
-description: Esiletõstetud pealkirjade kattuvus kataloogi ja vaadatavusega.
+slice_name: "\xDChenduste kvaliteet"
+description: "Esilet\xF5stetud pealkirjade kattuvus kataloogi ja vaadatavusega."
+certified_by: null
+certification_details: null
 viz_type: table
 params:
-  datasource: c2222222-2222-4222-8222-000000000002__table
+  datasource: 1__table
   viz_type: table
   query_mode: raw
   all_columns:
@@ -13,6 +15,7 @@ params:
   - both_metrics_count
   order_desc: true
   row_limit: 50
+query_context: null
 cache_timeout: 30
 uuid: caaaaaaa-aaaa-4aaa-8aaa-000000000002
 version: 1.0.0
