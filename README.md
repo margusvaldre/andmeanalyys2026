@@ -144,7 +144,7 @@ docker compose exec db psql -U praktikum -d praktikum -c "SELECT activity_date, 
 docker compose exec db psql -U praktikum -d praktikum -c "SELECT source, SUM(title_count) FROM mart.content_by_source GROUP BY source;"
 docker compose exec db psql -U praktikum -d praktikum -c "SELECT title, prominence_score_total, views_total FROM mart.v_superset_featured_viewership WHERE grain='daily' AND period_start_key='2026-05-29' ORDER BY prominence_score_total DESC LIMIT 10;"
 docker compose exec db psql -U praktikum -d praktikum -c "SELECT title, origin_country, meta_content_type FROM mart.dim_content WHERE in_metadata LIMIT 10;"
-docker compose exec db psql -U praktikum -d praktikum -c "SELECT structure_type, dimension, category_label, pct FROM mart.content_structure_pct WHERE dimension='origin_country' ORDER BY structure_type, pct DESC LIMIT 15;"
+docker compose exec db psql -U praktikum -d praktikum -c "SELECT structure_type, category_label, pct FROM mart.content_structure_period_pct WHERE grain='daily' AND dimension='origin_country' ORDER BY period_start DESC, structure_type, pct DESC LIMIT 15;"
 docker compose exec db psql -U praktikum -d praktikum -c "SELECT * FROM quality.v_latest_rule_results;"
 ```
 
@@ -157,8 +157,9 @@ docker compose exec db psql -U praktikum -d praktikum -c "SELECT * FROM quality.
 | `Dockerfile.superset` | Superset konteiner |
 | `superset/dashboard_export_source.zip` | **Install:** Superset UI export → `prepare_dashboard_export.py` |
 | `superset/dashboard_export/` | Genereeritud YAML (import; üle kirjutatakse iga `superset-import` korral ZIP-ist) |
-| `superset/dashboard_export_backup_20260519/` | **Varasem** käsitsi YAML starter (tagasipöördumine; import ilma `prepare`) |
-| `superset/dashboard_export_20260603T213354.zip` | Sama install ZIP kuupäevaga nimega (valikuline arhiiv) |
+| `superset/prepare_dashboard_export.py` | ZIP → `dashboard_export/` enne Superset importi |
+| `superset/apply_chart_export.py` | Chart params + dashboard layout YAML-ist |
+| `superset/dashboard_export_backup_20260519/` | Varasem käsitsi YAML starter (tagasipöördumine) |
 | `scheduler/crontab` | Päevane cron (06:00) |
 | `Dockerfile.scheduler` | Cron konteiner |
 | `logs/pipeline.log` | Scheduleri väljund (gitignore) |

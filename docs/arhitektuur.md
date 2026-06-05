@@ -223,7 +223,7 @@ Transform kustutab mart tabelid ja täidab need uuesti (`scripts/01_transform.sq
 
 Enne cron'i peavad vajalikud vaadatavuse failid (`jupiter_d_*.csv` ja vajadusel `jupiter_w_*.csv`) olema kaustas `data/viewers/`. Pärast iga edukat kataloogi ja featured ingestit tekivad vastavad arhiivfailid (varukoopia gitis). **Uus andmebaas:** `ingest-archives --all`, seejärel `run-all`. Olemasolev DB: vajadusel `ingest-archives --missing-only` (ainult puuduvad päevad).
 
-Kui päevad ei kattu, annab `check` sellest hoiatuse (nt featured päev on uuem kui viewers CSV). Sel juhul võib `views_total` tulla viimase saadaval oleva viewers päeva pealt sama pealkirja kohta (fallback), mistõttu sama päeva võrdlus ei ole enam puhas.
+Kui päevad ei kattu, annab `check` sellest hoiatuse (nt featured päev on uuem kui viewers CSV). `views_total` tuleb ainult **sama perioodi** viewers reast; fallback teisele päevale ei kasutata — vastavatel ridadel jääb `views_total` tühjaks ja `views_note = N/A`.
 
 ## Tööjaotus
 
@@ -238,7 +238,7 @@ Kui päevad ei kattu, annab `check` sellest hoiatuse (nt featured päev on uuem 
 
 | Risk | Mõju | Maandus |
 |------|------|---------|
-| Puuduv sisunimetus metaandmetes  | Pealkiri ei lähe `content_structure_period_pct` arvutusse (INNER JOIN meta). | Täita meta CSV; hinnata osakaalu; vajadusel käsitsi täiendus |
+| Puuduv sisunimetus metaandmetes  | Pealkiri läheb struktuuri arvutusse segmenti `Määramata (meta puudub)` (`UNKNOWN`). | Täita meta CSV; hinnata osakaalu; vajadusel käsitsi täiendus |
 | Liiga lühike analüüsiperiood  | Lühike periood võib moonutada tulemust - ühekordne suur "sündmus" | Vältida põhjuslike järelduste tegemist, analüüsi kordamine pikema perioodi jooksul tulevikus |
 | Unikaalse identifikaatori puudumine  | Andmete sidumine toimub pealkirjade järgi, mis võivad allikati erineda; osa esiletõstmise ridu jääb ilma `views_total`-ita (`views_note = N/A`) isegi kui viewers fail on olemas | `quality` + `check`: viimase päeva `viewers_match_pct` kus viewers andmed on (WARN &lt; 70%, FAIL &lt; 50%), `pair_count` (WARN &lt; 50, FAIL &lt; 20); vajadusel pealkirjade kaardistus tulevikus |
 
