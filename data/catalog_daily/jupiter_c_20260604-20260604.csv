@@ -1216,6 +1216,7 @@
 2026-06-04;1608495812;0;100 luulepärli;Saated;ETV2 > Saated;;https://services.err.ee/api/v2/series/getSeriesData?type=video
 2026-06-04;1608495869;1645704000;PÕS, kallis juubilar!;Saated;Jupiter > Video > Saated;;https://services.err.ee/api/v2/series/getSeriesData?type=video
 2026-06-04;1608495872;1771920900;100 Eesti hetke;Saated;Jupiter > Video > Saated;https://s.err.ee/photo/crop/2026/03/06/3242093he8f2t5.jpg;https://services.err.ee/api/v2/series/getSeriesData?type=video
+2026-06-04;1608495875;1780568100;Lipu heiskamine;Dokumentaalid;ETV2 > Dokumentaalid;https://s.err.ee/photo/crop/2026/06/01/3602596ha4dct5.jpg;https://services.err.ee/api/v2/series/getSeriesData?type=video
 2026-06-04;1608495932;1778096400;Pätt või pühak Raul Vaiksoo;Portreesaated;ETV > Portreesaated;https://s.err.ee/photo/crop/2024/04/08/2343798he7ebt5.jpg;https://services.err.ee/api/v2/series/getSeriesData?type=video
 2026-06-04;1608495941;1746960000;Lydia;Dokumentaal;Jupiter > Video > Filmid > Dokumentaal;https://s.err.ee/photo/crop/2022/02/22/1365842hee3ft5.jpg;https://services.err.ee/api/v2/series/getSeriesData?type=video
 2026-06-04;1608496364;1645645200;Peaminister Kaja Kallase pöördumine Vabariigi aastapäeva eel;Soovitame;ETV > Soovitame;https://s.err.ee/photo/crop/2022/02/23/1367000h5699t5.jpg;https://services.err.ee/api/v2/series/getSeriesData?type=video
@@ -1486,7 +1487,7 @@
 2026-06-04;1608749803;1666610400;Noormees jalgrattal muusikat kuulamas;Kultuur;ETV2 > Kultuur;;https://services.err.ee/api/v2/series/getSeriesData?type=video
 2026-06-04;1608750244;1727559600;Kristjan Järvi, Läänemere Filharmoonikud ja Torm;Kontserdid;ETV2 > Kontserdid;https://s.err.ee/photo/crop/2024/09/23/2555437h3555t5.jpg;https://services.err.ee/api/v2/series/getSeriesData?type=video
 2026-06-04;1608750259;1667151000;Piljardi Eesti meistrivõistlused. 9-palli finaal;Sport;ETV2 > Sport;https://s.err.ee/photo/crop/2022/10/26/1662157hc7c1t5.jpg;https://services.err.ee/api/v2/series/getSeriesData?type=video
-2026-06-04;1608750331;0;Teel jalgpalli MM-ile;Sport;ETV2 > Sport;https://s.err.ee/photo/crop/2026/05/25/3594982h1aa0t5.jpg;https://services.err.ee/api/v2/series/getSeriesData?type=video
+2026-06-04;1608750331;0;Teel jalgpalli MM-ile;Saated;Jupiter > Video > Saated;https://s.err.ee/photo/crop/2026/05/25/3594982h1aa0t5.jpg;https://services.err.ee/api/v2/series/getSeriesData?type=video
 2026-06-04;1608750355;1666811100;Kristjan Järvi ja Põhjala Amazonas;Kultuur;ETV > Kultuur;https://s.err.ee/photo/crop/2022/10/24/1660033hfe14t5.jpg;https://services.err.ee/api/v2/series/getSeriesData?type=video
 2026-06-04;1608766516;0;Laulu lugu;Kultuur;ETV > Kultuur;;https://services.err.ee/api/v2/series/getSeriesData?type=video
 2026-06-04;1608767827;1774870800;Ukraina naised;Dokumentaal;Jupiter > Video > Filmid > Dokumentaal;https://s.err.ee/photo/crop/2025/08/19/2978832hbe42t5.jpg;https://services.err.ee/api/v2/series/getSeriesData?type=video
@@ -3193,6 +3194,7 @@
 2026-06-04;1610026718;1780077600;Ämblikmees: Pole koduteed;Hollywood;Jupiter > Video > Filmid > Hollywood;https://s.err.ee/photo/crop/2026/05/25/3595870hd66et5.jpg;https://services.err.ee/api/v2/series/getSeriesData?type=video
 2026-06-04;1610030657;1780398900;Päevil, mil sind ma näen. Laulab Kare Kauks;ETV2 saated;Jupiter > ETV2 saated;https://s.err.ee/photo/crop/2026/05/29/3600031h3d35t5.jpg;https://services.err.ee/api/v2/series/getSeriesData?type=video
 2026-06-04;1610030660;0;Kutse mõrvale;ETV2 saated;Jupiter > ETV2 saated;;https://services.err.ee/api/v2/series/getSeriesData?type=video
+2026-06-04;1610030666;1780566600;Peegelmaastikus. Ain Kaalep;ETV2 saated;Jupiter > ETV2 saated;https://s.err.ee/photo/crop/2026/06/01/3602602h0355t5.jpg;https://services.err.ee/api/v2/series/getSeriesData?type=video
 2026-06-04;1610030678;1780741500;Võimlemispidu Hingelind;ETV2 saated;Jupiter > ETV2 saated;;https://services.err.ee/api/v2/series/getSeriesData?type=video
 2026-06-04;1610030711;1780516800;Rafael Nadal - liivaväljakute kuningas;ETV2 saated;Jupiter > ETV2 saated;https://s.err.ee/photo/crop/2026/06/01/3602365hfe04t5.jpg;https://services.err.ee/api/v2/series/getSeriesData?type=video
 2026-06-04;1610031992;1780330500;Pardiralli 2026;ETV saated;Jupiter > ETV saated;https://s.err.ee/photo/crop/2026/05/29/3599638h981et5.jpg;https://services.err.ee/api/v2/series/getSeriesData?type=video
